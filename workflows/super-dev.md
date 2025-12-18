@@ -99,22 +99,22 @@ Activate when asked to:
 specification/
 └── [spec-index]-[spec-name]/
     ├── index.md                               # Master index for this specification
-    ├── [phase-index]-requirements.md         # Phase 2: Requirements
-    ├── [phase-index]-research-report.md      # Phase 3: Research findings
-    ├── [phase-index]-debug-analysis.md       # Phase 3: Debug analysis (if bug)
-    ├── [phase-index]-assessment.md           # Phase 4: Code assessment
-    ├── [phase-index]-architecture.md         # Phase 5: Architecture (optional)
-    ├── [phase-index]-design-spec.md          # Phase 6: UI/UX design (optional)
-    ├── [phase-index]-specification.md        # Phase 7: Technical specification
-    ├── [phase-index]-implementation-plan.md  # Phase 7: Implementation plan
-    ├── [phase-index]-task-list.md            # Phase 7: Task tracking
-    └── [phase-index]-implementation-summary.md # Phase 11: Implementation summary
+    ├── [doc-index]-requirements.md         # Phase 2: Requirements
+    ├── [doc-index]-research-report.md      # Phase 3: Research findings
+    ├── [doc-index]-debug-analysis.md       # Phase 3: Debug analysis (if bug)
+    ├── [doc-index]-assessment.md           # Phase 4: Code assessment
+    ├── [doc-index]-architecture.md         # Phase 5: Architecture (optional)
+    ├── [doc-index]-design-spec.md          # Phase 6: UI/UX design (optional)
+    ├── [doc-index]-specification.md        # Phase 7: Technical specification
+    ├── [doc-index]-implementation-plan.md  # Phase 7: Implementation plan
+    ├── [doc-index]-task-list.md            # Phase 7: Task tracking
+    └── [doc-index]-implementation-summary.md # Phase 11: Implementation summary
 ```
 
 **File Naming Rules**:
 - **Spec Index**: Three-digit zero-padded number (e.g., 001, 002, 003...)
-- **Phase Index**: Three-digit zero-padded number starting from 001 (e.g., 001 for Phase 1, 002 for Phase 2, 003 for Phase 3, etc.)
-- **File Format**: `[phase-index]-[document-name].md`
+- **doc Index**: Three-digit zero-padded number starting from 001 to index the files created in the spec directory
+- **File Format**: `[doc-index]-[document-name].md`
 - Only create files for phases that are actually executed
 
 **Output**:
@@ -138,7 +138,7 @@ specification/
 - [ ] Identify dependencies and constraints
 - [ ] Clarify edge cases
 
-**Output**: `[phase-index]-requirements.md`
+**Output**: `[doc-index]-requirements.md`
 
 **Quality Gate**: All requirements must be clear, testable, and approved
 
@@ -158,7 +158,7 @@ specification/
 - [ ] Research potential solutions
 - [ ] Flag deprecated information
 
-**Output**: `[phase-index]-research-report.md` with freshness scores
+**Output**: `[doc-index]-research-report.md` with freshness scores
 
 **Quality Gate**: Must have current, relevant information for implementation
 
@@ -178,7 +178,7 @@ specification/
 - [ ] Use ast-grep for structural analysis
 - [ ] Identify root cause
 
-**Output**: `[phase-index]-debug-analysis.md`
+**Output**: `[doc-index]-debug-analysis.md`
 
 **Quality Gate**: Root cause must be identified with evidence
 
@@ -198,7 +198,7 @@ specification/
 - [ ] Use ast-grep for structural analysis
 - [ ] Track file coverage percentage
 
-**Output**: `[phase-index]-assessment.md`
+**Output**: `[doc-index]-assessment.md`
 
 **Quality Gate**: Must understand existing patterns and integration points
 
@@ -217,7 +217,7 @@ specification/
 - [ ] Create Architecture Decision Records (ADRs)
 - [ ] Validate design against requirements
 
-**Output**: `[phase-index]-architecture.md` and ADRs
+**Output**: `[doc-index]-architecture.md` and ADRs
 
 **Quality Gate**: Architecture must be validated against requirements
 
@@ -236,7 +236,7 @@ specification/
 - [ ] Design responsive layouts
 - [ ] Create design tokens
 
-**Output**: `[phase-index]-design-spec.md`
+**Output**: `[doc-index]-design-spec.md`
 
 **Quality Gate**: Design must meet accessibility and usability requirements
 
@@ -256,9 +256,9 @@ specification/
 - [ ] Specify test requirements
 
 **Output**:
-- `[phase-index]-specification.md`
-- `[phase-index]-implementation-plan.md`
-- `[phase-index]-task-list.md`
+- `[doc-index]-specification.md`
+- `[doc-index]-implementation-plan.md`
+- `[doc-index]-task-list.md`
 
 **Quality Gate**: Specification must be complete and actionable
 
@@ -365,9 +365,9 @@ specification/
 - [ ] Create final report
 
 **Output**: Updated:
-- `[phase-index]-task-list.md` (created in Phase 5, updated in Phase 9)
-- `[phase-index]-implementation-summary.md` (created in Phase 9)
-- `[phase-index]-specification.md` (created in Phase 5, updated in Phase 9)
+- `[doc-index]-task-list.md` (created in Phase 5, updated in Phase 9)
+- `[doc-index]-implementation-summary.md` (created in Phase 9)
+- `[doc-index]-specification.md` (created in Phase 5, updated in Phase 9)
 
 **Quality Gate**: All documentation must be current and accurate
 
@@ -632,16 +632,16 @@ super-dev complete --force
 2. `specification/[spec-index]-[spec-name]/index.md` - Index file tracking all documents in this specification
 
 **Phase Documents** (within spec directory):
-3. `[phase-index]-requirements.md` - Requirements document (Phase 2)
-4. `[phase-index]-research-report.md` - Research findings (Phase 3)
-5. `[phase-index]-debug-analysis.md` - Debug analysis (if bug, Phase 3)
-6. `[phase-index]-assessment.md` - Code assessment (Phase 4)
-7. `[phase-index]-architecture.md` - Architecture design (if needed, Phase 5)
-8. `[phase-index]-design-spec.md` - UI/UX design (if needed, Phase 6)
-9. `[phase-index]-specification.md` - Technical specification (Phase 7)
-10. `[phase-index]-task-list.md` - Task tracking (Phase 7)
-11. `[phase-index]-implementation-plan.md` - Implementation plan (Phase 7)
-12. `[phase-index]-implementation-summary.md` - Implementation notes (Phase 11)
+3. `[doc-index]-requirements.md` - Requirements document (Phase 2)
+4. `[doc-index]-research-report.md` - Research findings (Phase 3)
+5. `[doc-index]-debug-analysis.md` - Debug analysis (if bug, Phase 3)
+6. `[doc-index]-assessment.md` - Code assessment (Phase 4)
+7. `[doc-index]-architecture.md` - Architecture design (if needed, Phase 5)
+8. `[doc-index]-design-spec.md` - UI/UX design (if needed, Phase 6)
+9. `[doc-index]-specification.md` - Technical specification (Phase 7)
+10. `[doc-index]-task-list.md` - Task tracking (Phase 7)
+11. `[doc-index]-implementation-plan.md` - Implementation plan (Phase 7)
+12. `[doc-index]-implementation-summary.md` - Implementation notes (Phase 11)
 
 ---
 

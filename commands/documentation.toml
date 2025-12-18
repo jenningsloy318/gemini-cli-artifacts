@@ -13,18 +13,18 @@ Your task is to update all relevant documentation after successful code implemen
    - Read the code changes
    - Review the implementation summary
    - Check any deviations from the original specification
-2. **Update Task List**: Modify `[phase-index]-task-list.md`:
+2. **Update Task List**: Modify `[doc-index]-task-list.md`:
    - Mark completed tasks with `[x]`
    - Add any new tasks discovered during implementation
    - Update task status and progress notes
    - Document any blocked or deferred tasks with reasons
-3. **Update Implementation Summary**: Enhance `[phase-index]-implementation-summary.md`:
+3. **Update Implementation Summary**: Enhance `[doc-index]-implementation-summary.md`:
    - Add completed work to "Code Changes" section
    - Document technical decisions and trade-offs made
    - Record challenges encountered and solutions implemented
    - Note any deviations from the original plan
    - Update milestone status
-4. **Update Specification**: Revise `[phase-index]-specification.md`:
+4. **Update Specification**: Revise `[doc-index]-specification.md`:
    - Mark updated sections with `[UPDATED: YYYY-MM-DD]`
    - Document any implementation differences from the original spec
    - Explain why changes were necessary
@@ -53,13 +53,13 @@ Focus on creating documentation that will be valuable for future maintenance and
 <OUTPUT>
 Update or create the following documentation:
 
-## 1. Updated Task List (`[phase-index]-task-list.md`)
+## 1. Updated Task List (`[doc-index]-task-list.md`)
 - All completed tasks marked with `[x]`
 - New discovered tasks added with appropriate status
 - Progress notes for ongoing items
 - Blocked tasks with clear reasons and unblocking steps
 
-## 2. Updated Implementation Summary (`[phase-index]-implementation-summary.md`)
+## 2. Updated Implementation Summary (`[doc-index]-implementation-summary.md`)
 ### Code Changes
 - [Feature 1]: Implemented with key components
 - [Feature 2]: Implemented with key components
@@ -78,7 +78,7 @@ Update or create the following documentation:
 - Deviation 1: What changed and why
 - Deviation 2: What changed and why
 
-## 3. Updated Specification (`[phase-index]-specification.md`)
+## 3. Updated Specification (`[doc-index]-specification.md`)
 - Sections marked with `[UPDATED: YYYY-MM-DD]` where modified
 - Implementation differences documented
 - Rationale for changes explained
