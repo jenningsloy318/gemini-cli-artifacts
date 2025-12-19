@@ -113,7 +113,7 @@ specification/
 
 **File Naming Rules**:
 - **Spec Index**: Three-digit zero-padded number (e.g., 001, 002, 003...)
-- **doc Index**: Three-digit zero-padded number starting from 001 to index the files created in the spec directory
+- **doc Index**: Three-digit zero-padded autoincremental number starting from 001 to index the files created in the spec directory, not same with phase index
 - **File Format**: `[doc-index]-[document-name].md`
 - Only create files for phases that are actually executed
 
