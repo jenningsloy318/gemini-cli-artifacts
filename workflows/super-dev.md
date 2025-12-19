@@ -216,6 +216,7 @@ specification/
 - [ ] Design data flow
 - [ ] Create Architecture Decision Records (ADRs)
 - [ ] Validate design against requirements
+- [ ] Versioned API with a clear, predictable hierarchy. Align API routes with the source code/package structure
 
 **Output**: `[doc-index]-architecture.md` and ADRs
 
