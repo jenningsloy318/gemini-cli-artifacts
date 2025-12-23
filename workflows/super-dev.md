@@ -57,11 +57,18 @@ Activate when asked to:
 
 ### Core Principles
 
-1. **Coordinator-Driven**: A central authority orchestrates all phases
-2. **Parallel Execution**: Development and QA run simultaneously when possible
-3. **Quality Gates**: Each phase has strict criteria before proceeding
-4. **Documentation-First**: All work is tracked and documented throughout
-5. **Incremental Progress**: Small, verifiable steps with commits at phase boundaries
+1. **First Principles Thinking**: Break down complex problems into fundamental truths and reason up from there:
+   - Question assumptions and conventions before proceeding
+   - Identify the fundamental problem, not just symptoms
+   - Build solutions from ground truth rather than analogy
+   - Ask "why" repeatedly to reach root causes (5 Whys technique)
+   - Challenge foundational assumptions: Is the solution over-abstracted? Can it be decomposed into smaller parts?
+
+2. **Coordinator-Driven**: A central authority orchestrates all phases
+3. **Parallel Execution**: Development and QA run simultaneously when possible
+4. **Quality Gates**: Each phase has strict criteria before proceeding
+5. **Documentation-First**: All work is tracked and documented throughout
+6. **Incremental Progress**: Small, verifiable steps with commits at phase boundaries
 
 ---
 
@@ -171,12 +178,13 @@ specification/
 **Purpose**: Systematic root cause analysis for bugs
 
 **Activities**:
+- [ ] **Apply First Principles**: Question assumptions, identify fundamental facts vs. assumptions, break down into fundamental components
 - [ ] Collect evidence of the issue
 - [ ] Reproduce the problem
 - [ ] Analyze error patterns
 - [ ] Use grep for text pattern search
 - [ ] Use ast-grep for structural analysis
-- [ ] Identify root cause
+- [ ] Identify root cause using 5 Whys technique
 
 **Output**: `[doc-index]-debug-analysis.md`
 

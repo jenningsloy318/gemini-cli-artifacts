@@ -9,6 +9,13 @@ Your task is to perform systematic root cause analysis for reported bugs and err
 </OBJECTIVE>
 
 <INSTRUCTIONS>
+0. **Apply First Principles Thinking** (Foundation): Before diving into analysis:
+   - Question all assumptions about how the system "should" work
+   - Identify what we know to be absolutely true (facts vs. assumptions)
+   - Break the problem into its fundamental components
+   - Ask "why" repeatedly to reach root causes (5 Whys technique)
+   - Challenge foundational assumptions: Is the solution over-abstracted? Can it be decomposed into smaller parts?
+
 1. **Collect Evidence**: Gather all available information about the issue:
    - Parse error messages and stack traces
    - Identify affected components and modules
@@ -73,6 +80,23 @@ Create a comprehensive debug analysis report with:
 ```
 
 ## Root Cause Analysis
+
+### First Principles Breakdown
+1. **Fundamental Facts** (what we know to be absolutely true):
+   - [Fact 1]: Verifiable truth about the system
+   - [Fact 2]: Verifiable truth about the system
+   - [Fact 3]: Verifiable truth about the system
+
+2. **Assumptions Challenged**:
+   - [Assumption 1]: Why this assumption was wrong
+   - [Assumption 2]: Why this assumption was wrong
+
+3. **5 Whys Analysis**:
+   - Why does this problem occur? → [Because...]
+   - Why does that cause happen? → [Because...]
+   - Why does that cause happen? → [Because...]
+   - Why does that cause happen? → [Because...]
+   - Why does that cause happen? → [Root cause reached]
 
 ### Execution Flow Trace
 1. Expected flow: [Describe normal execution]

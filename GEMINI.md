@@ -30,6 +30,15 @@ These rules define how to translate Figma inputs into code for this project and 
 
 ## Development Philosophy Integration (MUST follow)
 
+### Core Principles
+
+- **First Principles Thinking**: Break down complex problems into their fundamental truths and reason up from there. When solving bugs or implementing complex features:
+  - Question assumptions and conventions
+  - Identify the fundamental problem, not just symptoms
+  - Build solutions from ground truth rather than analogy
+  - Ask "why" repeatedly to reach root causes
+  - Challenge foundational assumptions: Is the solution over-abstracted? Can it be decomposed into smaller parts?
+
 - **Incremental development**: Make small, atomic commits; each commit must compile/build successfully and pass all tests.
 - **Learn from existing code**: Research and plan before beginning implementation.
 - **Pragmatic, not dogmatic**: Adapt to project realities.
@@ -79,5 +88,5 @@ These rules define how to translate Figma inputs into code for this project and 
 - Stop after a maximum of three attempts.
 - Record the failure cause and the specific error message(s).
 - Investigate 2–3 alternative implementation approaches.
-- Challenge foundational assumptions: Is the solution over-abstracted? Can it be decomposed into smaller parts?
+- **Apply First Principles Thinking**: See Core Principles above - question foundational assumptions, break down into smaller parts, and rebuild from fundamental truths.
 
