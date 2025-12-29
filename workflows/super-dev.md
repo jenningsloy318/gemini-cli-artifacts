@@ -1,28 +1,82 @@
 ---
-description: A comprehensive, coordinator-driven development workflow with parallel agent execution for implementing features, fixing bugs, improving performance, or refactoring code. This workflow can be used globally with any project management system including Google Antigravity.
+description: A comprehensive, coordinator-driven development workflow with parallel agent execution for implementing features, fixing bugs, improving performance, or refactoring code. Includes mandatory development rules and philosophy.
 ---
 
----
+# Super-Dev Workflow
 
-# Super-Dev
-
-A comprehensive, coordinator-driven development workflow with parallel agent execution for implementing features, fixing bugs, improving performance, or refactoring code. This workflow can be used globally with any project management system including Google Antigravity.
+A comprehensive, coordinator-driven development workflow with parallel agent execution for implementing features, fixing bugs, improving performance, or refactoring code. This workflow serves as the central orchestration manual for the "Coordinator Agent".
 
 ## Table of Contents
-1. [Workflow Overview](#workflow-overview)
-2. [Entry Point](#entry-point)
-3. [Phase-by-Phase Execution](#phase-by-phase-execution)
-4. [Agent Reference](#agent-reference)
-5. [Quality Gates](#quality-gates)
-6. [Documentation Rules](#documentation-rules)
+1. [Development Rules & Philosophy](#development-rules--philosophy)
+2. [Workflow Overview](#workflow-overview)
+3. [Entry Point](#entry-point)
+4. [Phase-by-Phase Execution](#phase-by-phase-execution)
+5. [Agent Reference](#agent-reference)
+6. [Quality Gates](#quality-gates)
 7. [Integration Guide](#integration-guide)
+
+---
+
+## Development Rules & Philosophy
+
+**Trigger:** Phase 0 of the workflow.
+**Mandate:** These rules MUST be followed for all development work.
+
+### 1. Figma MCP Integration Rules
+When implementing designs from Figma:
+1. **Required Flow**:
+   - Run `get_design_context` first.
+   - If truncated, run `get_metadata` then re-fetch specific nodes.
+   - Run `get_screenshot` for visual reference.
+   - **Only then** download assets and start implementation.
+2. **Implementation Rules**:
+   - Treat Figma output as a representation, not final code.
+   - Replace Tailwind utility classes with project design tokens.
+   - Reuse existing components; do not duplicate.
+   - Validate 1:1 visual parity against the screenshot.
+
+### 2. MCP Script Usage
+Use wrapper scripts via Bash instead of direct MCP tool calls (except `current_time`).
+- **Exa**: `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.py`
+- **DeepWiki**: `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_structure.py`
+- **Context7**: `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_docs.py`
+- **GitHub**: `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_code.py`
+
+### 3. Time & Search Rules
+- **Time MCP**: In every prompt, add the current date and time as extra context.
+- **Codebase Search**: **Prefer ast-grep** for structural code search. Use it to find patterns (`useState`, API calls) and deprecated usage.
+
+### 4. Git Rules (CRITICAL)
+- **Safety**: Never create GitHub Actions. Do not commit to git cache.
+- **Atomic Commits**: `git add file1 file2` (only edited files). **NEVER** `git add -A`.
+- **Checkpoints**:
+  - Stash before major phases/refactoring.
+  - Commit after **every** completed task.
+  - Verify `git status` is clean before phase transitions.
+- **Recovery**: Use `git reflog` or `git stash pop` if files are lost.
+
+### 5. Documentation Update Rules (MANDATORY)
+All specification documents MUST be updated as work progresses:
+1. **Task List (`[index]-task-list.md`)**: Mark tasks complete immediately.
+2. **Implementation Summary (`[index]-implementation-summary.md`)**: Update after EACH milestone.
+3. **Specification (`[index]-specification.md`)**: Update with `[UPDATED: YYYY-MM-DD]` if implementation deviates.
+
+**Enforcement**:
+❌ **FORBIDDEN**: Completing tasks without updating the task list.
+❌ **FORBIDDEN**: Committing code without corresponding doc updates.
+
+### 6. Development Philosophy
+- **Incremental**: Small, compilable, atomic commits.
+- **First Principles**: Question assumptions. Build from ground truth.
+- **New Requirements**: Discuss solution -> ASCII Diagram -> User Confirmation -> Code.
+- **Bug Reporting**: Always ask for: 1. Steps to Reproduce, 2. Expected vs Actual, 3. Environment.
+- **Decision Priority**: Testability > Readability > Consistency > Simplicity > Reversibility.
 
 ---
 
 ## Workflow Overview
 
 ### Architecture
-
 ```
                     ┌─────────────────┐
                     │   Super Dev     │
@@ -44,628 +98,172 @@ A comprehensive, coordinator-driven development workflow with parallel agent exe
 └─────────┘            └─────────┘            └─────────┘
 ```
 
-### When to Use This Workflow
-
-Activate when asked to:
-- [ ] Fix a bug or issue
-- [ ] Fix build warnings or errors
-- [ ] Implement a new feature
-- [ ] Improve an existing feature
-- [ ] Improve performance
-- [ ] Resolve deprecation warnings
-- [ ] Refactor code
-
 ### Core Principles
-
-1. **First Principles Thinking**: Break down complex problems into fundamental truths and reason up from there:
-   - Question assumptions and conventions before proceeding
-   - Identify the fundamental problem, not just symptoms
-   - Build solutions from ground truth rather than analogy
-   - Ask "why" repeatedly to reach root causes (5 Whys technique)
-   - Challenge foundational assumptions: Is the solution over-abstracted? Can it be decomposed into smaller parts?
-
-2. **Coordinator-Driven**: A central authority orchestrates all phases
-3. **Parallel Execution**: Development and QA run simultaneously when possible
-4. **Quality Gates**: Each phase has strict criteria before proceeding
-5. **Documentation-First**: All work is tracked and documented throughout
-6. **Incremental Progress**: Small, verifiable steps with commits at phase boundaries
+1. **Coordinator-Driven**: A central authority orchestrates all phases. No unauthorized stops.
+2. **Parallel Execution**: Development and QA run simultaneously in Phase 8.
+3. **Documentation-First**: All work is tracked and documented throughout.
+4. **Quality Gates**: Strict criteria before proceeding to the next phase.
 
 ---
 
 ## Entry Point
 
-### Step 1: Initialize Workflow
-
-**Command**: `init-super-dev-workflow`
+**Command**: `super-dev:coordinator` or `init-super-dev-workflow`
 
 **Parameters**:
 - `task_type`: "feature|bug|refactor|improvement"
-- `task_description`: Detailed description of what needs to be done
-- `spec_directory`: Path to specification directory (optional, will be created if not exists)
-
-**Output**: Workflow initialization with task ID and working directory
+- `task_description`: Detailed description.
+- `spec_directory`: Optional path.
 
 ---
 
 ## Phase-by-Phase Execution
 
+### Phase 0: Apply Dev Rules
+**Agent**: `super-dev:dev-rules`
+- Establish coding standards, git practices, and quality guidelines.
+
 ### Phase 1: Specification Setup
-
-**Purpose**: Define specification directory and naming convention
-
-**Activities**:
-- [ ] Analyze project structure
-- [ ] Identify existing specification patterns
-- [ ] Define spec-name for this initiative (descriptive name)
-- [ ] Generate spec-index number for this initiative (format: 001, 002, 003...)
-- [ ] Create specification directory: `specification/[spec-index]-[spec-name]/`
-- [ ] Create index.md file in the spec directory with metadata
-
-**Specification Directory Structure**:
-```
-specification/
-└── [spec-index]-[spec-name]/
-    ├── index.md                               # Master index for this specification
-    ├── [doc-index]-requirements.md         # Phase 2: Requirements
-    ├── [doc-index]-research-report.md      # Phase 3: Research findings
-    ├── [doc-index]-debug-analysis.md       # Phase 3: Debug analysis (if bug)
-    ├── [doc-index]-assessment.md           # Phase 4: Code assessment
-    ├── [doc-index]-architecture.md         # Phase 5: Architecture (optional)
-    ├── [doc-index]-design-spec.md          # Phase 6: UI/UX design (optional)
-    ├── [doc-index]-specification.md        # Phase 7: Technical specification
-    ├── [doc-index]-implementation-plan.md  # Phase 7: Implementation plan
-    ├── [doc-index]-task-list.md            # Phase 7: Task tracking
-    └── [doc-index]-implementation-summary.md # Phase 11: Implementation summary
-```
-
-**File Naming Rules**:
-- **Spec Index**: Three-digit zero-padded number (e.g., 001, 002, 003...)
-- **doc Index**: Three-digit zero-padded autoincremental number starting from 001 to index the files created in the spec directory, not same with phase index
-- **File Format**: `[doc-index]-[document-name].md`
-- Only create files for phases that are actually executed
-
-**Output**:
-- Specification directory defined as: `specification/[spec-index]-[spec-name]/`
-- `specification/[spec-index]-[spec-name]/index.md` - Index file
-
-**Quality Gate**: Specification directory must be created with index.md file
-
----
+**Purpose**: Define specification directory structure.
+**Output**: `specification/[spec-index]-[spec-name]/index.md`
 
 ### Phase 2: Requirements Clarification
-
-**Agent**: `requirements-clarifier`
-
-**Purpose**: Gather and clarify all requirements
-
-**Activities**:
-- [ ] Extract functional requirements
-- [ ] Identify non-functional requirements
-- [ ] Define acceptance criteria
-- [ ] Identify dependencies and constraints
-- [ ] Clarify edge cases
-
+**Agent**: `super-dev:requirements-clarifier`
 **Output**: `[doc-index]-requirements.md`
 
-**Quality Gate**: All requirements must be clear, testable, and approved
+### Phase 3: Research (Time MCP Enhanced)
+**Agent**: `super-dev:research-agent`
+**Activities**: 
+- Get current timestamp, filter by recency, flag deprecated info.
+- **MANDATORY**: Provide 3 options and comparison to user for select.
+**Output**: `[doc-index]-research-report.md`
 
----
-
-### Phase 3: Research
-
-**Agent**: `research-agent`
-
-**Purpose**: Research best practices, documentation, and patterns
-
-**Activities**:
-- [ ] Get current timestamp and context
-- [ ] Search for relevant documentation
-- [ ] Identify best practices
-- [ ] Find similar implementations
-- [ ] Research potential solutions
-- [ ] Flag deprecated information
-
-**Output**: `[doc-index]-research-report.md` with freshness scores
-
-**Quality Gate**: Must have current, relevant information for implementation
-
----
-
-### Phase 3: Debug Analysis (For Bugs Only)
-
-**Agent**: `debug-analyzer`
-
-**Purpose**: Systematic root cause analysis for bugs
-
-**Activities**:
-- [ ] **Apply First Principles**: Question assumptions, identify fundamental facts vs. assumptions, break down into fundamental components
-- [ ] Collect evidence of the issue
-- [ ] Reproduce the problem
-- [ ] Analyze error patterns
-- [ ] Use grep for text pattern search
-- [ ] Use ast-grep for structural analysis
-- [ ] Identify root cause using 5 Whys technique
-
+### Phase 4: Debug Analysis (For Bugs)
+**Agent**: `super-dev:debug-analyzer`
+**Activities**: Root cause analysis using `grep` (text) and `ast-grep` (structure).
 **Output**: `[doc-index]-debug-analysis.md`
 
-**Quality Gate**: Root cause must be identified with evidence
-
----
-
-### Phase 4: Code Assessment
-
-**Agent**: `code-assessor`
-
-**Purpose**: Assess existing codebase for architecture and patterns
-
-**Activities**:
-- [ ] Analyze existing architecture
-- [ ] Identify relevant patterns
-- [ ] Assess framework usage
-- [ ] Use grep for pattern matching
-- [ ] Use ast-grep for structural analysis
-- [ ] Track file coverage percentage
-
+### Phase 5: Code Assessment
+**Agent**: `super-dev:code-assessor`
+**Activities**: Analyze architecture and patterns using `grep`/`ast-grep`.
 **Output**: `[doc-index]-assessment.md`
 
-**Quality Gate**: Must understand existing patterns and integration points
+### Phase 5.3: Architecture Design (Optional/Complex)
+**Agent**: `super-dev:architecture-agent`
+**Activities**: **MANDATORY**: Provide 3 options and comparison to user for select.
+**Output**: `[doc-index]-architecture.md` and ADRs.
 
----
-
-### Phase 5: Architecture Design (For Complex Features - Optional)
-
-**Agent**: `architecture-agent`
-
-**Purpose**: Design architecture for complex features
-
-**Activities**:
-- [ ] Create module decomposition
-- [ ] Define interfaces
-- [ ] Design data flow
-- [ ] Create Architecture Decision Records (ADRs)
-- [ ] Validate design against requirements
-- [ ] Versioned API with a clear, predictable hierarchy. Align API routes with the source code/package structure
-
-**Output**: `[doc-index]-architecture.md` and ADRs
-
-**Quality Gate**: Architecture must be validated against requirements
-
----
-
-### Phase 6: UI/UX Design (For Features with UI - Optional)
-
-**Agent**: `ui-ux-designer`
-
-**Purpose**: Create UI/UX design specifications
-
-**Activities**:
-- [ ] Create wireframes
-- [ ] Define interaction patterns
-- [ ] Specify accessibility requirements
-- [ ] Design responsive layouts
-- [ ] Create design tokens
-
+### Phase 5.5: UI/UX Design (Optional/UI)
+**Agent**: `super-dev:ui-ux-designer`
+**Activities**: **MANDATORY**: Provide 3 options and comparison to user for select.
 **Output**: `[doc-index]-design-spec.md`
 
-**Quality Gate**: Design must meet accessibility and usability requirements
-
----
-
-### Phase 7: Specification Writing
-
-**Agent**: `spec-writer`
-
-**Purpose**: Write comprehensive technical specification
-
-**Activities**:
-- [ ] Create technical specification
-- [ ] Define implementation plan
-- [ ] Create task breakdown
-- [ ] Document API changes
-- [ ] Specify test requirements
-
-**Output**:
+### Phase 6: Specification Writing
+**Agent**: `super-dev:spec-writer`
+**Output**: 
 - `[doc-index]-specification.md`
 - `[doc-index]-implementation-plan.md`
 - `[doc-index]-task-list.md`
 
-**Quality Gate**: Specification must be complete and actionable
+### Phase 7: Specification Review
+**Agent**: `super-dev:coordinator`
+**Action**: Validate alignment with requirements.
 
----
+### Phase 8: Execution & QA (PARALLEL)
+**CRITICAL**: The Coordinator invokes TWO agents in PARALLEL.
 
-### Phase 6: Specification Review
+**Agent 1: `super-dev:dev-executor`**
+- Implements code features.
+- Invokes specialist developers (Rust, Go, React, etc.).
+- Handles Build Queue (Rust/Go: one at a time).
 
-**Agent**: `coordinator`
+**Agent 2: `super-dev:qa-agent`**
+- Plans test strategy.
+- Writes and executes unit/integration tests parallel to dev.
 
-**Purpose**: Review all specification documents
+**Output**: Implemented code and passing test suite.
 
-**Activities**:
-- [ ] Validate alignment with requirements
-- [ ] Check for completeness
-- [ ] Verify testability
-- [ ] Ensure feasibility
-- [ ] Approve or request revisions
+### Phase 9: Code Review (Loop)
+**Agent**: `super-dev:code-reviewer`
+**Rule**: Spec-aware review.
+**Iteration**: 
+- If **Blocked/Changes Requested** OR **Critical/High findings** OR **Acceptance Criteria Fail**:
+  → **RE-ENTER Phase 8**.
+- Proceed only when "Approved" (Low/Info only).
 
-**Output**: Review decision and any required changes
+### Phase 10: Documentation Update (Sequential)
+**Agent**: `super-dev:docs-executor`
+**Timing**: Runs AFTER code review approval.
+**Action**: Batch update all docs (Task List, Summary, Spec).
 
-**Quality Gate**: All specifications must be approved before implementation
+### Phase 11: Cleanup
+**Agent**: `super-dev:coordinator`
+**Action**: Remove temp files, unused code.
 
----
+### Phase 12: Commit & Push
+**Agent**: `super-dev:coordinator`
+**Action**: 
+1. `git add [files]` (modified only).
+2. `git commit -m "..."`.
+3. `git push`.
+4. Verify `git status` is clean.
 
-### Phase 7: Execution & QA (PARALLEL)
-
-**Critical**: Execute BOTH agents in parallel
-
-#### Agent 1: Development Executor
-**Type**: `dev-executor`
-
-**Purpose**: Implement code changes
-
-**Activities**:
-- [ ] Implement features according to spec
-- [ ] Invoke specialist developers as needed
-- [ ] Follow coding standards
-- [ ] Write implementation notes
-- [ ] Handle build queue (Rust/Go: one at a time)
-
-#### Agent 2: QA Agent
-**Type**: `qa-agent`
-
-**Purpose**: Testing and verification
-
-**Activities**:
-- [ ] Plan test strategy
-- [ ] Write unit tests
-- [ ] Set up integration tests
-- [ ] Configure E2E tests if needed
-- [ ] Verify acceptance criteria
-
-**Output**:
-- Implemented code
-- Test suite
-- Progress tracking
-
-**Quality Gate**: Code must pass all tests and meet acceptance criteria
-
----
-
-### Phase 8: Code Review
-
-**Agent**: `code-reviewer`
-
-**Purpose**: Specification-aware code review
-
-**Activities**:
-- [ ] Review code against specification
-- [ ] Check for security vulnerabilities
-- [ ] Assess performance implications
-- [ ] Verify maintainability
-- [ ] Check test coverage
-- [ ] Review acceptance criteria
-
-**Output**: Code review report with:
-- Severity levels
-- Evidence
-- Verdict
-
-**Iteration Rule**:
-- If verdict is "Blocked" or "Changes Requested"
-- OR any Critical/High/Medium findings exist
-- OR any acceptance criteria are Not Met/Partial
-→ **RE-ENTER Phase 7**
-
-**Quality Gate**: Must be "Approved" or "Approved with Comments" with only Low/Info findings
-
----
-
-### Phase 9: Documentation Update
-
-**Agent**: `docs-executor`
-
-**Purpose**: Update all documentation after approval
-
-**Execution Model**: Sequential batch processing
-
-**Activities**:
-- [ ] Update task list completion status
-- [ ] Document implementation summary
-- [ ] Update specification with any deviations
-- [ ] Integrate review findings
-- [ ] Create final report
-
-**Output**: Updated:
-- `[doc-index]-task-list.md` (created in Phase 5, updated in Phase 9)
-- `[doc-index]-implementation-summary.md` (created in Phase 9)
-- `[doc-index]-specification.md` (created in Phase 5, updated in Phase 9)
-
-**Quality Gate**: All documentation must be current and accurate
-
----
-
-### Phase 10: Cleanup
-
-**Agent**: `coordinator`
-
-**Purpose**: Clean up temporary files and unused code
-
-**Activities**:
-- [ ] Remove temporary files
-- [ ] Delete unused code
-- [ ] Clean up test artifacts
-- [ ] Verify no debugging code remains
-
-**Output**: Clean working directory
-
-**Quality Gate**: Working directory must be clean
-
----
-
-### Phase 11: Commit & Push
-
-**Agent**: `coordinator`
-
-**Purpose**: Commit and push all changes
-
-**Activities**:
-- [ ] Stage all relevant files: `git add [files]`
-- [ ] Create descriptive commit message
-- [ ] Commit changes: `git commit`
-- [ ] Push to remote: `git push`
-- [ ] Verify clean state: `git status`
-
-**Output**: Committed and pushed changes
-
-**CRITICAL**: Never mark workflow complete without committing and pushing
-
----
-
-### Phase 12: Final Verification
-
-**Agent**: `coordinator`
-
-**Purpose**: Verify all artifacts are complete
-
-**Checklist**:
-- [ ] All specification documents created
-- [ ] Implementation summary complete
-- [ ] No missing code or files
-- [ ] All changes committed
-- [ ] All changes pushed to remote
-- [ ] Git status clean
-
-**Output**: Final verification report
+### Phase 13: Final Verification
+**Agent**: `super-dev:coordinator`
+**Checklist**: All artifacts present, code pushed, status clean.
 
 ---
 
 ## Agent Reference
 
-### Coordinator Agent (Central Authority)
-
-| Agent | Purpose | Key Responsibilities |
-|-------|---------|---------------------|
-| `coordinator` | Central orchestrator | • Manages all phases<br>• Assigns tasks to specialists<br>• Monitors execution<br>• Enforces quality gates<br>• Performs final verification |
+### Coordinator Agent
+| Agent | Role |
+|-------|------|
+| `coordinator` | Central Orchestrator. Manages phases, build queue, and final verification. |
 
 ### Executor Agents
+| Agent | Role | Phase |
+|-------|------|-------|
+| `dev-executor` | Code Implementation | Phase 8 (Parallel) |
+| `qa-agent` | Testing & Verification | Phase 8 (Parallel) |
+| `docs-executor` | Documentation Updates | Phase 10 (Sequential) |
 
-| Agent | Purpose | Execution Mode | When Used |
-|-------|---------|----------------|-----------|
-| `dev-executor` | Development implementation | Parallel (Phase 8) | Always |
-| `qa-agent` | Testing and verification | Parallel (Phase 8) | Always |
-| `docs-executor` | Documentation updates | Sequential (Phase 10) | After Phase 9 approval |
+### Analysis & Planning Agents
+- `requirements-clarifier`
+- `research-agent` (Time MCP)
+- `search-agent`
+- `debug-analyzer` (grep/ast-grep)
+- `code-assessor` (grep/ast-grep)
+- `architecture-agent`
+- `ui-ux-designer`
+- `spec-writer`
+- `code-reviewer`
 
-### Workflow Agents
-
-| Agent | Purpose | Output |
-|-------|---------|--------|
-| `requirements-clarifier` | Gather requirements | Requirements document |
-| `research-agent` | Research with current context | Research report |
-| `search-agent` | Multi-source search | Search results |
-| `debug-analyzer` | Root cause analysis | Debug analysis |
-| `code-assessor` | Assess codebase | Assessment report |
-| `code-reviewer` | Specification-aware review | Code review |
-| `architecture-agent` | Design architecture | Architecture docs |
-| `ui-ux-designer` | Create UI/UX specs | Design specifications |
-| `spec-writer` | Write specifications | Technical specs |
-
-### Developer Agents (Specialists)
-
-| Agent | Purpose | Languages/Frameworks |
-|-------|---------|---------------------|
-| `rust-developer` | Rust systems programming | Rust 1.75+, Tokio, axum |
-| `golang-developer` | Go backend development | Go 1.21+, stdlib, gin, chi |
-| `frontend-developer` | Web frontend development | React 19, Next.js 15, TypeScript, Tailwind v4 |
-| `backend-developer` | Backend/API development | Node.js/TS, Python, FastAPI, databases |
-| `android-developer` | Android app development | Kotlin, Jetpack Compose, MVVM |
-| `ios-developer` | iOS app development | Swift, SwiftUI, async/await |
-| `windows-app-developer` | Windows desktop development | C#/.NET 8+, WinUI 3, WPF |
-| `macos-app-developer` | macOS desktop development | Swift, SwiftUI, AppKit |
+### Specialist Developers
+- `rust-developer`, `golang-developer`, `frontend-developer`, `backend-developer`, `android-developer`, `ios-developer`, `windows-app-developer`, `macos-app-developer`.
 
 ---
 
 ## Quality Gates
 
-### Phase Completion Criteria
-
-Each phase must meet these criteria before proceeding:
-
-1. **Phase 1**: Specification directory exists
-2. **Phase 2**: Requirements are clear and approved
-3. **Phase 3**: Research is current and relevant
-4. **Phase 3** (Debug Analysis): Root cause identified (bugs only)
-5. **Phase 4**: Code patterns understood
-6. **Phase 4.3**: Architecture validated (complex features)
-7. **Phase 4.5**: Design meets requirements (UI features)
-8. **Phase 5**: Specification is complete
-9. **Phase 6**: All documents approved
-10. **Phase 7**: Code implemented and tests pass
-11. **Phase 8**: Code review approved
-12. **Phase 9**: Documentation updated
-13. **Phase 10**: Working directory clean
-14. **Phase 11**: Changes committed and pushed
-15. **Phase 12**: All artifacts verified
-
-### Iteration Rules
-
-- **Phase 7-8 Loop**: Continue until:
-  - Code review verdict is "Approved" or "Approved with Comments"
-  - Only Low/Info severity findings remain
-  - All acceptance criteria are met
-
-- **Build Queue (Rust/Go)**: Only one build at a time to prevent resource conflicts
-
----
-
-## Documentation Rules
-
-### MANDATORY: Update at Every Milestone
-
-**At every phase boundary, update these documents:**
-
-#### 1. Task List (`spec-[spec-index]-p5-task-list.md`)
-- [ ] Mark completed tasks with `[x]`
-- [ ] Add any new tasks discovered
-- [ ] Note blocked or deferred tasks with reasons
-- [ ] Update spec-index file with phase completion status
-
-#### 2. Implementation Summary (`spec-[spec-index]-p9-implementation-summary.md`)
-- [ ] Add completed work to "Code Changes" section
-- [ ] Document technical decisions
-- [ ] Record challenges and solutions
-
-#### 3. Specification (`spec-[spec-index]-p5-specification.md`)
-- [ ] Update affected sections with `[UPDATED: date]` marker
-- [ ] Document why changes were necessary
-
-### FORBIDDEN Actions
-- ❌ Completing a milestone without updating task list
-- ❌ Moving to next phase with outdated implementation summary
-- ❌ Changing implementation without updating specification
+1. **Phase 1**: Spec directory exists.
+2. **Phase 2-7**: Docs approved.
+3. **Phase 8**: Code compiles, tests pass.
+4. **Phase 9**: Review Approved (No Critical/High issues).
+5. **Phase 10**: Docs synced with code.
+6. **Phase 12**: Clean git status, pushed to remote.
 
 ---
 
 ## Integration Guide
 
-### Using with Google Antigravity
-
-1. **Import this workflow** into your Antigravity workspace
-2. **Create a new project** using the "Super Dev Workflow" template
-3. **Initialize workflow** with task details
-4. **Follow phase-by-phase execution** as outlined
-
-### Customization
-
-You can customize:
-- **Agent implementations**: Replace with your preferred AI agents
-- **Document templates**: Modify to match your project's style
-- **Quality criteria**: Adjust based on project requirements
-- **Integration points**: Add your own tools and systems
-
-### Required Integrations
-
-To use this workflow effectively, you need:
-- **Git repository**: For version control
-- **File system**: For storing specifications and code
-- **Agent system**: For executing specialized agents
-- **Notification system**: For phase gate approvals
-
-### Minimal Setup
-
+### Quick Start
 ```bash
-# Clone or create your project
-git clone <your-repo>
-cd <your-project>
-
-# Create specification directory
-mkdir -p specification
-
 # Initialize workflow
-init-super-dev-workflow --task-type="feature" --task-description="Your task here"
+init-super-dev-workflow --task-type="feature" --task-description="Add user auth"
 ```
 
-### Example Commands
-
+### Status Check
 ```bash
-# Start a new feature
-super-dev init --type=feature --description="Add user authentication"
-
-# Check current phase
 super-dev status
-
-# Advance to next phase
-super-dev next-phase
-
-# View all documents
-super-dev docs
-
-# Force completion (use with caution)
-super-dev complete --force
 ```
-
----
-
-## Quick Reference
-
-### Workflow Commands
-
-| Command | Purpose |
-|---------|---------|
-| `init` | Initialize new workflow |
-| `status` | Show current phase and status |
-| `next-phase` | Advance to next phase |
-| `docs` | View all documentation |
-| `review` | Trigger code review |
-| `complete` | Mark workflow complete |
-
-### Phase Checkpoints
-
-- [ ] **Phase 1**: Spec directory ready
-- [ ] **Phase 2**: Requirements clarified
-- [ ] **Phase 3**: Research complete
-- [ ] **Phase 3** (Debug Analysis): Debug analyzed (if bug)
-- [ ] **Phase 4**: Code assessed
-- [ ] **Phase 4.3**: Architecture designed (if complex)
-- [ ] **Phase 4.5**: UI/UX designed (if UI feature)
-- [ ] **Phase 5**: Specification written
-- [ ] **Phase 6**: Specification reviewed
-- [ ] **Phase 7**: Code implemented & tested
-- [ ] **Phase 8**: Code reviewed and approved
-- [ ] **Phase 9**: Documentation updated
-- [ ] **Phase 10**: Cleanup complete
-- [ ] **Phase 11**: Changes committed
-- [ ] **Phase 12**: Final verification passed
-
-### Required Documents
-
-**Specification Directory Structure**:
-1. `specification/[spec-index]-[spec-name]/` - Directory containing all specification documents
-2. `specification/[spec-index]-[spec-name]/index.md` - Index file tracking all documents in this specification
-
-**Phase Documents** (within spec directory):
-3. `[doc-index]-requirements.md` - Requirements document (Phase 2)
-4. `[doc-index]-research-report.md` - Research findings (Phase 3)
-5. `[doc-index]-debug-analysis.md` - Debug analysis (if bug, Phase 3)
-6. `[doc-index]-assessment.md` - Code assessment (Phase 4)
-7. `[doc-index]-architecture.md` - Architecture design (if needed, Phase 5)
-8. `[doc-index]-design-spec.md` - UI/UX design (if needed, Phase 6)
-9. `[doc-index]-specification.md` - Technical specification (Phase 7)
-10. `[doc-index]-task-list.md` - Task tracking (Phase 7)
-11. `[doc-index]-implementation-plan.md` - Implementation plan (Phase 7)
-12. `[doc-index]-implementation-summary.md` - Implementation notes (Phase 11)
-
----
-
-## Success Criteria
-
-A workflow is successful when:
-
-1. **All phases completed** in order
-2. **Quality gates passed** at each checkpoint
-3. **Documentation updated** throughout
-4. **Code reviewed and approved**
-5. **Changes committed and pushed**
-6. **Working directory clean**
-7. **All acceptance criteria met**
-
----
-
-*This workflow is designed to be adaptable to any project type while maintaining rigorous quality standards and comprehensive documentation.*
