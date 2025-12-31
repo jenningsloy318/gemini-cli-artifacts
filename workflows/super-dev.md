@@ -135,7 +135,7 @@ All specification documents MUST be updated as work progresses:
 **Agent**: `super-dev:research-agent`
 **Activities**: 
 - Get current timestamp, filter by recency, flag deprecated info.
-- **MANDATORY**: Provide 3 options and comparison to user for select.
+- **MANDATORY**: Provide 3-5 options with detailed comparisons and let the user pick the best fit.
 **Output**: `[doc-index]-research-report.md`
 
 ### Phase 4: Debug Analysis (For Bugs)
@@ -150,12 +150,12 @@ All specification documents MUST be updated as work progresses:
 
 ### Phase 5.3: Architecture Design (Optional/Complex)
 **Agent**: `super-dev:architecture-agent`
-**Activities**: **MANDATORY**: Provide 3 options and comparison to user for select.
+**Activities**: **MANDATORY**: Provide 3-5 options with detailed comparisons and let the user pick the best fit.
 **Output**: `[doc-index]-architecture.md` and ADRs.
 
 ### Phase 5.5: UI/UX Design (Optional/UI)
 **Agent**: `super-dev:ui-ux-designer`
-**Activities**: **MANDATORY**: Provide 3 options and comparison to user for select.
+**Activities**: **MANDATORY**: Provide 3-5 options with detailed comparisons and let the user pick the best fit.
 **Output**: `[doc-index]-design-spec.md`
 
 ### Phase 6: Specification Writing
