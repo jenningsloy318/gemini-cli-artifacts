@@ -1,92 +1,63 @@
-## Figma MCP Integration Rules
-These rules define how to translate Figma inputs into code for this project and must be followed for every Figma-driven change.
+# Super Dev Gemini Extension
 
-### Required flow (do not skip)
-1. Run get_design_context first to fetch the structured representation for the exact node(s).
-2. If the response is too large or truncated, run get_metadata to get the high‑level node map and then re‑fetch only the required node(s) with get_design_context.
-3. Run get_screenshot for a visual reference of the node variant being implemented.
-4. Only after you have both get_design_context and get_screenshot, download any assets needed and start implementation.
-5. Translate the output  into this project's conventions, styles and framework.  Reuse the project's color tokens, components, and typography wherever possible.
-6. Validate against Figma for 1:1 look and behavior before marking complete.
+A comprehensive coordinator-driven development workflow extension for Gemini CLI with parallel agent execution for implementing features, fixing bugs, and refactoring code.
 
-### Implementation rules
-- Treat the Figma MCP output  as a representation of design and behavior, not as final code style.
-- Replace Tailwind utility classes with the project's preferred utilities/design‑system tokens when applicable.
-- Reuse existing components (e.g., buttons, inputs, typography, icon wrappers) instead of duplicating functionality.
-- Use the project's color system, typography scale, and spacing tokens consistently.
-- Respect existing routing, state management, and data‑fetch patterns already adopted in the repo.
-- Strive for 1:1 visual parity with the Figma design. When conflicts arise, prefer design‑system tokens and adjust spacing or sizes minimally to match visuals.
-- Validate the final UI against the Figma screenshot for both look and behavior.
+**v2.2.0 — Enhanced with 2026 AI Development Best Practices**
 
-## Time MCP rules (MUST follow)
+## Overview
 
-- in every prompt, add the current date and time as an extra info for context
+This extension provides a systematic development workflow orchestrated by a **Coordinator Agent** that:
+- Assigns tasks to specialized sub-agents
+- Enforces quality gates at each phase
+- Manages build queues and parallel execution (dev + qa + docs)
 
-## github rule (MUST follow)
-- whenerver create new project or update / fix the code, don't create github action
-- if there is already some github actions, don't add to git cache, don't commit, don't push
-- when commit and push, only commit those file you edited, ignore the files which are not created or edit by you at the moment
-- don't use git add -A, just use git add file1 file2( only files edit/created/delete by you in this session)
+## Usage
 
-## Development Philosophy Integration (MUST follow)
+Invoke the `super-dev` skill to start the orchestrated workflow:
+"I'm using the super-dev skill to systematically implement this task: [task description]"
 
-### Core Principles
+## Sub-Agents
 
-- **First Principles Thinking**: Break down complex problems into their fundamental truths and reason up from there. When solving bugs or implementing complex features:
-  - Question assumptions and conventions
-  - Identify the fundamental problem, not just symptoms
-  - Build solutions from ground truth rather than analogy
-  - Ask "why" repeatedly to reach root causes
-  - Challenge foundational assumptions: Is the solution over-abstracted? Can it be decomposed into smaller parts?
+The extension includes several specialized sub-agents:
+- `coordinator`: Central orchestrator for all workflow phases.
+- `dev-executor`: Implements code changes.
+- `qa-agent`: Plans and runs tests.
+- `docs-executor`: Updates documentation.
+- `architecture-agent`: Designs system architecture.
+- `ui-ux-designer`: Creates UI/UX specifications.
+- `spec-writer`: Writes technical specifications.
+- `research-agent`: Conducts multi-source research.
+- `code-reviewer`: Performs specification-aware reviews.
+- `adversarial-reviewer`: Challenges implementations from critical lenses.
+- `bdd-scenario-writer`: Generates BDD scenarios.
+- `investigator`: Root-cause analysis for mid-execution unknowns.
 
-- **Incremental development**: Make small, atomic commits; each commit must compile/build successfully and pass all tests.
-- **Learn from existing code**: Research and plan before beginning implementation.
-- **Pragmatic, not dogmatic**: Adapt to project realities.
-- **Explicit intent over clever code**: Choose simple, clear solutions.
-- Avoid over-engineering; keep code simple, readable, and practical.
-- Manage cyclomatic complexity; maximize code reuse.
-- Emphasize modular design; use design patterns where appropriate.
-- Minimize changes; avoid modifying unrelated module code.
-- Occam's Razor (do not add code unless necessary)
-- **No backward compatibility** - Break old formats freely
+## Available Skills
 
-### New Requirements Process (MUST follow)
-1. **Do not rush into coding during initial communication**: When the user proposes a new requirement, first conduct a solution discussion.
-2. **Use ASCII diagrams**: When necessary, create comparative ASCII diagrams for multiple solution options to enable the user to select the optimal approach.
+- `super-dev`: Main entry point for the development workflow.
+- `dev-rules`: Core coding standards and git practices.
+- `tdd-workflow`: Test-driven development methodology.
+- `security-review`: Security checklists and patterns.
+- `adversarial-review`: Multi-lens critical challenge.
+- `verify`: Interactive feature verification.
+- `careful`: Safety guardrails for destructive commands.
+- `freeze`: Directory restriction for debugging.
 
-### Implementation Process (MUST follow)
-1. Understand existing patterns: study three analogous features/components in the codebase.
-2. Identify common patterns: determine project conventions and recurring patterns.
-3. Adhere to existing standards: use the same libraries/tools and follow the established testing patterns.
-4. Implement in phases: decompose complex work into 3–5 stages.
-5. No reinventing the wheel: extensively reuse open-source components, and use AI to write the "glue code" that binds them together.
-6. Modularity: develop like assembling building blocks—define interfaces first, implement afterward.
-8. for api implementation, always use version api endpoints like `/api/v1/xxx`
-9. In Next.js, do not use deprecated or global middleware for request proxying. Prefer implementing a proxy via Route Handlers (e.g., /app/api/proxy/route.ts) or a dedicated proxy.ts/js helper, and use next.config.js rewrites/redirects when appropriate.
-10. If the project includes both frontend and backend, split them into two directories (e.g., /frontend and /backend) and maintain separate build/test pipelines for each.
-### Quality Standards (MUST follow)
-- Each commit must compile successfully
-- Pass all existing tests
-- Include tests for new functionality
-- Adhere to project formatting and linting checks
+## Workflow Phases
 
-### refactor Process
+1.  **Requirements Clarification** (`requirements-clarifier`)
+2.  **BDD Scenario Writing** (`bdd-scenario-writer`)
+3.  **Research** (`research-agent`)
+4.  **Debug Analysis** (if bug) (`debug-analyzer`)
+5.  **Code Assessment** (`code-assessor`)
+6.  **Architecture & UI/UX Design** (`architecture-agent`, `ui-ux-designer`)
+7.  **Specification Writing** (`spec-writer`)
+8.  **Execution & QA** (`dev-executor`, `qa-agent`)
+9.  **Code & Adversarial Review** (`code-reviewer`, `adversarial-reviewer`)
+10. **Documentation Update** (`docs-executor`)
+11. **Handoff Writing** (`handoff-writer`)
+12. **Commit & Merge** (Coordinator)
 
-1. First analyze the project according to Clean Code principles.
-2. Prepare an incremental refactoring checklist and prioritize items from highest to lowest.
-3. Execute items one by one; after completing each item, update the to‑do status.
-4. Obtain my approval for each step before proceeding to the next.
+## Configuration
 
-### Decision Framework Priority
-1. **Testability** - Is it easy to test?
-2. **Readability** - Will it still be understandable in six months?
-3. **Consistency** - Does it conform to project patterns?
-4. **Simplicity** - Is it the simplest viable solution?
-5. **Reversibility** - What is the difficulty of making subsequent changes?
-
-### Error Handling & When Stuck
-- Stop after a maximum of three attempts.
-- Record the failure cause and the specific error message(s).
-- Investigate 2–3 alternative implementation approaches.
-- **Apply First Principles Thinking**: See Core Principles above - question foundational assumptions, break down into smaller parts, and rebuild from fundamental truths.
-
+The extension auto-detects project settings on first run and stores them in `${GEMINI_EXTENSION_DATA}/config.json`.

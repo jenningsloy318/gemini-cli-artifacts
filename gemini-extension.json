@@ -1,129 +1,46 @@
 {
-  "name": "gemini-cli-artifacts",
-  "version": "1.0.0",
-  "description": "A comprehensive Gemini CLI extension for development workflow automation including architecture design, code assessment, review, implementation, and documentation",
-  "author": "jenningsloy318",
-  "license": "MIT",
-  "keywords": ["gemini-cli", "extension", "code-review", "architecture", "development", "ai", "automation"],
-  "capabilities": {
-    "code_review": true,
-    "architecture_design": true,
-    "code_assessment": true,
-    "debug_analysis": true,
-    "documentation": true,
-    "research": true,
-    "ui_ux_design": true,
-    "implementation": true
-  },
-  "commands": [
+  "name": "super-dev",
+  "version": "2.2.0",
+  "description": "Coordinator-driven development workflow with parallel agent execution for implementing features, fixing bugs, and refactoring code",
+  "author": "Jennings Liu <jenningsloy318@gmail.com>",
+  "homepage": "https://github.com/jenningsloy318/super-skill-claude-artifacts",
+  "repository": "https://github.com/jenningsloy318/super-skill-claude-artifacts",
+  "contextFileName": "GEMINI.md",
+  "keywords": [
+    "development",
+    "workflow",
+    "debugging",
+    "implementation",
+    "refactoring",
+    "specification",
+    "coordinator",
+    "parallel"
+  ],
+  "settings": [
     {
-      "name": "architecture:design",
-      "aliases": ["arch:design", "architecture"],
-      "file": "commands/architecture-design.toml",
-      "category": "architecture",
-      "description": "Design comprehensive architecture with ADRs",
-      "icon": "🏗️"
+      "name": "Exa API Key",
+      "envVar": "EXA_API_KEY",
+      "description": "API key for Exa search (used by research-agent)",
+      "sensitive": true
     },
     {
-      "name": "code:assess",
-      "aliases": ["assess", "code-assessment"],
-      "file": "commands/code-assessment.toml",
-      "category": "analysis",
-      "description": "Assess codebase architecture and patterns",
-      "icon": "🔍"
+      "name": "OpenAI API Key",
+      "envVar": "OPENAI_API_KEY",
+      "description": "API key for OpenAI (used for embeddings)",
+      "sensitive": true
     },
     {
-      "name": "code-review",
-      "aliases": ["review", "code:review"],
-      "file": "commands/code-review.toml",
-      "category": "quality",
-      "description": "Review code changes with deep analysis",
-      "icon": "✅"
-    },
-    {
-      "name": "debug:analyze",
-      "aliases": ["debug", "debug-analysis"],
-      "file": "commands/debug-analysis.toml",
-      "category": "debugging",
-      "description": "Perform root cause analysis",
-      "icon": "🐛"
-    },
-    {
-      "name": "docs:update",
-      "aliases": ["docs", "documentation"],
-      "file": "commands/documentation.toml",
-      "category": "documentation",
-      "description": "Update documentation after implementation",
-      "icon": "📚"
-    },
-    {
-      "name": "implement",
-      "aliases": ["impl", "dev"],
-      "file": "commands/implement.toml",
-      "category": "development",
-      "description": "Execute parallel development and QA",
-      "icon": "💻"
-    },
-    {
-      "name": "research",
-      "aliases": ["study", "investigate"],
-      "file": "commands/research.toml",
-      "category": "research",
-      "description": "Research best practices and patterns",
-      "icon": "📖"
-    },
-    {
-      "name": "ui-ux:design",
-      "aliases": ["ui", "ux", "design"],
-      "file": "commands/ui-ux-design.toml",
-      "category": "design",
-      "description": "Create UI/UX design specifications",
-      "icon": "🎨"
+      "name": "GitHub Token",
+      "envVar": "GITHUB_TOKEN",
+      "description": "GitHub personal access token for repo searches",
+      "sensitive": true
     }
   ],
-  "categories": {
-    "architecture": {
-      "name": "Architecture & Design",
-      "icon": "🏗️",
-      "description": "Commands for system architecture and UI design"
-    },
-    "analysis": {
-      "name": "Code Analysis",
-      "icon": "🔍",
-      "description": "Commands for analyzing and understanding code"
-    },
-    "quality": {
-      "name": "Quality Assurance",
-      "icon": "✅",
-      "description": "Commands for code review and quality checks"
-    },
-    "debugging": {
-      "name": "Debugging",
-      "icon": "🐛",
-      "description": "Commands for debugging and troubleshooting"
-    },
-    "documentation": {
-      "name": "Documentation",
-      "icon": "📚",
-      "description": "Commands for creating and updating documentation"
-    },
-    "development": {
-      "name": "Development",
-      "icon": "💻",
-      "description": "Commands for implementation and testing"
-    },
-    "research": {
-      "name": "Research",
-      "icon": "📖",
-      "description": "Commands for researching best practices"
-    },
-    "design": {
-      "name": "Design",
-      "icon": "🎨",
-      "description": "Commands for UI/UX design"
-    }
-  },
-  "dependencies": {
-    "gemini-cli": ">=1.0.0"
-  }
+  "excludeTools": [
+    "run_shell_command(\"rm -rf /\")",
+    "run_shell_command(\"rm -rf *\")",
+    "run_shell_command(\"git push --force\")",
+    "run_shell_command(\"git push -f\")",
+    "run_shell_command(\"git reset --hard\")"
+  ]
 }
