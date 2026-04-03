@@ -1,10 +1,10 @@
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Skill|Agent",
-        "command": "echo '{\"tool_name\": \"$TOOL_NAME\", \"tool_input\": $TOOL_INPUT}' | ${CLAUDE_PLUGIN_ROOT}/scripts/usage-tracker.sh 2>/dev/null || true"
-      }
-    ]
+[
+  {
+    "event": "BeforeTool",
+    "matcher": ".*",
+    "hooks": {
+      "type": "command",
+      "command": "${extensionPath}/scripts/usage-tracker.sh"
+    }
   }
-}
+]
