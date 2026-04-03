@@ -15,7 +15,7 @@ compatibility: Requires Gemini CLI with experimental subagents enabled (experime
 metadata:
   author: Jennings Liu
   version: "2.8.0"
-  repository: https://github.com/jenningsloy318/super-skill-gemini-artifacts
+  repository: https://github.com/jenningsloy318/super-skill-claude-artifacts
   keywords:
     - development
     - workflow
@@ -24,11 +24,11 @@ metadata:
     - parallel-execution
 ---
 
-# Super Dev Workflow - Gemini Subagents Edition
+# Super Dev Workflow
 
 A team-based development system where the Coordinator acts as Team Lead, orchestrating specialized subagents who work in their own independent context loops, returning structured results to the main session.
 
-**Announce at start:** YOU MUST say "I'm using the super-dev skill with Gemini subagents to systematically implement this task." at the beginning of every run.
+**Announce at start:** YOU MUST say "I'm using the super-dev skill with super-dev subagents to systematically implement this task." at the beginning of every run.
 
 ## Prerequisites
 
@@ -226,7 +226,7 @@ bash ${GEMINI_EXTENSION_ROOT}/scripts/gates/<gate-name>.sh <spec-dir>
 
 **To start:**
 ```
-"I'm using super-dev with Gemini subagents. I will assume the Coordinator role to implement: [task]"
+"I'm using super-dev. I will assume the Coordinator role to implement: [task]"
 ```
 
 ## Team Lead Responsibilities (Delegate Mode)
