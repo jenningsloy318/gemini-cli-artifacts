@@ -15,7 +15,7 @@ compatibility: Requires Gemini CLI with experimental subagents enabled (experime
 metadata:
   author: Jennings Liu
   version: "2.8.0"
-  repository: https://github.com/jenningsloy318/super-skill-claude-artifacts
+  repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
     - workflow
