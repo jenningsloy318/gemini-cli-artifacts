@@ -21,6 +21,7 @@ Invoke the `super-dev` skill to start the orchestrated workflow:
 The extension includes several specialized sub-agents:
 - `coordinator`: Central orchestrator for all workflow phases.
 - `dev-executor`: Implements code changes.
+- `backend-developer`: Expert backend developer for Node.js/Python.
 - `qa-agent`: Plans and runs tests.
 - `docs-executor`: Updates documentation.
 - `architecture-agent`: Designs system architecture.
