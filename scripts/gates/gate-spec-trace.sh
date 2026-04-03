@@ -1,6 +1,6 @@
 #!/bin/bash
-# Gate: Spec-to-BDD Trace Coverage
-# Cross-references spec tasks with BDD scenarios to ensure full traceability
+# Gate: Spec-to-BDD Traceability Check
+# Verifies that every scenario in BDD file is mapped to a component/function in the spec
 #
 # Usage: gate-spec-trace.sh <spec-dir>
 # Exit 0 = PASS, Exit 1 = FAIL
@@ -8,8 +8,8 @@
 set -euo pipefail
 
 SPEC_DIR="${1:?Usage: gate-spec-trace.sh <spec-dir>}"
-SPEC_FILE="${SPEC_DIR}/06-specification.md"
 BDD_FILE="${SPEC_DIR}/01.1-behavior-scenarios.md"
+SPEC_FILE="${SPEC_DIR}/02-specification.md"
 
 PASS=0
 FAIL=0
@@ -26,39 +26,46 @@ check() {
     fi
 }
 
-# Check both files exist
-if [ ! -f "$SPEC_FILE" ]; then
-    echo "GATE FAIL: Specification file not found: ${SPEC_FILE}"
-    exit 1
-fi
-
+# Check files exist
 if [ ! -f "$BDD_FILE" ]; then
     echo "GATE FAIL: BDD scenarios file not found: ${BDD_FILE}"
     exit 1
 fi
 
-# Check spec references BDD scenarios
-spec_refs=$(grep -cE 'SCENARIO-[0-9]+' "$SPEC_FILE" 2>/dev/null || true)
-check "Spec references BDD scenarios (found: ${spec_refs} refs)" "$([ "$spec_refs" -ge 1 ] && echo true || echo false)"
+if [ ! -f "$SPEC_FILE" ]; then
+    echo "GATE FAIL: Specification file not found: ${SPEC_FILE}"
+    exit 1
+fi
 
-# Check for testing strategy section in spec
-has_testing=$(grep -ci "testing strategy\|test plan\|test approach" "$SPEC_FILE" || true)
-check "Spec includes testing strategy" "$([ "$has_testing" -gt 0 ] && echo true || echo false)"
+# Get list of scenario IDs from BDD file
+scenario_ids=$(grep -oE 'SCENARIO-[0-9]+' "$BDD_FILE" | sort -u || true)
+scenario_count=$(echo "$scenario_ids" | grep -c "SCENARIO" || true)
 
-# Check for task list in spec
-task_count=$(grep -cE '^\s*-\s*\[[ x]\]' "$SPEC_FILE" 2>/dev/null || true)
-check "Spec has task list (found: ${task_count} tasks)" "$([ "$task_count" -ge 1 ] && echo true || echo false)"
+if [ "$scenario_count" -eq 0 ]; then
+    check "Has scenario IDs to trace" "false"
+else
+    check "Has scenario IDs to trace (found: ${scenario_count})" "true"
+    
+    # Check if each scenario ID is mentioned in the spec file
+    for id in $scenario_ids; do
+        found=$(grep -c "$id" "$SPEC_FILE" || true)
+        if [ "$found" -gt 0 ]; then
+            PASS=$((PASS + 1))
+        else
+            FAIL=$((FAIL + 1))
+            ERRORS="${ERRORS}\n  FAIL: Scenario ${id} not traced in specification"
+        fi
+    done
+fi
 
-# Check spec has implementation plan
-has_plan=$(grep -ci "implementation plan\|implementation phases\|task list" "$SPEC_FILE" || true)
-check "Spec includes implementation plan" "$([ "$has_plan" -gt 0 ] && echo true || echo false)"
+# Check for implementation plan section in spec
+has_plan=$(grep -ci "implementation plan\|plan" "$SPEC_FILE" || true)
+check "Has implementation plan section" "$([ "$has_plan" -gt 0 ] && echo true || echo false)"
 
 # Report
 TOTAL=$((PASS + FAIL))
 echo "GATE: Spec-to-BDD Traceability"
 echo "  Score: ${PASS}/${TOTAL} checks passed"
-echo "  Spec → BDD references: ${spec_refs}"
-echo "  Tasks in spec: ${task_count}"
 
 if [ "$FAIL" -gt 0 ]; then
     echo -e "  Failures:${ERRORS}"

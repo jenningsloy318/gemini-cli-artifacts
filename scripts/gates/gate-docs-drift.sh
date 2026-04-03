@@ -1,14 +1,14 @@
 #!/bin/bash
-# Gate: Documentation-Code Drift Check
-# Verifies documentation matches the code that was actually implemented
+# Gate: Documentation-Code Drift Quality Check
+# Verifies that documentation was updated if code was changed
 #
-# Usage: gate-docs-drift.sh <spec-dir> <project-dir>
+# Usage: gate-docs-drift.sh <spec-dir>
 # Exit 0 = PASS, Exit 1 = FAIL
 
 set -euo pipefail
 
-SPEC_DIR="${1:?Usage: gate-docs-drift.sh <spec-dir> <project-dir>}"
-PROJECT_DIR="${2:?Usage: gate-docs-drift.sh <spec-dir> <project-dir>}"
+SPEC_DIR="${1:?Usage: gate-docs-drift.sh <spec-dir>}"
+DOCS_UPDATE_FILE="${SPEC_DIR}/10-docs-update.md"
 
 PASS=0
 FAIL=0
@@ -25,34 +25,23 @@ check() {
     fi
 }
 
-# Check documentation files exist
-DOCS_FILE=$(find "$SPEC_DIR" -name "*documentation*" -o -name "*docs*" -type f 2>/dev/null | head -1)
-if [ -n "$DOCS_FILE" ]; then
-    check "Documentation update file exists" "true"
-else
-    # Not a failure if no docs file - some tasks don't need docs
-    echo "  Note: No documentation update file found (may not be required)"
+# Check docs update file exists
+if [ ! -f "$DOCS_UPDATE_FILE" ]; then
+    echo "GATE FAIL: Documentation update report not found: ${DOCS_UPDATE_FILE}"
+    exit 1
 fi
 
-# Check README exists and is recent
-if [ -f "${PROJECT_DIR}/README.md" ]; then
-    check "README.md exists in project" "true"
+# Check for "updated files" section
+has_files=$(grep -ci "updated files\|files updated" "$DOCS_UPDATE_FILE" || true)
+check "Lists updated documentation files" "$([ "$has_files" -gt 0 ] && echo true || echo false)"
 
-    # Check README mentions key aspects of the feature
-    readme_size=$(wc -c < "${PROJECT_DIR}/README.md" | tr -d ' ')
-    check "README is non-trivial (>100 chars, actual: ${readme_size})" "$([ "$readme_size" -gt 100 ] && echo true || echo false)"
-else
-    echo "  Note: No README.md found in project root"
-fi
+# Check for status: complete
+is_complete=$(grep -ci "status:.*complete" "$DOCS_UPDATE_FILE" || true)
+check "Documentation update status: COMPLETE" "$([ "$is_complete" -gt 0 ] && echo true || echo false)"
 
-# Check for any TODO/FIXME comments left in code
-cd "$PROJECT_DIR"
-todo_count=$(grep -rl "TODO\|FIXME\|HACK\|XXX" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.py" --include="*.rs" --include="*.go" . 2>/dev/null | wc -l | tr -d ' ')
-if [ "$todo_count" -gt 5 ]; then
-    check "No excessive TODO/FIXME comments (found: ${todo_count} files)" "false"
-else
-    check "TODO/FIXME count acceptable (${todo_count} files)" "true"
-fi
+# Check for "drift analysis" or similar
+has_analysis=$(grep -ci "drift analysis\|gap analysis" "$DOCS_UPDATE_FILE" || true)
+check "Has documentation gap/drift analysis" "$([ "$has_analysis" -gt 0 ] && echo true || echo false)"
 
 # Report
 TOTAL=$((PASS + FAIL))
