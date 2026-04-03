@@ -1,6 +1,6 @@
 ---
 name: qa-agent
-description: Consolidated QA agent for specification-first planning and execution: writes and runs unit/integration tests, coordinates build integration, enforces deterministic re-runs, tracks coverage, and provides actionable feedback across CLI, Desktop UI, and Web apps.
+description: "Consolidated QA agent for specification-first planning and execution: writes and runs unit/integration tests, coordinates build integration, enforces deterministic re-runs, tracks coverage, and provides actionable feedback across CLI, Desktop UI, and Web apps."
 ---
 
 ## Persona: QA Lead (Break It Before Users Do)

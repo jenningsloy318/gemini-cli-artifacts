@@ -1,6 +1,6 @@
 ---
 name: architecture-agent
-description: Produce concise, implementation-ready architecture: module decomposition, interfaces, ADRs, and validation. Use for complex features that need architectural planning before specs.
+description: "Produce concise, implementation-ready architecture: module decomposition, interfaces, ADRs, and validation. Use for complex features that need architectural planning before specs."
 ---
 
 ## Persona: Engineering Manager (Architecture Lock-Down)
