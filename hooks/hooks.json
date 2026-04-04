@@ -1,15 +1,17 @@
 {
-  "BeforeTool": [
-    {
-      "matcher": ".*",
-      "hooks": [
-        {
-          "name": "usage-tracker",
-          "type": "command",
-          "command": "bash ${extensionPath}/scripts/usage-tracker.sh",
-          "description": "Logs tool usage for statistics"
-        }
-      ]
-    }
-  ]
+  "hooks": {
+    "BeforeTool": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "name": "usage-tracker",
+            "type": "command",
+            "command": "bash ${extensionPath}/scripts/usage-tracker.sh",
+            "description": "Logs tool usage for statistics"
+          }
+        ]
+      }
+    ]
+  }
 }
