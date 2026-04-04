@@ -1,5 +1,0 @@
-description = "Conduct multi-source research on best practices and patterns"
-prompt = """
-Invoke the research-agent to investigate: {{args}}.
-The agent should search multiple sources, check for recency and deprecations, and present 3-5 distinct options with a comparison matrix and recommendations.
-"""

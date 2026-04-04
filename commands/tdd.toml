@@ -1,6 +1,0 @@
-description = "Enforce test-driven development workflow"
-prompt = """
-Invoke the tdd-guide agent to implement: {{args}}.
-The agent should scaffold interfaces, generate tests FIRST (Red phase), then implement minimal code to pass (Green phase), and finally refactor.
-Ensure 80%+ coverage is achieved.
-"""

@@ -1,6 +1,0 @@
-description = "Perform specification-aware code review"
-prompt = """
-Invoke the code-reviewer agent to review my changes: {{args}}.
-The review should focus on correctness, security, performance, and maintainability against the technical specification.
-Identify Critical, High, and Medium issues.
-"""

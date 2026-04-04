@@ -1,6 +1,0 @@
-description = "Create a comprehensive implementation plan before writing code"
-prompt = """
-Invoke the planner agent to analyze my request: {{args}}.
-The agent should restate requirements, identify risks, and create a step-by-step implementation plan.
-Wait for my confirmation before proceeding with any code modifications.
-"""
