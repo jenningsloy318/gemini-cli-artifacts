@@ -16,26 +16,7 @@
     "coordinator",
     "parallel"
   ],
-  "settings": [
-    {
-      "name": "Exa API Key",
-      "envVar": "EXA_API_KEY",
-      "description": "API key for Exa search (used by research-agent)",
-      "sensitive": true
-    },
-    {
-      "name": "OpenAI API Key",
-      "envVar": "OPENAI_API_KEY",
-      "description": "API key for OpenAI (used for embeddings)",
-      "sensitive": true
-    },
-    {
-      "name": "GitHub Token",
-      "envVar": "GITHUB_TOKEN",
-      "description": "GitHub personal access token for repo searches",
-      "sensitive": true
-    }
-  ],
+  "settings": [],
   "excludeTools": [
     "run_shell_command(\"rm -rf /\")",
     "run_shell_command(\"rm -rf *\")",
