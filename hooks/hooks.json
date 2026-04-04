@@ -1,15 +1,14 @@
-{
-  "hooks": {
-    "BeforeTool": [
+[
+  {
+    "event": "BeforeTool",
+    "matcher": ".*",
+    "hooks": [
       {
-        "matcher": ".*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "${extensionPath}/scripts/usage-tracker.sh"
-          }
-        ]
+        "name": "usage-tracker",
+        "type": "command",
+        "command": "${extensionPath}/scripts/usage-tracker.sh",
+        "description": "Logs tool usage for statistics"
       }
     ]
   }
-}
+]
