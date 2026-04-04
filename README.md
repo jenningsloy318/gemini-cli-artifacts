@@ -26,23 +26,26 @@ Install the extension via the Gemini CLI:
 gemini extension install https://github.com/jenningsloy318/gemini-cli-artifacts
 ```
 
-### 3. Configuration
-Run the following command to set up your project preferences:
+### 3. Initial Setup
+The extension will automatically detect your project's tech stack on first use. You can also manually configure it using:
 ```bash
 gemini extension config super-dev
 ```
-This will prompt you for:
-- **Exa API Key**: Used by the `research-agent` for web/code search.
-- **OpenAI API Key**: Used for creating vector embeddings of your codebase.
-- **GitHub Token**: Used for repository searches.
-
-The configuration is saved to `${GEMINI_EXTENSION_DATA}/config.json` for future sessions.
+*Note: Redundant API keys (Exa, GitHub, OpenAI) have been removed from the extension configuration as they are now handled directly by their respective MCP tools.*
 
 ## 🛠 Usage
 
 To start a development workflow, simply use keywords like "implement", "build", or "add feature" in your prompt, or explicitly call the skill:
 
 > "I'm using the super-dev skill to build a new dashboard page with a sidebar and charts."
+
+### Slash Commands
+All commands are namespaced under `/super-dev:`. Available commands include:
+- `/super-dev:plan` - Restate requirements and create a technical plan.
+- `/super-dev:tdd` - Implement code using Test-Driven Development.
+- `/super-dev:code-review` - Audit your changes for technical integrity.
+- `/super-dev:research` - Conduct multi-source research on patterns.
+- `/super-dev:execute` - Start the implementation and QA phase.
 
 ### Workflow Phases
 1. **Research & Requirements**: The `requirements-clarifier` and `research-agent` map the task and project context.
@@ -57,10 +60,10 @@ To start a development workflow, simply use keywords like "implement", "build", 
 ## 📂 Project Structure
 - `agents/`: Definitions for specialized subagents.
 - `skills/`: Skill instructions and logic.
-- `scripts/gates/`: Programmatic validation scripts used during transitions.
-- `templates/`: Configuration and specification templates.
+- `scripts/gates/`: Programmatic validation scripts (e.g., `gate-requirements.sh`, `gate-build.sh`).
+- `commands/`: Slash command definitions (MD-based).
 
 ## 🛡 Security & Safety
 - All development work is performed in a **git worktree** (`.worktree/`) to keep your main branch clean until verification is complete.
-- Programmatic gates (`gate-build.sh`, `gate-review.sh`, etc.) enforce quality before any merge happens.
-- Sensitive information like API keys are stored securely in your local environment, never committed.
+- **Quality Gates** are enforced at every transition to catch bugs and regressions early.
+- Sensitive information is managed via local environment variables, never stored in the extension.
