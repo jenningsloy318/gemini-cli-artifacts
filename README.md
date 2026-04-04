@@ -46,6 +46,7 @@ All commands are namespaced under `/super-dev:`. Available commands include:
 - `/super-dev:code-review` - Audit your changes for technical integrity.
 - `/super-dev:research` - Conduct multi-source research on patterns.
 - `/super-dev:execute` - Start the implementation and QA phase.
+- `/super-dev:go-quality` - Run Go-specific quality checks (linting, tests, race detection).
 
 ### Workflow Phases
 1. **Research & Requirements**: The `requirements-clarifier` and `research-agent` map the task and project context.
