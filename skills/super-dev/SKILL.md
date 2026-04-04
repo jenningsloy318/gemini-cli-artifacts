@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "2.8.0"
+  version: "3.0.0"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -22,6 +22,7 @@ metadata:
     - subagents
     - coordinator
     - parallel-execution
+    - hooks
 ---
 
 # Super Dev Workflow
@@ -29,6 +30,24 @@ metadata:
 A team-based development system where the Coordinator acts as Team Lead, orchestrating specialized subagents who work in their own independent context loops, returning structured results to the main session.
 
 **Announce at start:** YOU MUST say "I'm using the super-dev skill with super-dev subagents to systematically implement this task." at the beginning of every run.
+
+## Hook-Driven Quality Gates (NEW in v3.0.0)
+
+Super-dev now integrates deep hooks to automate quality control and protect your project.
+
+### Automated Protections (BeforeTool)
+- **Dangerous Command Block:** Blocks `rm -rf`, `git reset --hard`, etc., before they execute.
+- **Sensitive File Protection:** Prevents accidental edits to `.env`, `package-lock.json`, and other critical files.
+- **Phase Integrity Check:** Automatically verifies that previous phase artifacts exist before starting a new phase (e.g., checks for requirements before starting BDD).
+- **PR Quality Gate:** Blocks PR creation via GitHub MCP if tests are failing.
+
+### Automated Cleanup (AfterTool)
+- **Auto-Format:** Runs Prettier (or project formatter) automatically after every file edit.
+- **Auto-Lint:** Runs ESLint (or project linter) and reports errors back to the agent immediately.
+- **Command Logging:** Maintains an audit trail of every bash command run in `${GEMINI_EXTENSION_DATA}/command-log.txt`.
+
+### Atomic Task Commits (Stop)
+- **Auto-Commit:** Automatically commits changes after each task completion with a `chore(ai): apply Gemini CLI edit` message.
 
 ## Prerequisites
 

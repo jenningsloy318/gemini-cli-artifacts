@@ -11,6 +11,88 @@
             "description": "Logs tool usage for statistics"
           }
         ]
+      },
+      {
+        "matcher": "run_shell_command",
+        "hooks": [
+          {
+            "name": "block-dangerous",
+            "type": "command",
+            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}block-dangerous.sh",
+            "description": "Block destructive commands before execution"
+          },
+          {
+            "name": "log-commands",
+            "type": "command",
+            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}log-commands.sh",
+            "description": "Log every shell command"
+          }
+        ]
+      },
+      {
+        "matcher": "write_file|replace",
+        "hooks": [
+          {
+            "name": "protect-files",
+            "type": "command",
+            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}protect-files.sh",
+            "description": "Protect sensitive files from edits"
+          }
+        ]
+      },
+      {
+        "matcher": "generalist",
+        "hooks": [
+          {
+            "name": "phase-integrity",
+            "type": "command",
+            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}phase-integrity.sh",
+            "description": "Check previous phase artifacts at start of each phase"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp_github_create_pull_request",
+        "hooks": [
+          {
+            "name": "require-tests-for-pr",
+            "type": "command",
+            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}require-tests-for-pr.sh",
+            "description": "Block PR creation unless all tests pass"
+          }
+        ]
+      }
+    ],
+    "AfterTool": [
+      {
+        "matcher": "write_file|replace",
+        "hooks": [
+          {
+            "name": "auto-format",
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | xargs npx prettier --write 2>/dev/null; exit 0",
+            "description": "Auto-format every file Claude touches"
+          },
+          {
+            "name": "auto-lint",
+            "type": "command",
+            "command": "npx eslint --fix $(jq -r '.tool_input.file_path') 2>&1 | tail -10; exit 0",
+            "description": "Auto-lint and report errors after edit"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "name": "auto-commit",
+            "type": "command",
+            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}auto-commit.sh",
+            "description": "Auto-commit after each completed task"
+          }
+        ]
       }
     ]
   }

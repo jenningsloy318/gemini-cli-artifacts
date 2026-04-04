@@ -1,7 +1,7 @@
 {
   "name": "super-dev",
-  "version": "2.2.0",
-  "description": "Coordinator-driven development workflow with parallel agent execution for implementing features, fixing bugs, and refactoring code",
+  "version": "3.0.0",
+  "description": "Coordinator-driven development workflow with parallel agent execution and hook-driven quality gates",
   "author": "Jennings Liu <jenningsloy318@gmail.com>",
   "homepage": "https://github.com/jenningsloy318/gemini-cli-artifacts",
   "repository": "https://github.com/jenningsloy318/gemini-cli-artifacts",
@@ -14,7 +14,8 @@
     "refactoring",
     "specification",
     "coordinator",
-    "parallel"
+    "parallel",
+    "hooks"
   ],
   "settings": [],
   "excludeTools": [
@@ -23,5 +24,9 @@
     "run_shell_command(\"git push --force\")",
     "run_shell_command(\"git push -f\")",
     "run_shell_command(\"git reset --hard\")"
-  ]
+  ],
+  "hooks": {
+    "enabled": true,
+    "path": "hooks/hooks.json"
+  }
 }
