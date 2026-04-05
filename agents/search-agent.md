@@ -119,43 +119,43 @@ Original: "React state management"
 
 Code:
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_code.sh --query "[query]" --tokens 10000
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_code.sh --query "[query] language:[lang]" --per-page 10
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_resolve.sh --library "[library]"
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_docs.sh --library-id "[id]" --mode code --topic "[topic]"
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_ask.sh --repo "[owner/repo]" --question "[question]"
+${extensionPath}/scripts/exa/exa_code.sh --query "[query]" --tokens 10000
+${extensionPath}/scripts/github/github_search_code.sh --query "[query] language:[lang]" --per-page 10
+${extensionPath}/scripts/context7/context7_resolve.sh --library "[library]"
+${extensionPath}/scripts/context7/context7_docs.sh --library-id "[id]" --mode code --topic "[topic]"
+${extensionPath}/scripts/deepwiki/deepwiki_ask.sh --repo "[owner/repo]" --question "[question]"
 ```
 
 Docs:
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_resolve.sh --library "[library]"
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_docs.sh --library-id "[id]" --mode info
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_structure.sh --repo "[owner/repo]"
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_contents.sh --repo "[owner/repo]"
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[query] site:docs" --type deep --results 10
+${extensionPath}/scripts/context7/context7_resolve.sh --library "[library]"
+${extensionPath}/scripts/context7/context7_docs.sh --library-id "[id]" --mode info
+${extensionPath}/scripts/deepwiki/deepwiki_structure.sh --repo "[owner/repo]"
+${extensionPath}/scripts/deepwiki/deepwiki_contents.sh --repo "[owner/repo]"
+${extensionPath}/scripts/exa/exa_search.sh --query "[query] site:docs" --type deep --results 10
 ```
 
 Academic:
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[query] arxiv OR paper" --type deep --results 10
+${extensionPath}/scripts/exa/exa_search.sh --query "[query] arxiv OR paper" --type deep --results 10
 ```
 
 Web:
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[query]" --type auto --results 10
+${extensionPath}/scripts/exa/exa_search.sh --query "[query]" --type auto --results 10
 ```
 
 Social:
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[query] site:reddit.com" --results 10
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[query] site:x.com OR site:twitter.com" --results 10
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[query] site:youtube.com" --results 10
+${extensionPath}/scripts/exa/exa_search.sh --query "[query] site:reddit.com" --results 10
+${extensionPath}/scripts/exa/exa_search.sh --query "[query] site:x.com OR site:twitter.com" --results 10
+${extensionPath}/scripts/exa/exa_search.sh --query "[query] site:youtube.com" --results 10
 ```
 
 GitHub:
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_repos.sh --query "[query]" --sort stars --per-page 10
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_file_contents.sh --owner "[owner]" --repo "[repo]" --path "[path]"
+${extensionPath}/scripts/github/github_search_repos.sh --query "[query]" --sort stars --per-page 10
+${extensionPath}/scripts/github/github_file_contents.sh --owner "[owner]" --repo "[repo]" --path "[path]"
 ```
 
 All:
@@ -236,7 +236,7 @@ TypeScript shape:
 
 ## Script Reference
 
-Location: `${CLAUDE_PLUGIN_ROOT}/scripts/`
+Location: `${extensionPath}/scripts/`
 
 Available:
 - Exa: `exa_search.sh`, `exa_code.sh`
@@ -258,4 +258,4 @@ Output JSON:
 }
 ```
 
-See `research-agent.md` and `${CLAUDE_PLUGIN_ROOT}/scripts/README.md` for details.
+See `research-agent.md` and `${extensionPath}/scripts/README.md` for details.

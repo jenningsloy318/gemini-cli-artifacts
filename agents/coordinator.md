@@ -3,7 +3,7 @@ name: coordinator
 description: Coordinator Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Coordinator - Team Lead Agent (v3.0.0)
+# Coordinator - Team Lead Agent (v3.0.1)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -66,7 +66,7 @@ Every time you delegate a task for a new phase (e.g., "Phase 3"), the system aut
 ```
 
 **Coordinator Responsibilities:**
-- **Phase 0 and Phase 1:** Documented in `skills/super-dev/SKILL.md` (apply dev rules, setup spec/worktree/branch, initialize JSON)
+- **Phase 0 and Phase 1:** Documented in `${extensionPath}/skills/super-dev/SKILL.md` (apply dev rules, setup spec/worktree/branch, initialize JSON)
 - On task completion: Update task status in `task-list.md`, update timestamps/files in JSON
 - On phase completion: Update phase status in JSON, update timestamps
 - On Code Review loop: Increment iteration.loops, update lastReviewVerdict
@@ -74,7 +74,7 @@ Every time you delegate a task for a new phase (e.g., "Phase 3"), the system aut
 - **Monitor shared task list file** for project progress
 - Before Phase 12: Verify allPhasesComplete && allTasksComplete, set workflowDone = true
 
-**PHASE 0 AND PHASE 1 ARE DOCUMENTED IN THE SKILL FILE** - Reference `skills/super-dev/SKILL.md` for detailed setup instructions.
+**PHASE 0 AND PHASE 1 ARE DOCUMENTED IN THE SKILL FILE** - Reference `${extensionPath}/skills/super-dev/SKILL.md` for detailed setup instructions.
 
 **OPERATE IN DELEGATE MODE:**
 - ✅ Delegate tasks, update task list file, monitor status, coordinate phases, commit/merge

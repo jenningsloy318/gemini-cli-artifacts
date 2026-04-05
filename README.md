@@ -4,14 +4,15 @@ A comprehensive coordinator-driven development workflow for Gemini CLI, using sp
 
 ## 🚀 Getting Started
 
-### 1. Enable Sub-agents (Required)
+### 1. Enable Sub-agents (Required) and worktree 
 This extension relies on the experimental sub-agent capabilities in Gemini CLI. You must enable this in your global settings.
 
 Edit your `~/.gemini/settings.json`:
 ```json
 {
   "experimental": {
-    "enableAgents": true
+    "enableAgents": true,
+    "worktrees": true
   }
 }
 ```
@@ -59,9 +60,9 @@ All commands are namespaced under `/super-dev:`. Available commands include:
 8. **Merge**: The Coordinator merges the verified worktree back to your main branch.
 
 ## 📂 Project Structure
-- `agents/`: Definitions for specialized subagents.
-- `skills/`: Skill instructions and logic.
-- `scripts/gates/`: Programmatic validation scripts (e.g., `gate-requirements.sh`, `gate-build.sh`).
+- `${extensionPath}/agents/`: Definitions for specialized subagents.
+- `${extensionPath}/skills/`: Skill instructions and logic.
+- `${extensionPath}/scripts/gates/`: Programmatic validation scripts (e.g., `gate-requirements.sh`, `gate-build.sh`).
 - `commands/`: Slash command definitions (MD-based).
 
 ## 🛡 Security & Safety

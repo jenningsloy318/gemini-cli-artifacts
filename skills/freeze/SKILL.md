@@ -58,7 +58,7 @@ When a blocked edit is detected:
 
 - **Config files**: Freeze mode may block edits to config files (package.json, tsconfig.json) that live outside the feature directory. Override when needed.
 - **Test files**: Tests may live in a separate `tests/` directory. Consider freezing at a higher level or overriding for test files.
-- **Build artifacts**: Freeze mode doesn't block build tools from writing outside the directory — it only blocks Claude's direct edits.
+- **Build artifacts**: Freeze mode doesn't block build tools from writing outside the directory — it only blocks Gemini's direct edits.
 
 ## Deactivation
 

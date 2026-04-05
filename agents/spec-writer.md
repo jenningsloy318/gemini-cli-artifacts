@@ -58,7 +58,7 @@ Generate granular tasks for execution.
 # Technical Specification: [Feature/Fix Name]
 
 **Date:** [timestamp]
-**Author:** Claude
+**Author:** Gemini
 **Status:** Draft
 
 ## 1. Overview
@@ -635,7 +635,7 @@ specification/[index]-[feature-name]/
 # Master Specification: [Feature Name]
 
 **Date:** [timestamp]
-**Author:** Claude
+**Author:** Gemini
 **Status:** Draft
 
 ## 1. Feature Overview

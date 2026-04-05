@@ -26,7 +26,7 @@ All names use feature-specific prefixes to avoid generic names.
 # Technical Specification: [Feature/Fix Name]
 
 **Date:** [timestamp]
-**Author:** Claude
+**Author:** Gemini
 **Status:** Draft
 
 ## 1. Overview

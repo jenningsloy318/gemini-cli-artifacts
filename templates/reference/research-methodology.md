@@ -101,43 +101,43 @@ Compile all findings into structured recommendations:
 ### Exa (Web & Code Search)
 ```bash
 # Web search
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[query]" --type auto --results 10
+${extensionPath}/scripts/exa/exa_search.sh --query "[query]" --type auto --results 10
 
 # Code context search
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_code.sh --query "[query]" --tokens 5000
+${extensionPath}/scripts/exa/exa_code.sh --query "[query]" --tokens 5000
 ```
 
 ### DeepWiki (GitHub Repo Documentation)
 ```bash
 # Get repo docs structure
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_structure.sh --repo "[owner/repo]"
+${extensionPath}/scripts/deepwiki/deepwiki_structure.sh --repo "[owner/repo]"
 
 # Get repo docs contents
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_contents.sh --repo "[owner/repo]"
+${extensionPath}/scripts/deepwiki/deepwiki_contents.sh --repo "[owner/repo]"
 
 # Ask questions about a repo
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_ask.sh --repo "[owner/repo]" --question "[question]"
+${extensionPath}/scripts/deepwiki/deepwiki_ask.sh --repo "[owner/repo]" --question "[question]"
 ```
 
 ### Context7 (Library Documentation)
 ```bash
 # Resolve library ID
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_resolve.sh --library "[library-name]"
+${extensionPath}/scripts/context7/context7_resolve.sh --library "[library-name]"
 
 # Get library documentation
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_docs.sh --library-id "[/org/project]" --mode code --topic "[topic]"
+${extensionPath}/scripts/context7/context7_docs.sh --library-id "[/org/project]" --mode code --topic "[topic]"
 ```
 
 ### GitHub (Code & Repo Search)
 ```bash
 # Search code across repos
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_code.sh --query "[query]" --per-page 10
+${extensionPath}/scripts/github/github_search_code.sh --query "[query]" --per-page 10
 
 # Search repositories
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_repos.sh --query "[query]" --sort stars
+${extensionPath}/scripts/github/github_search_repos.sh --query "[query]" --sort stars
 
 # Get file/directory contents
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_file_contents.sh --owner "[owner]" --repo "[repo]" --path "[path]"
+${extensionPath}/scripts/github/github_file_contents.sh --owner "[owner]" --repo "[repo]" --path "[path]"
 ```
 
 ## Time MCP Integration

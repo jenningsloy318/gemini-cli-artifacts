@@ -1,20 +1,20 @@
 ---
 name: super-dev
 description: >
-    Use when implementing features, fixing bugs, refactoring code, optimizing performance,
-    resolving deprecations, or any multi-step development task requiring planning, implementation,
-    testing, and review. Orchestrates specialized subagents through research, architecture,
-    coding, QA, code review, and documentation phases. Triggers on: "implement", "build",
-    "fix bug", "refactor", "add feature", "develop this", "help me build", "add functionality",
-    "optimize performance", "resolve deprecation", "systematic development".
-    Do NOT trigger on: simple questions ("what does this code do?"), file searches
-    ("where is the auth function?"), one-off commands ("run the tests"), code explanations,
-    quick edits, or non-development tasks.
+  Use when implementing features, fixing bugs, refactoring code, optimizing performance,
+  resolving deprecations, or any multi-step development task requiring planning, implementation,
+  testing, and review. Orchestrates specialized subagents through research, architecture,
+  coding, QA, code review, and documentation phases. Triggers on: "implement", "build",
+  "fix bug", "refactor", "add feature", "develop this", "help me build", "add functionality",
+  "optimize performance", "resolve deprecation", "systematic development".
+  Do NOT trigger on: simple questions ("what does this code do?"), file searches
+  ("where is the auth function?"), one-off commands ("run the tests"), code explanations,
+  quick edits, or non-development tasks.
 license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.0.0"
+  version: "3.0.1"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -31,22 +31,25 @@ A team-based development system where the Coordinator acts as Team Lead, orchest
 
 **Announce at start:** YOU MUST say "I'm using the super-dev skill with super-dev subagents to systematically implement this task." at the beginning of every run.
 
-## Hook-Driven Quality Gates (NEW in v3.0.0)
+## Hook-Driven Quality Gates (NEW in v3.0.1)
 
 Super-dev now integrates deep hooks to automate quality control and protect your project.
 
 ### Automated Protections (BeforeTool)
+
 - **Dangerous Command Block:** Blocks `rm -rf`, `git reset --hard`, etc., before they execute.
 - **Sensitive File Protection:** Prevents accidental edits to `.env`, `package-lock.json`, and other critical files.
 - **Phase Integrity Check:** Automatically verifies that previous phase artifacts exist before starting a new phase (e.g., checks for requirements before starting BDD).
 - **PR Quality Gate:** Blocks PR creation via GitHub MCP if tests are failing.
 
 ### Automated Cleanup (AfterTool)
+
 - **Auto-Format:** Runs Prettier (or project formatter) automatically after every file edit.
 - **Auto-Lint:** Runs ESLint (or project linter) and reports errors back to the agent immediately.
-- **Command Logging:** Maintains an audit trail of every bash command run in `${GEMINI_EXTENSION_DATA}/command-log.txt`.
+- **Command Logging:** Maintains an audit trail of every bash command run in `${extensionPath}/data/command-log.txt`.
 
 ### Atomic Task Commits (Stop)
+
 - **Auto-Commit:** Automatically commits changes after each task completion with a `chore(ai): apply Gemini CLI edit` message.
 
 ## Prerequisites
@@ -62,6 +65,7 @@ Super-dev now integrates deep hooks to automate quality control and protect your
 ```
 
 Or enable via environment variable:
+
 ```bash
 export GEMINI_EXPERIMENTAL_ENABLE_AGENTS=true
 ```
@@ -74,7 +78,7 @@ On the first invocation of super-dev, check for a project configuration file:
 
 ```bash
 # Check for existing config
-CONFIG_PATH="${GEMINI_EXTENSION_DATA}/config.json"
+CONFIG_PATH="${extensionPath}/data/config.json"
 if [ ! -f "$CONFIG_PATH" ]; then
   echo "First-run detected - configuration needed"
 fi
@@ -82,7 +86,7 @@ fi
 
 ### Setup Flow
 
-If `${GEMINI_EXTENSION_DATA}/config.json` does not exist:
+If `${extensionPath}/data/config.json` does not exist:
 
 1. **Announce**: "This is the first run of super-dev. Let me set up your project configuration."
 2. **Auto-detect** what you can from the project:
@@ -91,12 +95,12 @@ If `${GEMINI_EXTENSION_DATA}/config.json` does not exist:
    - Package manager: Check for `bun.lockb`, `pnpm-lock.yaml`, `yarn.lock`, `package-lock.json`
    - Test runner: Check for `jest.config.*`, `vitest.config.*`, `playwright.config.*`, `.pytest.ini`
 3. **Ask user to confirm** detected values and fill in missing ones using `ask_user`
-4. **Write config** to `${GEMINI_EXTENSION_DATA}/config.json`
+4. **Write config** to `${extensionPath}/data/config.json`
 5. **Continue** with the normal workflow
 
 ### Subsequent Runs
 
-On subsequent runs, read `${GEMINI_EXTENSION_DATA}/config.json` silently and apply preferences. Do NOT ask again unless the user runs `/super-dev configure`.
+On subsequent runs, read `${extensionPath}/data/config.json` silently and apply preferences. Do NOT ask again unless the user runs `/super-dev configure`.
 
 ## Architecture Overview
 
@@ -124,16 +128,17 @@ On subsequent runs, read `${GEMINI_EXTENSION_DATA}/config.json` silently and app
 
 ## Main Agent vs Subagents
 
-| | Main Agent (Coordinator) | Subagents |
-|---|---|---|
-| **Context** | Full session history | Independent/Fresh context |
-| **Tools** | Full toolset access | Specialized/Restricted toolsets |
-| **Coordination** | Orchestrates phases | Executes atomic tasks |
-| **Best for** | Strategic decision making | Deep technical focus |
+|                  | Main Agent (Coordinator)  | Subagents                       |
+| ---------------- | ------------------------- | ------------------------------- |
+| **Context**      | Full session history      | Independent/Fresh context       |
+| **Tools**        | Full toolset access       | Specialized/Restricted toolsets |
+| **Coordination** | Orchestrates phases       | Executes atomic tasks           |
+| **Best for**     | Strategic decision making | Deep technical focus            |
 
 ## When to Use
 
 **ACTIVATE for** (multi-step development requiring planning + implementation):
+
 - Bug fixes, build warnings/errors
 - New features, improvements
 - Performance optimization
@@ -141,6 +146,7 @@ On subsequent runs, read `${GEMINI_EXTENSION_DATA}/config.json` silently and app
 - Refactoring large codebases
 
 **DO NOT ACTIVATE for** (these are too simple for a full workflow):
+
 - "What does this code do?" → Simple explanation, no dev workflow needed
 - "Where is the auth function?" → File search, use `grep_search`/`glob` directly
 - "Run the tests" → Single command, use `run_shell_command` directly
@@ -152,6 +158,7 @@ On subsequent runs, read `${GEMINI_EXTENSION_DATA}/config.json` silently and app
 Grade each completed workflow run against these three dimensions:
 
 ### Outcome (Baseline — if this fails, nothing else matters)
+
 - Feature/fix implemented correctly and works as intended
 - All existing tests pass; new tests cover new functionality
 - Code review resolves all Critical, High, and Medium issues to zero
@@ -160,12 +167,14 @@ Grade each completed workflow run against these three dimensions:
 - Handoff document generated in spec directory (`11-handoff.md`)
 
 ### Efficiency (Undervalued — two correct runs can differ 3x in cost)
+
 - Phase iteration loops < 3 (Phase 8/9 loop)
 - Subagents used for high-volume or speculative work
 - Team Lead NEVER performs agent work directly (delegation enforcement)
 - No redundant phase execution or unnecessary retries
 
 ### Style & Instructions (Conventions followed)
+
 - Git worktree created with branch name matching worktree name
 - Spec directory structure followed inside worktree
 - Workflow tracking JSON maintained and updated per phase
@@ -203,6 +212,7 @@ Grade each completed workflow run against these three dimensions:
 ```
 
 **Phase 5.3/5.4/5.5 Selection:**
+
 - Architecture ONLY → Phase 5.3 (`architecture-agent`)
 - UI ONLY → Phase 5.5 (`ui-ux-designer`)
 - BOTH → Phase 5.4 (`product-designer`) - coordinates both agents together
@@ -211,6 +221,7 @@ Grade each completed workflow run against these three dimensions:
 
 **MANDATORY Phase 9 → 12 Transition Sequence (NEVER skip or reorder):**
 After Phase 9 passes, you MUST execute these phases in strict order. Do NOT jump to Phase 12.
+
 1. **Run gate-review.sh** → Must PASS (exit 0)
 2. **Phase 10:** Delegate to `docs-executor` → Wait for completion
 3. **Run gate-docs-drift.sh** → Must PASS (exit 0)
@@ -221,7 +232,7 @@ After Phase 9 passes, you MUST execute these phases in strict order. Do NOT jump
 
 ## Verification Gates (MANDATORY)
 
-Gates are **programmatic quality checks** that run between phases to catch problems early. Each gate is a script in `scripts/gates/` that exits 0 (PASS) or 1 (FAIL).
+Gates are **programmatic quality checks** that run between phases to catch problems early. Each gate is a script in `${extensionPath}/scripts/gates/` that exits 0 (PASS) or 1 (FAIL).
 
 **CRITICAL:** Gates are NON-NEGOTIABLE. If a gate fails, the Team Lead MUST NOT proceed to the next phase. Instead, loop back to the failing phase and fix the issue.
 
@@ -229,7 +240,7 @@ Gates are **programmatic quality checks** that run between phases to catch probl
 
 ```bash
 # Run any gate script
-bash ${GEMINI_EXTENSION_ROOT}/scripts/gates/<gate-name>.sh <spec-dir>
+bash ${extensionPath}/scripts/gates/<gate-name>.sh <spec-dir>
 ```
 
 ### Gate Failure Handling
@@ -244,6 +255,7 @@ bash ${GEMINI_EXTENSION_ROOT}/scripts/gates/<gate-name>.sh <spec-dir>
 **ROLE:** Your current session becomes the Team Lead (Coordinator).
 
 **To start:**
+
 ```
 "I'm using super-dev. I will assume the Coordinator role to implement: [task]"
 ```
@@ -259,6 +271,7 @@ You MUST suppress the urge to "just fix it yourself".
 
 **THE "HANDS-OFF" RULE:**
 From **Phase 2 onwards**, you are FORBIDDEN from using these tools for implementation, debugging, or research tasks:
+
 - `replace` - file editing
 - `write_file` - file creation
 - `run_shell_command` - command execution
@@ -267,17 +280,20 @@ From **Phase 2 onwards**, you are FORBIDDEN from using these tools for implement
 - `read_file` - reading files for implementation analysis
 
 You MUST ONLY use these tools for:
+
 1. Phase 0/1 Setup (creating directories, worktrees)
 2. Phase 12 Git Operations (merge, commit)
 3. Project Management (reading status, updating task lists, tool calls)
 
 **HOW TO DELEGATE TO SUBAGENTS:**
 Use the **`generalist` tool** (or specialized subagent tools like `codebase_investigator`) with a clear request:
+
 ```
 generalist(request: "Act as the [Agent Name] subagent. Your instructions are located at [agent-md-path]. Task: [task]")
 ```
 
 **IF YOU CATCH YOURSELF DOING THE WORK:**
+
 - STOP immediately
 - Ask: "Which subagent handles this?"
 - Use the **`generalist` tool** to delegate to that subagent.
@@ -285,10 +301,12 @@ generalist(request: "Act as the [Agent Name] subagent. Your instructions are loc
 **CRITICAL ENFORCEMENT:** Team Lead operates in orchestration-only mode. The ONLY way to do work in Phases 2-11 is via delegation tools.
 
 ✅ **CAN (Phases 0-1 only):**
+
 - Phase 0: Apply dev rules
 - Phase 1: Execute specification setup (worktree, spec dir, workflow JSON)
 
 ✅ **CAN (All phases - orchestration only):**
+
 - Use **`generalist`** or **`codebase_investigator`** to delegate tasks
 - Create/Update shared task list file
 - Synthesize findings from subagent results
@@ -296,6 +314,7 @@ generalist(request: "Act as the [Agent Name] subagent. Your instructions are loc
 - Commit and merge (Phase 12)
 
 ❌ **CANNOT (Phases 2-11) - DELEGATE INSTEAD:**
+
 - **NEVER edit files directly** → Delegate to `dev-executor` or `docs-executor`
 - **NEVER run commands directly** → Delegate to `dev-executor` or `qa-agent`
 - **NEVER perform research directly** → Delegate to `research-agent` or `codebase_investigator`
@@ -309,37 +328,40 @@ generalist(request: "Act as the [Agent Name] subagent. Your instructions are loc
 
 ## Subagent Roles
 
-| Phase | Subagent | Role |
-|-------|----------|------|
-| 2 | requirements-clarifier | **Product Thinker (YC Partner Mode):** Challenge framing, gather requirements |
-| 2.5 | bdd-scenario-writer | Write BDD behavior scenarios from acceptance criteria |
-| 3 | research-agent | **Research Scout:** Multi-source research with freshness scoring |
-| 4 | debug-analyzer | Root cause analysis (bugs only) |
-| 5 | code-assessor | Assess architecture, style, frameworks |
-| 5.3 | architecture-agent | **Eng Manager:** Design architecture with readiness dashboard |
-| 5.4 | product-designer | Coordinate architecture + UI design together |
-| 5.5 | ui-ux-designer | Create UI/UX design (UI only) |
-| 6 | spec-writer | Write spec, plan, task list |
-| 8 | dev-executor | Implement code (concurrent with `qa-agent`) |
-| 8 | qa-agent | **QA Lead:** Plan tests, run tests + browser smoke tests |
-| 9 | code-reviewer | **Staff Engineer:** Spec-aware review focused on production-risk bugs |
-| 9 | adversarial-reviewer | **Red Team:** Multi-lens adversarial challenge with Destructive Action Gate |
-| 10 | docs-executor | Update documentation |
-| 10.5 | handoff-writer | Generate session handoff document |
-| Any | investigator | **Detective:** Bounded 4-phase investigation for mid-execution unknowns |
+| Phase | Subagent               | Role                                                                          |
+| ----- | ---------------------- | ----------------------------------------------------------------------------- |
+| 2     | requirements-clarifier | **Product Thinker (YC Partner Mode):** Challenge framing, gather requirements |
+| 2.5   | bdd-scenario-writer    | Write BDD behavior scenarios from acceptance criteria                         |
+| 3     | research-agent         | **Research Scout:** Multi-source research with freshness scoring              |
+| 4     | debug-analyzer         | Root cause analysis (bugs only)                                               |
+| 5     | code-assessor          | Assess architecture, style, frameworks                                        |
+| 5.3   | architecture-agent     | **Eng Manager:** Design architecture with readiness dashboard                 |
+| 5.4   | product-designer       | Coordinate architecture + UI design together                                  |
+| 5.5   | ui-ux-designer         | Create UI/UX design (UI only)                                                 |
+| 6     | spec-writer            | Write spec, plan, task list                                                   |
+| 8     | dev-executor           | Implement code (concurrent with `qa-agent`)                                   |
+| 8     | qa-agent               | **QA Lead:** Plan tests, run tests + browser smoke tests                      |
+| 9     | code-reviewer          | **Staff Engineer:** Spec-aware review focused on production-risk bugs         |
+| 9     | adversarial-reviewer   | **Red Team:** Multi-lens adversarial challenge with Destructive Action Gate   |
+| 10    | docs-executor          | Update documentation                                                          |
+| 10.5  | handoff-writer         | Generate session handoff document                                             |
+| Any   | investigator           | **Detective:** Bounded 4-phase investigation for mid-execution unknowns       |
 
 ## Key Concepts
 
 ### Shared Task List (File-based)
+
 - Coordinator maintains a `specification/[name]/task-list.md` file.
 - Subagents read this file to understand their current context.
 - Coordinator updates the file after each delegation returns.
 
 ### Option Presentation
+
 YOU MUST present 3-5 options to the user in Phases 3, 5.3, 5.4, 5.5. NEVER skip option presentation.
 In Phase 5.4, ALWAYS present COMBINED architecture+UI options together.
 
 ### BDD Scenario Propagation Rule
+
 `01.1-behavior-scenarios.md` MUST be passed as input to ALL downstream phases after Phase 2.5.
 
 ## Investigation Protocol (Any Phase — On-Demand)
@@ -347,7 +369,9 @@ In Phase 5.4, ALWAYS present COMBINED architecture+UI options together.
 **Subagent:** `investigator` — can be delegated by any phase agent or Coordinator when unknowns arise.
 
 ### Auto-Trigger Conditions
+
 Delegate to `investigator` when:
+
 - **Loop detection**: Same error 2x with different fix attempts.
 - **Doc mismatch**: API/library behaves differently than docs.
 - **Missing dependency**: Required config/package not in assessment.
@@ -369,25 +393,14 @@ Verify Phase 8, 9, 10, 10.5, and 11 are complete before starting Phase 12.
 **CRITICAL — Specification Directory Commit Rule:**
 The `specification/[spec-index]-[spec-name]/` directory MUST always be committed. It contains the evidence of the systematic workflow.
 
-## Session State Management
-
-Super-dev maintains persistent state across sessions using `${GEMINI_EXTENSION_DATA}`.
-
-### Phase 0 — Read History
-Read `${GEMINI_EXTENSION_DATA}/session-history.log` for context on previous tasks and patterns.
-
-### Phase 12 — Write History
-After committing, append a session summary to the history log.
-
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
+| Issue                     | Solution                                                 |
+| ------------------------- | -------------------------------------------------------- |
 | Subagent hits token limit | Use `codebase_investigator` for smaller, scoped searches |
-| Delegation loop | Assume Coordinator role and resolve manually |
-| Gate failure | Loop back to the relevant phase and fix the artifact |
-| Config outdated | Run `/super-dev configure` to re-run setup |
+| Delegation loop           | Assume Coordinator role and resolve manually             |
+| Gate failure              | Loop back to the relevant phase and fix the artifact     |
 
 ---
 
-**For detailed phase-by-phase implementation, see:** `agents/coordinator.md`
+**For detailed phase-by-phase implementation, see:** `${extensionPath}/agents/coordinator.md`

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Usage tracker for super-dev extension
-# Logs skill and agent invocations to ${GEMINI_EXTENSION_DATA}/usage.log
+# Logs skill and agent invocations to ${extensionPath}/data/usage.log
 #
 # Called by BeforeTool hook when subagent tools are invoked.
 # Input: JSON via stdin with tool_name, tool_input fields
@@ -8,8 +8,7 @@
 
 set -euo pipefail
 
-# Use GEMINI_EXTENSION_DATA if set, otherwise fallback to ~/.gemini/data/super-dev
-DATA_DIR="${GEMINI_EXTENSION_DATA:-$HOME/.gemini/data/super-dev}"
+DATA_DIR="${extensionPath}/data"
 mkdir -p "$DATA_DIR"
 
 USAGE_LOG="${DATA_DIR}/usage.log"
@@ -17,12 +16,10 @@ STATS_FILE="${DATA_DIR}/stats.json"
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 # Read tool input from stdin
-# The CLI sends the full hook context here
 INPUT=$(cat)
 
 # Extract tool name and relevant context
 TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // "unknown"' 2>/dev/null || echo "unknown")
-TOOL_INPUT=$(echo "$INPUT" | jq -r '.tool_input // {}' 2>/dev/null || echo "{}")
 
 # Log the invocation
 echo "{\"ts\":\"$TIMESTAMP\",\"tool\":\"$TOOL_NAME\"}" >> "$USAGE_LOG"

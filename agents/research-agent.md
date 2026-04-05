@@ -28,43 +28,43 @@ Use wrapper scripts via Bash instead of direct MCP tool calls.
 ### Exa (Web & Code Search)
 ```bash
 # Web search
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[query]" --type auto --results 10
+${extensionPath}/scripts/exa/exa_search.sh --query "[query]" --type auto --results 10
 
 # Code context search
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_code.sh --query "[query]" --tokens 5000
+${extensionPath}/scripts/exa/exa_code.sh --query "[query]" --tokens 5000
 ```
 
 ### DeepWiki (GitHub Repo Documentation)
 ```bash
 # Get repo docs structure
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_structure.sh --repo "[owner/repo]"
+${extensionPath}/scripts/deepwiki/deepwiki_structure.sh --repo "[owner/repo]"
 
 # Get repo docs contents
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_contents.sh --repo "[owner/repo]"
+${extensionPath}/scripts/deepwiki/deepwiki_contents.sh --repo "[owner/repo]"
 
 # Ask questions about a repo
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_ask.sh --repo "[owner/repo]" --question "[question]"
+${extensionPath}/scripts/deepwiki/deepwiki_ask.sh --repo "[owner/repo]" --question "[question]"
 ```
 
 ### Context7 (Library Documentation)
 ```bash
 # Resolve library ID
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_resolve.sh --library "[library-name]"
+${extensionPath}/scripts/context7/context7_resolve.sh --library "[library-name]"
 
 # Get library documentation
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_docs.sh --library-id "[/org/project]" --mode code --topic "[topic]"
+${extensionPath}/scripts/context7/context7_docs.sh --library-id "[/org/project]" --mode code --topic "[topic]"
 ```
 
 ### GitHub (Code & Repo Search)
 ```bash
 # Search code across repos
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_code.sh --query "[query]" --per-page 10
+${extensionPath}/scripts/github/github_search_code.sh --query "[query]" --per-page 10
 
 # Search repositories
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_repos.sh --query "[query]" --sort stars
+${extensionPath}/scripts/github/github_search_repos.sh --query "[query]" --sort stars
 
 # Get file/directory contents
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_file_contents.sh --owner "[owner]" --repo "[repo]" --path "[path]"
+${extensionPath}/scripts/github/github_file_contents.sh --owner "[owner]" --repo "[repo]" --path "[path]"
 ```
 
 ## Core Capabilities
@@ -446,7 +446,7 @@ Every research report must:
 
 **CRITICAL RULE:** Always use HTTP Connector Scripts (via Bash) for ALL online searches instead of direct MCP tool calls. This ensures token efficiency and consistent output formatting.
 
-**No separate configuration needed** - scripts automatically read MCP config from Claude Code settings.
+**No separate configuration needed** - scripts automatically read MCP config from Gemini CLI settings.
 
 ---
 
@@ -454,7 +454,7 @@ Every research report must:
 
 #### Web Search
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[search query]" --type auto --results 10
+${extensionPath}/scripts/exa/exa_search.sh --query "[search query]" --type auto --results 10
 ```
 
 **Parameters:**
@@ -465,7 +465,7 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[search query]" --type 
 
 #### Code Context
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_code.sh --query "[code query]" --tokens 5000
+${extensionPath}/scripts/exa/exa_code.sh --query "[code query]" --tokens 5000
 ```
 
 **Parameters:**
@@ -478,7 +478,7 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_code.sh --query "[code query]" --tokens 50
 
 #### Get Repo Documentation Structure
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_structure.sh --repo "owner/repo"
+${extensionPath}/scripts/deepwiki/deepwiki_structure.sh --repo "owner/repo"
 ```
 
 **Parameters:**
@@ -486,7 +486,7 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_structure.sh --repo "owner/repo"
 
 #### Get Repo Documentation Contents
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_contents.sh --repo "owner/repo"
+${extensionPath}/scripts/deepwiki/deepwiki_contents.sh --repo "owner/repo"
 ```
 
 **Parameters:**
@@ -494,7 +494,7 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_contents.sh --repo "owner/repo"
 
 #### Ask Questions About a Repo
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_ask.sh --repo "owner/repo" --question "How does X work?"
+${extensionPath}/scripts/deepwiki/deepwiki_ask.sh --repo "owner/repo" --question "How does X work?"
 ```
 
 **Parameters:**
@@ -507,7 +507,7 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_ask.sh --repo "owner/repo" --que
 
 #### Resolve Library ID
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_resolve.sh --library "library-name"
+${extensionPath}/scripts/context7/context7_resolve.sh --library "library-name"
 ```
 
 **Parameters:**
@@ -515,7 +515,7 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_resolve.sh --library "library-na
 
 #### Get Library Documentation
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_docs.sh --library-id "/org/project" --mode code --topic "routing"
+${extensionPath}/scripts/context7/context7_docs.sh --library-id "/org/project" --mode code --topic "routing"
 ```
 
 **Parameters:**
@@ -530,7 +530,7 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_docs.sh --library-id "/org/proje
 
 #### Search Code
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_code.sh --query "HttpConnector language:python" --per-page 10
+${extensionPath}/scripts/github/github_search_code.sh --query "HttpConnector language:python" --per-page 10
 ```
 
 **Parameters:**
@@ -542,7 +542,7 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_code.sh --query "HttpConnecto
 
 #### Search Repositories
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_repos.sh --query "topic:mcp stars:>100" --sort stars
+${extensionPath}/scripts/github/github_search_repos.sh --query "topic:mcp stars:>100" --sort stars
 ```
 
 **Parameters:**
@@ -554,7 +554,7 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_repos.sh --query "topic:mcp s
 
 #### Get File Contents
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_file_contents.sh --owner "owner" --repo "repo" --path "src/"
+${extensionPath}/scripts/github/github_file_contents.sh --owner "owner" --repo "repo" --path "src/"
 ```
 
 **Parameters:**
@@ -567,10 +567,10 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/github/github_file_contents.sh --owner "owner" --r
 
 ### How Scripts Work
 
-1. Scripts read MCP config from Claude Code settings:
-   - `~/.claude.json`
-   - `~/.claude/settings.json`
-   - `.claude/settings.local.json` (project)
+1. Scripts read MCP config from Gemini CLI settings:
+   - `~/.gemini.json`
+   - `~/.gemini/settings.json`
+   - `.gemini/settings.local.json` (project)
 
 2. Connect to HTTP MCP server using `mcp-cli` (auto-detected from config)
 

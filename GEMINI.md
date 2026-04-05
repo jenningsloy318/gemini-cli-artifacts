@@ -7,6 +7,7 @@ A comprehensive coordinator-driven development workflow extension for Gemini CLI
 ## Overview
 
 This extension provides a systematic development workflow orchestrated by a **Coordinator Agent** that:
+
 - Assigns tasks to specialized sub-agents
 - Enforces quality gates at each phase
 - Manages build queues and parallel execution (dev + qa + docs)
@@ -19,6 +20,7 @@ Invoke the `super-dev` skill to start the orchestrated workflow:
 ## Sub-Agents
 
 The extension includes several specialized sub-agents:
+
 - `coordinator`: Central orchestrator for all workflow phases.
 - `dev-executor`: Implements code changes.
 - `backend-developer`: Expert backend developer for Node.js/Python.
@@ -61,4 +63,8 @@ The extension includes several specialized sub-agents:
 
 ## Configuration
 
-The extension auto-detects project settings on first run and stores them in `${GEMINI_EXTENSION_DATA}/config.json`.
+The extension auto-detects project settings on first run and stores them in `${extensionPath}/data/config.json`.
+
+## Maintenance Rules
+
+- **Patch Versioning:** Each time a modification is made to the codebase, the extension's patch version MUST be incremented in `gemini-extension.json`, `agents/coordinator.md`, and `skills/super-dev/SKILL.md` before committing changes.

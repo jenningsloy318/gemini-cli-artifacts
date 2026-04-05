@@ -7,7 +7,7 @@
           {
             "name": "usage-tracker",
             "type": "command",
-            "command": "bash ${extensionPath}${/}scripts${/}usage-tracker.sh",
+            "command": "extensionPath=${extensionPath} bash ${extensionPath}${/}scripts${/}usage-tracker.sh",
             "description": "Logs tool usage for statistics"
           }
         ]
@@ -24,7 +24,7 @@
           {
             "name": "log-commands",
             "type": "command",
-            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}log-commands.sh",
+            "command": "extensionPath=${extensionPath} bash ${extensionPath}${/}scripts${/}hooks${/}log-commands.sh",
             "description": "Log every shell command"
           }
         ]
@@ -70,13 +70,13 @@
           {
             "name": "auto-format",
             "type": "command",
-            "command": "jq -r '.tool_input.file_path' | xargs npx prettier --write 2>/dev/null; exit 0",
-            "description": "Auto-format every file Claude touches"
+            "command": "jq -r ".tool_input.file_path" | xargs npx prettier --write 2>/dev/null; exit 0",
+            "description": "Auto-format every file Gemini touches"
           },
           {
             "name": "auto-lint",
             "type": "command",
-            "command": "npx eslint --fix $(jq -r '.tool_input.file_path') 2>&1 | tail -10; exit 0",
+            "command": "npx eslint --fix $(jq -r ".tool_input.file_path") 2>&1 | tail -10; exit 0",
             "description": "Auto-lint and report errors after edit"
           }
         ]

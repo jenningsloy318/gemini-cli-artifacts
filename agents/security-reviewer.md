@@ -452,7 +452,7 @@ When reviewing PRs, post inline comments:
 
 ---
 
-> Security review performed by Claude Code security-reviewer agent
+> Security review performed by Gemini CLI security-reviewer agent
 > For questions, see docs/SECURITY.md
 ```
 

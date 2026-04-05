@@ -35,25 +35,17 @@ At the start of every super-dev session, check for context from the previous com
 ### Context Application
 
 The handoff context from the previous session informs:
+
 - Phase 2 (Requirements): Awareness of prior decisions and constraints
 - Phase 5 (Code Assessment): Knowledge of recently changed areas and patterns
 - All phases: Avoidance of redundant work, awareness of known risks
-
-### State Files
-
-In addition to handoff documents, check `${CLAUDE_PLUGIN_DATA}` for persistent state:
-
-1. **Session history**: `${CLAUDE_PLUGIN_DATA}/session-history.log` — previous workflow summaries
-2. **Learned patterns**: `${CLAUDE_PLUGIN_DATA}/patterns.json` — conventions discovered across sessions
-3. **Usage stats**: `${CLAUDE_PLUGIN_DATA}/stats.json` — track skill/agent usage
-
-If these files exist, read them silently and apply learned patterns. If missing, skip silently (first run or pre-state sessions).
 
 ## Figma MCP Integration Rules
 
 When implementing designs from Figma:
 
 ### Required Flow (MUST follow)
+
 1. Run `get_design_context` first to fetch the structured representation for the exact node(s)
 2. If response is too large or truncated, run `get_metadata` to get the high-level node map, then re-fetch only required node(s)
 3. Run `get_screenshot` for a visual reference of the node variant being implemented
@@ -62,6 +54,7 @@ When implementing designs from Figma:
 6. Validate against Figma for 1:1 look and behavior before marking complete
 
 ### Implementation Rules
+
 - Treat Figma MCP output as a representation of design and behavior, not as final code style
 - Replace Tailwind utility classes with project's preferred utilities/design-system tokens when applicable
 - Reuse existing components (buttons, inputs, typography, icon wrappers) instead of duplicating
@@ -75,62 +68,68 @@ When implementing designs from Figma:
 Use wrapper scripts via Bash instead of direct MCP tool calls.
 
 **Prerequisites:**
+
 - `mcp-cli` installed: `curl -fsSL https://raw.githubusercontent.com/philschmid/mcp-cli/main/install.sh | bash`
 - `jq` installed: `sudo apt-get install jq` (Ubuntu) or `brew install jq` (macOS)
 
 **Exception:** `mcp__time-mcp__current_time` is allowed (no script available)
 
 ### Exa (Web & Code Search)
+
 ```bash
 # Web search
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[query]" --type auto --results 10
+${extensionPath}/scripts/exa/exa_search.sh --query "[query]" --type auto --results 10
 
 # Code context search
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_code.sh --query "[query]" --tokens 5000
+${extensionPath}/scripts/exa/exa_code.sh --query "[query]" --tokens 5000
 ```
 
 ### DeepWiki (GitHub Repo Documentation)
+
 ```bash
 # Get repo docs structure
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_structure.sh --repo "[owner/repo]"
+${extensionPath}/scripts/deepwiki/deepwiki_structure.sh --repo "[owner/repo]"
 
 # Get repo docs contents
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_contents.sh --repo "[owner/repo]"
+${extensionPath}/scripts/deepwiki/deepwiki_contents.sh --repo "[owner/repo]"
 
 # Ask questions about a repo
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_ask.sh --repo "[owner/repo]" --question "[question]"
+${extensionPath}/scripts/deepwiki/deepwiki_ask.sh --repo "[owner/repo]" --question "[question]"
 ```
 
 ### Context7 (Library Documentation)
+
 ```bash
 # Resolve library ID
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_resolve.sh --library "[library-name]"
+${extensionPath}/scripts/context7/context7_resolve.sh --library "[library-name]"
 
 # Get library documentation
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_docs.sh --library-id "[/org/project]" --mode code --topic "[topic]"
+${extensionPath}/scripts/context7/context7_docs.sh --library-id "[/org/project]" --mode code --topic "[topic]"
 ```
 
 ### GitHub (Code & Repo Search)
+
 ```bash
 # Search code across repos
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_code.sh --query "[query]" --per-page 10
+${extensionPath}/scripts/github/github_search_code.sh --query "[query]" --per-page 10
 
 # Search repositories
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_search_repos.sh --query "[query]" --sort stars
+${extensionPath}/scripts/github/github_search_repos.sh --query "[query]" --sort stars
 
 # Get file/directory contents
-${CLAUDE_PLUGIN_ROOT}/scripts/github/github_file_contents.sh --owner "[owner]" --repo "[repo]" --path "[path]"
+${extensionPath}/scripts/github/github_file_contents.sh --owner "[owner]" --repo "[repo]" --path "[path]"
 ```
 
 ### Why Scripts?
+
 - **Faster execution:** ~100ms startup vs ~1-2s for Python scripts
 - **No Python dependency:** Single binary + jq, no virtual environments
 - **HTTP + stdio support:** Works with both types of MCP servers
 - **Token-efficient output formatting:** Consistent JSON response structure
-- **Automatic MCP config resolution:** Auto-detects ~/.claude.json
+- **Automatic MCP config resolution:** Auto-detects ~/.gemini.json
 - **Better error handling:** Structured errors with actionable messages
 
-**See `${CLAUDE_PLUGIN_ROOT}/scripts/README.md` for full documentation.**
+**See `${extensionPath}/scripts/README.md` for full documentation.**
 
 ## Time MCP Rules (MUST follow)
 
@@ -143,11 +142,11 @@ When searching the local codebase for code patterns, structures, or specific con
 1. **Prefer ast-grep** for structural code search (AST-based pattern matching), using **ast-grep skill** to invoke it
 
 ### When to Use ast-grep
+
 - Finding specific code patterns (e.g., all `useState` hooks, all API calls)
 - Searching for language constructs (classes, functions, imports)
 - Refactoring patterns across multiple files
 - Finding anti-patterns or deprecated API usage
-
 
 ## Git Rules (MUST follow)
 
@@ -179,11 +178,13 @@ test -f .git && echo "In worktree" || test -d .git && echo "In main repo"
 ### Worktree Verification
 
 **You are in a worktree if:**
+
 - `.git` is a **file** (not a directory) containing `gitdir: path/to/main/.git`
 - `git worktree list` shows the current path as a worktree
 - The directory structure follows pattern: `.worktree/[spec-index]-[spec-name]/`
 
 **You are NOT in a worktree if:**
+
 - `.git` is a **directory** (main repository, not isolated)
 - `git worktree list` does NOT show the current path
 - Working directly in the main project repository
@@ -207,6 +208,7 @@ cd .worktree/[spec-index]-[spec-name]
 ## Git Safety & Checkpoint Rules (CRITICAL)
 
 ### Frequent Checkpoints (MANDATORY)
+
 To prevent losing work during context compaction or errors:
 
 1. **Stash Before Major Operations**
@@ -232,7 +234,9 @@ To prevent losing work during context compaction or errors:
      - If not clean, commit with WIP message or stash
 
 ### Checkpoint Triggers
+
 Create a checkpoint (commit or stash) when:
+
 - [ ] Completing a task from the task list
 - [ ] Before starting a new phase
 - [ ] After successful test run
@@ -241,7 +245,9 @@ Create a checkpoint (commit or stash) when:
 - [ ] Before context compaction warning appears
 
 ### Recovery Commands
+
 If files are lost, use:
+
 ```bash
 git stash list                    # List all stashes
 git stash pop                     # Restore most recent stash
@@ -260,6 +266,7 @@ All features, bug fixes, error fixes, improvements, and code refactoring should 
 3. **Incremental Indexing**: When adding new specification directories under `specification/`, increment the index by one each time.
 
 ### Keep Spec Documents Current (MANDATORY)
+
 All specification documents MUST be updated as work progresses:
 
 **IMPORTANT:** Files within each spec directory should start from 01, not use the spec directory index.
@@ -284,13 +291,16 @@ All specification documents MUST be updated as work progresses:
    - Keep spec aligned with actual implementation
 
 ### Documentation Commit Rules
+
 - **Commit docs WITH code**: Never commit code without updating related docs
 - **Atomic doc updates**: Each task completion = task list update
 - **Milestone summaries**: Add summary section at each phase boundary
 - **Spec sync**: If code deviates from spec, update spec in same commit
 
 ### Enforcement Checklist
+
 Before moving to next task/phase:
+
 - [ ] Task list reflects actual completion state
 - [ ] Implementation summary has latest progress
 - [ ] Spec changes are documented with [UPDATED] markers
@@ -305,6 +315,7 @@ Before moving to next task/phase:
 ## Development Philosophy
 
 ### Core Principles
+
 - **First Principles Analysis**: For complex features and bug fixes, break down to fundamental truths and build up from there
 - **Incremental Development**: Small commits, each must compile and pass tests
 - **Learn from Existing Code**: Research and plan before implementing
@@ -317,6 +328,7 @@ Before moving to next task/phase:
 - Versioned API with a clear, predictable hierarchy. Align API routes with the source code/package structure
 
 ### New Requirements Process
+
 1. **Don't rush to code**: When user proposes new requirements, discuss the solution first
 2. **Use ASCII diagrams**: When necessary, draw comparison diagrams for multiple solutions, let user choose
 3. **Confirm before developing**: Only start development after user explicitly confirms the solution
@@ -326,13 +338,16 @@ Before moving to next task/phase:
 When a user reports a bug or error, **ALWAYS** ask for reproduction steps before attempting to fix:
 
 #### Required Information
+
 Ask user to provide:
+
 1. **Steps to Reproduce** - Exact sequence of actions to trigger the bug
 2. **Expected Behavior** - What should happen
 3. **Actual Behavior** - What actually happens (error message, wrong output, etc.)
 4. **Environment** (if relevant) - OS, browser, Node version, etc.
 
 #### Example Questions to Ask
+
 ```
 To help fix this bug, please provide:
 1. What steps trigger this error? (e.g., "Run `npm test`, click button X, enter value Y")
@@ -342,36 +357,43 @@ To help fix this bug, please provide:
 ```
 
 #### Why This Matters
+
 - Cannot reliably fix bugs without understanding how to reproduce them
 - Prevents guessing and multiple failed fix attempts
 - Ensures the fix actually addresses the user's specific issue
 - Enables proper verification that the fix works
 
 #### Exceptions
+
 Only skip reproduction steps if:
+
 - Error is clearly visible in provided stack trace/logs
 - User provides comprehensive context upfront
 - It's a typo or obvious code error the user points to directly
 
 ### Implementation Process
+
 1. **Understand existing patterns**: Study 3 similar features/components in the codebase
 2. **Identify common patterns**: Find project conventions and patterns
 3. **Follow existing standards**: Use same libraries/tools, follow existing test patterns
 4. **Implement in phases**: Break complex work into 3-5 phases
 
 ### Quality Standards
+
 - Every commit must compile successfully
 - Pass all existing tests
 - Include tests for new functionality
 - Follow project formatting/linting rules
 
 ### Refactoring Process
+
 1. First analyze project according to Clean Code principles
 2. Create an incremental refactoring checklist, sorted by priority (high to low)
 3. Execute one by one, update todo status after completing each item
 4. Each step must be confirmed by user before proceeding
 
 ### Decision Framework Priority
+
 1. **Testability** - Is it easy to test?
 2. **Readability** - Will it be understandable in 6 months?
 3. **Consistency** - Does it match project patterns?
@@ -379,30 +401,32 @@ Only skip reproduction steps if:
 5. **Reversibility** - How hard to modify later?
 
 ### Error Handling & When Stuck
+
 - Stop after maximum 3 attempts
 - Record failure reasons and specific error messages
 - Research 2-3 alternative implementation approaches
 - Question basic assumptions: Is it over-abstracted? Can it be decomposed?
 
-## Rules System (from everything-claude-code)
+## Rules System (from everything-gemini-code)
 
 The `rules/` directory contains modular always-follow guidelines:
 
 ### Available Rules
 
-| Rule | Focus | Key Points |
-|------|-------|------------|
-| `security.md` | Security | No hardcoded secrets, input validation, XSS/CSRF protection |
-| `coding-style.md` | Code Quality | Immutability, 200-400 line files, proper error handling |
-| `testing.md` | Testing | TDD, 80% coverage, unit/integration/E2E tests |
-| `patterns.md` | Patterns | Common patterns (API format, custom hooks, repository) |
-| `performance.md` | Performance | Model selection (Haiku/Sonnet/Opus), context management |
-| `git-workflow.md` | Git | Commit format, PR process |
-| `agents.md` | Delegation | When to delegate to subagents |
+| Rule              | Focus        | Key Points                                                  |
+| ----------------- | ------------ | ----------------------------------------------------------- |
+| `security.md`     | Security     | No hardcoded secrets, input validation, XSS/CSRF protection |
+| `coding-style.md` | Code Quality | Immutability, 200-400 line files, proper error handling     |
+| `testing.md`      | Testing      | TDD, 80% coverage, unit/integration/E2E tests               |
+| `patterns.md`     | Patterns     | Common patterns (API format, custom hooks, repository)      |
+| `performance.md`  | Performance  | Model selection (Haiku/Sonnet/Opus), context management     |
+| `git-workflow.md` | Git          | Commit format, PR process                                   |
+| `agents.md`       | Delegation   | When to delegate to subagents                               |
 
 ### Using Rules
 
 Rules are automatically referenced by:
+
 - Phase 8 (Implementation): coding-style, testing, performance, patterns
 - Phase 9 (Code Review): security, coding-style
 - Phase 12 (Commit): git-workflow
@@ -422,6 +446,7 @@ For all Rust projects, ALWAYS use a workspace structure:
 ### Workspace Configuration
 
 **Example workspace `Cargo.toml`:**
+
 ```toml
 [workspace]
 members = [
@@ -432,6 +457,7 @@ members = [
 ```
 
 **Crate-level `Cargo.toml`:**
+
 ```toml
 [package]
 name = "crate-name"
@@ -450,6 +476,7 @@ serde = { version = "1.0", features = ["derive"] }
 ### Build & Test Commands
 
 **Always run from workspace root:**
+
 ```bash
 # Check code (faster than build)
 cargo check
@@ -490,16 +517,16 @@ cargo update
 
 ### Common Crate Patterns
 
-| Use Case | Recommended Crates |
-|----------|-------------------|
-| Async runtime | `tokio` |
-| Error handling | `thiserror`, `anyhow` |
-| Serialization | `serde`, `serde_json` |
-| HTTP client | `reqwest` |
-| HTTP server | `axum` |
-| CLI | `clap` |
-| Logging | `tracing`, `tracing-subscriber` |
-| Configuration | `config`, `serde_yaml` |
+| Use Case       | Recommended Crates              |
+| -------------- | ------------------------------- |
+| Async runtime  | `tokio`                         |
+| Error handling | `thiserror`, `anyhow`           |
+| Serialization  | `serde`, `serde_json`           |
+| HTTP client    | `reqwest`                       |
+| HTTP server    | `axum`                          |
+| CLI            | `clap`                          |
+| Logging        | `tracing`, `tracing-subscriber` |
+| Configuration  | `config`, `serde_yaml`          |
 
 ## Gotchas
 
@@ -517,6 +544,7 @@ Announce at the start of any development task:
 "I'm applying the dev-rules skill to ensure we follow project standards and best practices."
 
 These rules should be referenced throughout the development workflow, especially during:
+
 - Code implementation
 - Code review
 - Commit preparation

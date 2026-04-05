@@ -38,7 +38,7 @@ fix: resolve null pointer in login handler
 ### Types
 feat, fix, refactor, docs, test, chore, perf, ci
 
-Note: Attribution disabled globally via ~/.claude/settings.json.
+Note: Attribution disabled globally via ~/.gemini/settings.json.
 
 ## Pull Request Workflow
 

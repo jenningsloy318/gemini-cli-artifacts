@@ -31,10 +31,10 @@ TYPE="${TYPE:-auto}"
 NUM_RESULTS="${NUM_RESULTS:-8}"
 CONTEXT_CHARS="${CONTEXT_CHARS:-10000}"
 
-# MCP config (auto-detect Claude config)
-MCP_CONFIG="${MCP_CONFIG:-${CLAUDE_CONFIG_PATH:-}}"
-if [[ -z "$MCP_CONFIG" ]] && [[ -f "$HOME/.claude.json" ]]; then
-    MCP_CONFIG="$HOME/.claude.json"
+# MCP config (auto-detect Gemini config)
+MCP_CONFIG="${MCP_CONFIG:-${GEMINI_CONFIG_PATH:-}}"
+if [[ -z "$MCP_CONFIG" ]] && [[ -f "$HOME/.gemini.json" ]]; then
+    MCP_CONFIG="$HOME/.gemini.json"
 fi
 
 # ============================================================================

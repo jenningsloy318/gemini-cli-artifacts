@@ -1,6 +1,6 @@
 # MCP Connector Scripts
 
-Scripts for connecting to MCP servers configured in Claude Code.
+Scripts for connecting to MCP servers configured in Gemini CLI.
 
 **NEW:** Shell scripts using `mcp-cli` (faster, no Python dependency)
 **LEGACY:** Python scripts using `mcp-use` (still supported)
@@ -30,26 +30,26 @@ brew install jq           # macOS
 **Shell Scripts (New):**
 ```bash
 # Web search with Exa
-./scripts/exa/exa_search.sh --query "Next.js 15 best practices" --results 5
+${extensionPath}/scripts/exa/exa_search.sh --query "Next.js 15 best practices" --results 5
 
 # Code context with Exa
-./scripts/exa/exa_code.sh --query "React hooks patterns" --tokens 5000
+${extensionPath}/scripts/exa/exa_code.sh --query "React hooks patterns" --tokens 5000
 
 # Get repo documentation structure with DeepWiki
-./scripts/deepwiki/deepwiki_structure.sh --repo "facebook/react"
+${extensionPath}/scripts/deepwiki/deepwiki_structure.sh --repo "facebook/react"
 
 # Resolve library ID with Context7
-./scripts/context7/context7_resolve.sh --library "react"
+${extensionPath}/scripts/context7/context7_resolve.sh --library "react"
 
 # Search code on GitHub
-./scripts/github/github_search_code.sh --query "HttpConnector language:python"
+${extensionPath}/scripts/github/github_search_code.sh --query "HttpConnector language:python"
 ```
 
 **Python Scripts (Legacy):**
 ```bash
 # Same commands but with python3 prefix and .py extension
-python3 scripts/exa/exa_search.py --query "Next.js 15 best practices" --results 5
-python3 scripts/exa/exa_code.py --query "React hooks patterns" --tokens 5000
+python3 ${extensionPath}/scripts/exa/exa_search.py --query "Next.js 15 best practices" --results 5
+python3 ${extensionPath}/scripts/exa/exa_code.py --query "React hooks patterns" --tokens 5000
 # ... etc
 ```
 
@@ -73,7 +73,7 @@ python3 scripts/exa/exa_code.py --query "React hooks patterns" --tokens 5000
 Agent (Bash) ──► Shell Script ──► mcp-cli ──► MCP Server (HTTP/stdio)
                          │
                          ▼
-                   ~/.claude.json (auto-detected)
+                   ~/.gemini.json (auto-detected)
 ```
 
 **Python Scripts (mcp-use):**
@@ -81,7 +81,7 @@ Agent (Bash) ──► Shell Script ──► mcp-cli ──► MCP Server (HTTP
 Agent (Bash) ──► Python Script ──► HttpConnector ──► MCP HTTP Server
                          │
                          ▼
-                   ~/.claude.json (reads config)
+                   ~/.gemini.json (reads config)
 ```
 
 ## Available Scripts
@@ -132,7 +132,7 @@ Agent (Bash) ──► Python Script ──► HttpConnector ──► MCP HTTP 
 
 **Shell:**
 ```bash
-./scripts/exa/exa_search.sh \
+${extensionPath}/scripts/exa/exa_search.sh \
   --query "React 19 new features" \
   --type deep \
   --results 10 \
@@ -141,7 +141,7 @@ Agent (Bash) ──► Python Script ──► HttpConnector ──► MCP HTTP 
 
 **Python:**
 ```bash
-python3 scripts/exa/exa_search.py \
+python3 ${extensionPath}/scripts/exa/exa_search.py \
   --query "React 19 new features" \
   --type deep \
   --results 10 \
@@ -152,14 +152,14 @@ python3 scripts/exa/exa_search.py \
 
 **Shell:**
 ```bash
-./scripts/exa/exa_code.sh \
+${extensionPath}/scripts/exa/exa_code.sh \
   --query "Next.js app router middleware" \
   --tokens 10000
 ```
 
 **Python:**
 ```bash
-python3 scripts/exa/exa_code.py \
+python3 ${extensionPath}/scripts/exa/exa_code.py \
   --query "Next.js app router middleware" \
   --tokens 10000
 ```
@@ -168,14 +168,14 @@ python3 scripts/exa/exa_code.py \
 
 **Shell:**
 ```bash
-./scripts/deepwiki/deepwiki_ask.sh \
+${extensionPath}/scripts/deepwiki/deepwiki_ask.sh \
   --repo "vercel/next.js" \
   --question "How do I use the App Router?"
 ```
 
 **Python:**
 ```bash
-python3 scripts/deepwiki/deepwiki_ask.py \
+python3 ${extensionPath}/scripts/deepwiki/deepwiki_ask.py \
   --repo "vercel/next.js" \
   --question "How do I use the App Router?"
 ```
@@ -184,7 +184,7 @@ python3 scripts/deepwiki/deepwiki_ask.py \
 
 **Shell:**
 ```bash
-./scripts/context7/context7_docs.sh \
+${extensionPath}/scripts/context7/context7_docs.sh \
   --library-id "/vercel/next.js" \
   --mode code \
   --topic "routing"
@@ -192,7 +192,7 @@ python3 scripts/deepwiki/deepwiki_ask.py \
 
 **Python:**
 ```bash
-python3 scripts/context7/context7_docs.py \
+python3 ${extensionPath}/scripts/context7/context7_docs.py \
   --library-id "/vercel/next.js" \
   --mode code \
   --topic "routing"
@@ -202,14 +202,14 @@ python3 scripts/context7/context7_docs.py \
 
 **Shell:**
 ```bash
-./scripts/github/github_search_code.sh \
+${extensionPath}/scripts/github/github_search_code.sh \
   --query "HttpConnector language:python" \
   --per-page 10
 ```
 
 **Python:**
 ```bash
-python3 scripts/github/github_search_code.py \
+python3 ${extensionPath}/scripts/github/github_search_code.py \
   --query "HttpConnector language:python" \
   --per-page 10
 ```
@@ -220,9 +220,9 @@ python3 scripts/github/github_search_code.py \
 
 1. **Copy the template:**
    ```bash
-   mkdir scripts/new_server
-   cp scripts/templates/mcp_wrapper.sh scripts/new_server/new_tool.sh
-   chmod +x scripts/new_server/new_tool.sh
+   mkdir ${extensionPath}/scripts/new_server
+   cp ${extensionPath}/scripts/templates/mcp_wrapper.sh ${extensionPath}/scripts/new_server/new_tool.sh
+   chmod +x ${extensionPath}/scripts/new_server/new_tool.sh
    ```
 
 2. **Customize the script:**
@@ -237,16 +237,16 @@ python3 scripts/github/github_search_code.py \
 
 3. **Test:**
    ```bash
-   ./scripts/new_server/new_tool.sh --query "test"
+   ${extensionPath}/scripts/new_server/new_tool.sh --query "test"
    ```
 
 ### Python Script Template
 
 1. **Copy the template:**
    ```bash
-   mkdir scripts/new_server
-   cp specification/11-mcp-http-connector/template_connector.py scripts/new_server/new_tool.py
-   chmod +x scripts/new_server/new_tool.py
+   mkdir ${extensionPath}/scripts/new_server
+   cp specification/11-mcp-http-connector/template_connector.py ${extensionPath}/scripts/new_server/new_tool.py
+   chmod +x ${extensionPath}/scripts/new_server/new_tool.py
    ```
 
 2. **Customize the script:**
@@ -257,7 +257,7 @@ python3 scripts/github/github_search_code.py \
 
 3. **Test:**
    ```bash
-   python3 scripts/new_server/new_tool.py --query "test"
+   python3 ${extensionPath}/scripts/new_server/new_tool.py --query "test"
    ```
 
 ## Output Format
@@ -291,18 +291,18 @@ All scripts output JSON:
 Scripts auto-discover MCP config from:
 
 **For Shell Scripts (mcp-cli):**
-1. `~/.claude.json` (auto-detected)
+1. `~/.gemini.json` (auto-detected)
 2. `~/.mcp_servers.json`
 3. `~/.config/mcp/mcp_servers.json`
 4. `./mcp_servers.json`
 5. `$MCP_CONFIG_PATH` environment variable
 
 **For Python Scripts (mcp-use):**
-1. `~/.claude.json`
-2. `~/.claude/settings.json`
-3. `~/.claude/settings.local.json`
-4. `.claude/settings.json` (project)
-5. `.claude/settings.local.json` (project)
+1. `~/.gemini.json`
+2. `~/.gemini/settings.json`
+3. `~/.gemini/settings.local.json`
+4. `.gemini/settings.json` (project)
+5. `.gemini/settings.local.json` (project)
 
 Expected config structure:
 ```json
@@ -369,7 +369,7 @@ mcp-cli  # List all available servers
 
 Or with explicit config:
 ```bash
-mcp-cli -c ~/.claude.json
+mcp-cli -c ~/.gemini.json
 ```
 
 ### Python Scripts
@@ -403,7 +403,7 @@ The tool name might differ. Check available tools by adding debug print in the P
 Run the test suite to verify your setup:
 
 ```bash
-./scripts/test_migration.sh
+${extensionPath}/scripts/test_migration.sh
 ```
 
 This will check:

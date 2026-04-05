@@ -277,11 +277,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Scripts to Power Documentation
 
-### scripts/codemaps/generate.ts
+### ${extensionPath}/scripts/codemaps/generate.ts
 ```typescript
 /**
  * Generate codemaps from repository structure
- * Usage: tsx scripts/codemaps/generate.ts
+ * Usage: tsx ${extensionPath}/scripts/codemaps/generate.ts
  */
 
 import { Project } from 'ts-morph'
@@ -322,11 +322,11 @@ function findEntrypoints(files: SourceFile[]) {
 }
 ```
 
-### scripts/docs/update.ts
+### ${extensionPath}/scripts/docs/update.ts
 ```typescript
 /**
  * Update documentation from code
- * Usage: tsx scripts/docs/update.ts
+ * Usage: tsx ${extensionPath}/scripts/docs/update.ts
  */
 
 import * as fs from 'fs'

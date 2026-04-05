@@ -15,7 +15,8 @@ if [ "$TOOL_NAME" != "run_shell_command" ]; then
 fi
 
 CMD=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
-DATA_DIR="${GEMINI_EXTENSION_DATA:-$HOME/.gemini/data/super-dev}"
+
+DATA_DIR="${extensionPath}/data"
 mkdir -p "$DATA_DIR"
 COMMAND_LOG="${DATA_DIR}/command-log.txt"
 

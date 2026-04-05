@@ -94,7 +94,7 @@ Collect all available evidence before searching externally. This phase uses ONLY
 Search for precedent, documentation, or known issues. Budget: max 3 sources, max 3 tool calls.
 
 **Search Priority Order:**
-1. **Project docs first** — README, CLAUDE.md, architecture docs, existing spec directory
+1. **Project docs first** — README, GEMINI.md, architecture docs, existing spec directory
 2. **Library docs** — official documentation for the specific version installed
 3. **Issue trackers** — GitHub issues for the library/framework (often has exact error match)
 4. **Web search** — Stack Overflow, blog posts, release notes (last resort)
@@ -102,13 +102,13 @@ Search for precedent, documentation, or known issues. Budget: max 3 sources, max
 **Search Tools (use MCP scripts when available):**
 ```bash
 # DeepWiki for GitHub repo documentation
-${CLAUDE_PLUGIN_ROOT}/scripts/deepwiki/deepwiki_ask.sh --repo "[owner/repo]" --question "[question]"
+${extensionPath}/scripts/deepwiki/deepwiki_ask.sh --repo "[owner/repo]" --question "[question]"
 
 # Context7 for library documentation
-${CLAUDE_PLUGIN_ROOT}/scripts/context7/context7_docs.sh --library-id "[/org/project]" --mode code --topic "[topic]"
+${extensionPath}/scripts/context7/context7_docs.sh --library-id "[/org/project]" --mode code --topic "[topic]"
 
 # Exa for web search
-${CLAUDE_PLUGIN_ROOT}/scripts/exa/exa_search.sh --query "[query]" --type auto --results 3
+${extensionPath}/scripts/exa/exa_search.sh --query "[query]" --type auto --results 3
 ```
 
 **Output of Phase 2:**

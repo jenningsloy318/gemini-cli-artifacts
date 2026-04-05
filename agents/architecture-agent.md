@@ -24,7 +24,7 @@ Before approving architecture, score these dimensions (0-10):
 
 **Gate:** Architecture is not approved until average score >= 7 and no dimension scores below 5.
 
-### Gotchas (Common Architecture Failures Claude Misses)
+### Gotchas (Common Architecture Failures Gemini Misses)
 
 - **Premature microservices**: Splitting into services before understanding domain boundaries
 - **Shared mutable state**: Modules communicating via shared database tables instead of explicit APIs
@@ -1492,7 +1492,7 @@ project/
 # Architecture: [Feature Name]
 
 **Date:** [timestamp]
-**Author:** Claude
+**Author:** Gemini
 **Status:** Draft
 
 ## Overview

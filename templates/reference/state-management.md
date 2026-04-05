@@ -1,13 +1,13 @@
 # State Management Reference
 
-Super-dev uses `${CLAUDE_PLUGIN_DATA}` for persistent state that survives plugin upgrades.
+Super-dev uses `${extensionPath}/data` for persistent state that survives plugin upgrades.
 
 ## Storage Location
 
-All persistent data is stored in `${CLAUDE_PLUGIN_DATA}/`:
+All persistent data is stored in `${extensionPath}/data/`:
 
 ```
-${CLAUDE_PLUGIN_DATA}/
+${extensionPath}/data/
 ├── config.json              # User configuration (first-run setup)
 ├── session-history.log      # Append-only session log
 ├── patterns.json            # Learned patterns and conventions
@@ -21,24 +21,49 @@ An append-only log of every super-dev workflow run.
 ### Format (one JSON line per session)
 
 ```jsonl
-{"timestamp":"2026-03-24T10:00:00Z","spec":"01-user-auth","task":"Implement user authentication","phases_completed":[0,1,2,3,5,6,7,8,9,10,12],"duration_phases":13,"verdict":{"code_review":"Approved","adversarial":"PASS"},"files_changed":12,"language":"typescript","framework":"nextjs"}
+{
+  "timestamp": "2026-03-24T10:00:00Z",
+  "spec": "01-user-auth",
+  "task": "Implement user authentication",
+  "phases_completed": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    12
+  ],
+  "duration_phases": 13,
+  "verdict": {
+    "code_review": "Approved",
+    "adversarial": "PASS"
+  },
+  "files_changed": 12,
+  "language": "typescript",
+  "framework": "nextjs"
+}
 ```
 
 ### How to Write
 
 ```bash
 # Append at end of Phase 12 (commit)
-echo '{"timestamp":"...","spec":"...","task":"..."}' >> "${CLAUDE_PLUGIN_DATA}/session-history.log"
+echo '{"timestamp":"...","spec":"...","task":"..."}' >> "${extensionPath}/data/session-history.log"
 ```
 
 ### How to Read
 
 ```bash
 # Read last 5 sessions for context
-tail -5 "${CLAUDE_PLUGIN_DATA}/session-history.log"
+tail -5 "${extensionPath}/data/session-history.log"
 
 # Count total sessions
-wc -l "${CLAUDE_PLUGIN_DATA}/session-history.log"
+wc -l "${extensionPath}/data/session-history.log"
 ```
 
 ## Patterns File
