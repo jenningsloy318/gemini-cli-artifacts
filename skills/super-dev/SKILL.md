@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.0.1"
+  version: "3.0.3"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -30,6 +30,14 @@ metadata:
 A team-based development system where the Coordinator acts as Team Lead, orchestrating specialized subagents who work in their own independent context loops, returning structured results to the main session.
 
 **Announce at start:** YOU MUST say "I'm using the super-dev skill with super-dev subagents to systematically implement this task." at the beginning of every run.
+
+## Mandatory Worktree Enforcement (NEW in v3.0.2)
+
+Super-dev now strictly enforces that ALL development work happens inside a git worktree.
+
+- **Automatic Navigation:** Subagents are explicitly instructed to `cd` into the worktree at the start of every session.
+- **Global Rule:** The `dev-rules` skill makes worktree navigation a mandatory initial step for all agents.
+- **Verification:** Agents are required to verify their environment using `git worktree list`.
 
 ## Hook-Driven Quality Gates (NEW in v3.0.1)
 
@@ -176,6 +184,8 @@ Grade each completed workflow run against these three dimensions:
 ### Style & Instructions (Conventions followed)
 
 - Git worktree created with branch name matching worktree name
+- **MANDATORY**: ALL work (code, tests, docs) done inside the worktree
+- **ENFORCEMENT**: Every session starts with `cd [worktree-path]`
 - Spec directory structure followed inside worktree
 - Workflow tracking JSON maintained and updated per phase
 - Commit messages follow project conventions
@@ -186,6 +196,7 @@ Grade each completed workflow run against these three dimensions:
 ```
 - [ ] Phase 0:  Apply Dev Rules
 - [ ] Phase 1:  Specification Setup (worktree + subagent config)
+- [ ] MANDATORY: Navigate to Worktree (ALL agents: cd .worktree/...)
 - [ ] Phase 2:  Requirements Clarification
 - [ ] GATE:     Requirements Completeness (gate-requirements.sh)
 - [ ] Phase 2.5: BDD Scenario Writing (MANDATORY, user confirmation required)
@@ -263,6 +274,14 @@ bash ${extensionPath}/scripts/gates/<gate-name>.sh <spec-dir>
 ## Team Lead Responsibilities (Delegate Mode)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
+
+### Worktree Isolation Rule (CRITICAL)
+
+**Once the Git worktree is created in Phase 1, ALL work from Phase 2 through Phase 11 MUST occur inside that worktree.**
+
+1. **Subagent Working Directory**: Every `generalist` call MUST include the worktree path and a mandatory `cd` instruction as the first step of the request.
+2. **Context Passing**: The Coordinator MUST track the worktree path in the session context and pass it to every subagent.
+3. **No Main Tree Edits**: Any edit to the main repository tree (outside the worktree) during Phases 2-11 is a **VIOLATION** of the isolation policy.
 
 **CRITICAL PRIME DIRECTIVE:**
 You are the **Team Lead**, NOT an individual contributor.

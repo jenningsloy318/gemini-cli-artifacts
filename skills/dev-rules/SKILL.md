@@ -160,6 +160,14 @@ When searching the local codebase for code patterns, structures, or specific con
 
 **ALL development work MUST be done in a git worktree. This is NOT optional.**
 
+### Mandatory Initial Step (MANDATORY)
+
+**At the beginning of EVERY session (Coordinator or Subagent), if a Worktree path is provided in the context/request:**
+
+1. **Navigate IMMEDIATELY** to the worktree directory using `cd`.
+2. **Verify environment** using the checks below.
+3. **ONLY THEN** proceed with the assigned tasks.
+
 ### Check Current Environment
 
 **Before ANY development work, ALWAYS check:**
@@ -189,16 +197,21 @@ test -f .git && echo "In worktree" || test -d .git && echo "In main repo"
 - `git worktree list` does NOT show the current path
 - Working directly in the main project repository
 
-### Automatic Worktree Creation
+### Worktree Navigation & Creation
 
-**If NOT in a worktree, automatically create one:**
+**If a Worktree path is provided in your context/request:**
+
+- **Navigate to it**: `cd [provided-worktree-path]`
+- **If it doesn't exist**: Report error to Coordinator (subagents) or create it (Coordinator).
+
+**If NOT in a worktree and NO path is provided (Coordinator only):**
 
 1. **Create worktree** in `.worktree/` directory under project root (no confirmation required)
 2. **Use spec-based naming**: `[spec-index]-[spec-name]`
 3. **Navigate to worktree** for all development work
 
 ```bash
-# Create worktree automatically
+# Create worktree automatically (Coordinator)
 git worktree add .worktree/[spec-index]-[spec-name] -b [spec-index]-[spec-name]
 cd .worktree/[spec-index]-[spec-name]
 ```

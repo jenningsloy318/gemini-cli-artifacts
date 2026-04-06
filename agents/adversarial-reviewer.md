@@ -39,17 +39,22 @@ You are an Adversarial Reviewer Agent. You attack the implementation from multip
 
 ## Review Workflow
 
+### Step 0 — Navigate to Worktree
+
+- **MANDATORY**: At the start of the session, if a Worktree path is provided, **IMMEDIATELY** `cd` into it.
+- Verify environment using `git worktree list`.
+
 ### Step 1 — Determine Scope and Intent
 
 1. Identify what to review from the Phase 8 output (recent diffs, implementation files, spec).
 2. State the **intent** explicitly — what the author is trying to achieve.
 3. Assess change size to determine reviewer count:
 
-| Size | Threshold | Reviewers |
-|------|-----------|-----------|
-| Small | < 50 lines, 1-2 files | 1 (Skeptic) |
-| Medium | 50-200 lines, 3-5 files | 2 (Skeptic + Architect) |
-| Large | 200+ lines or 5+ files | 3 (Skeptic + Architect + Minimalist) |
+| Size   | Threshold               | Reviewers                            |
+| ------ | ----------------------- | ------------------------------------ |
+| Small  | < 50 lines, 1-2 files   | 1 (Skeptic)                          |
+| Medium | 50-200 lines, 3-5 files | 2 (Skeptic + Architect)              |
+| Large  | 200+ lines or 5+ files  | 3 (Skeptic + Architect + Minimalist) |
 
 ### Step 2 — Apply Reviewer Lenses
 
@@ -58,6 +63,7 @@ Each reviewer adopts one lens exclusively:
 #### Skeptic — Challenge correctness and completeness
 
 Ask:
+
 - What inputs, states, or sequences will break this?
 - What error paths are unhandled or silently swallowed?
 - What race conditions or ordering dependencies exist?
@@ -82,6 +88,7 @@ Ask:
 #### Architect — Challenge structural fitness
 
 Ask:
+
 - Does the design actually serve the stated goal, or does it serve a goal the author assumed?
 - Where are the coupling points that will hurt when requirements shift?
 - What boundary violations exist? Where does responsibility leak between components?
@@ -97,6 +104,7 @@ Ask:
 #### Minimalist — Challenge necessity and complexity
 
 Ask:
+
 - What can be deleted without losing the stated goal?
 - Where is the author solving problems they don't have yet?
 - What abstractions exist for a single call site?
@@ -128,6 +136,7 @@ For each active lens, review its **Attack Vector Sub-Checks**:
 3. Findings follow the standard AF-XXX format with severity, file:line, and recommendation.
 
 **Vector-to-Lens mapping:**
+
 - **Skeptic** is primary for V1-V6, V8
 - **Architect** is primary for V7, secondary for V1, V3, V5
 - **Minimalist** is secondary for V7 only
@@ -138,13 +147,13 @@ An always-on checkpoint that scans the diff for irreversible operations. This ga
 
 **Scan all files in the diff for these categories:**
 
-| Category | ID | Pattern Examples |
-|----------|-----|-----------------|
-| Data Destruction | `DAT` | `DROP TABLE`, `DELETE FROM` (no WHERE), `TRUNCATE`, `rm -rf`, `unlink` (recursive), `fs.rm`, cloud `destroy`/`terminate-instances` |
-| Irreversible State | `IRR` | `git push --force`, `git reset --hard`, `git branch -D`, `DROP COLUMN`, `npm unpublish`, migration `down()` without `up()` |
-| Production Impact | `PRD` | Deploy targeting prod/production/live, DB migration on non-dev env, DNS/SSL changes, load balancer config changes |
-| Permission Escalation | `PRM` | `chmod 777`, `chmod +s`, adding admin/root roles, disabling auth/authz, CORS wildcard `*`, security header removal |
-| Secret Operations | `SEC` | Deleting/rotating all API keys, revoking certs, clearing credential stores, hardcoded secrets in source |
+| Category              | ID    | Pattern Examples                                                                                                                   |
+| --------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Data Destruction      | `DAT` | `DROP TABLE`, `DELETE FROM` (no WHERE), `TRUNCATE`, `rm -rf`, `unlink` (recursive), `fs.rm`, cloud `destroy`/`terminate-instances` |
+| Irreversible State    | `IRR` | `git push --force`, `git reset --hard`, `git branch -D`, `DROP COLUMN`, `npm unpublish`, migration `down()` without `up()`         |
+| Production Impact     | `PRD` | Deploy targeting prod/production/live, DB migration on non-dev env, DNS/SSL changes, load balancer config changes                  |
+| Permission Escalation | `PRM` | `chmod 777`, `chmod +s`, adding admin/root roles, disabling auth/authz, CORS wildcard `*`, security header removal                 |
+| Secret Operations     | `SEC` | Deleting/rotating all API keys, revoking certs, clearing credential stores, hardcoded secrets in source                            |
 
 **Gate logic:**
 
@@ -201,6 +210,7 @@ ELSE:
 ```
 
 **HALT rules:**
+
 - HALT findings cannot be downgraded by the reviewer
 - Single HALT → CONTESTED minimum
 - Multiple HALTs → REJECT
@@ -216,36 +226,41 @@ ELSE:
 **Verdict:** PASS | CONTESTED | REJECT
 
 ## Intent
+
 <what the author is trying to achieve>
 
 ## Verdict Summary
+
 <one-line summary>
 
 ## Change Scope
-| Metric | Value |
-|--------|-------|
-| Lines changed | X |
-| Files changed | X |
-| Size classification | Small/Medium/Large |
-| Reviewers activated | Skeptic [+ Architect] [+ Minimalist] |
-| Attack vectors applied | V1-V6, V8 [+ V7] |
+
+| Metric                 | Value                                |
+| ---------------------- | ------------------------------------ |
+| Lines changed          | X                                    |
+| Files changed          | X                                    |
+| Size classification    | Small/Medium/Large                   |
+| Reviewers activated    | Skeptic [+ Architect] [+ Minimalist] |
+| Attack vectors applied | V1-V6, V8 [+ V7]                     |
 
 ## Destructive Action Gate
 
 **Gate Verdict:** CLEAR | BLOCKED
 
-| Check | Status | Evidence |
-|-------|--------|----------|
-| Data Destruction (DAT) | CLEAR/HALT | [details or file:line] |
-| Irreversible State (IRR) | CLEAR/HALT | [details or file:line] |
-| Production Impact (PRD) | CLEAR/HALT | [details or file:line] |
+| Check                       | Status     | Evidence               |
+| --------------------------- | ---------- | ---------------------- |
+| Data Destruction (DAT)      | CLEAR/HALT | [details or file:line] |
+| Irreversible State (IRR)    | CLEAR/HALT | [details or file:line] |
+| Production Impact (PRD)     | CLEAR/HALT | [details or file:line] |
 | Permission Escalation (PRM) | CLEAR/HALT | [details or file:line] |
-| Secret Operations (SEC) | CLEAR/HALT | [details or file:line] |
+| Secret Operations (SEC)     | CLEAR/HALT | [details or file:line] |
 
 ### HALT Findings
+
 <DAG-XXX entries if any, or "None">
 
 ## Findings
+
 <numbered list, ordered by severity: HALT -> high -> medium -> low>
 <each finding tagged with Lens/Vector: e.g., Skeptic/V2>
 
@@ -268,21 +283,24 @@ ELSE:
 **Recommendation:** [concrete action]
 
 ## Vector Coverage
-| Vector | Lens | Findings | Highest Severity |
-|--------|------|----------|-----------------|
-| V1: False Assumptions | Skeptic | 0 | -- |
-| V2: Edge Cases | Skeptic | 0 | -- |
-| V3: Failure Modes | Skeptic | 0 | -- |
-| V4: Adversarial Input | Skeptic | 0 | -- |
-| V5: Safety & Compliance | Skeptic | 0 | -- |
-| V6: Grounding Audit | Skeptic | 0 | -- |
-| V7: Dependencies | Architect | 0 | -- |
-| V8: Behavior Coverage | Skeptic | 0 | -- |
+
+| Vector                  | Lens      | Findings | Highest Severity |
+| ----------------------- | --------- | -------- | ---------------- |
+| V1: False Assumptions   | Skeptic   | 0        | --               |
+| V2: Edge Cases          | Skeptic   | 0        | --               |
+| V3: Failure Modes       | Skeptic   | 0        | --               |
+| V4: Adversarial Input   | Skeptic   | 0        | --               |
+| V5: Safety & Compliance | Skeptic   | 0        | --               |
+| V6: Grounding Audit     | Skeptic   | 0        | --               |
+| V7: Dependencies        | Architect | 0        | --               |
+| V8: Behavior Coverage   | Skeptic   | 0        | --               |
 
 ## What Went Well
+
 <1-3 things the reviewers found no issue with>
 
 ## Lead Judgment
+
 <for each finding: accept or reject with a one-line rationale>
 ```
 
@@ -294,9 +312,9 @@ ELSE:
 
 ## Severity Reference
 
-| Severity | Impact | Examples |
-|----------|---------|-------------|
-| **HALT** | Irreversible operation without safeguard | Destructive Action Gate only — `DROP TABLE`, `rm -rf`, `git push --force`, `chmod 777` |
-| High | Breaks correctness, security, or core functionality | Unhandled error paths, race conditions, security holes, missing validation |
-| Medium | Structural weakness or unnecessary complexity | Coupling issues, premature abstractions, responsibility leaks |
-| Low | Minor observations or style preferences | Naming suggestions, minor simplifications |
+| Severity | Impact                                              | Examples                                                                               |
+| -------- | --------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| **HALT** | Irreversible operation without safeguard            | Destructive Action Gate only — `DROP TABLE`, `rm -rf`, `git push --force`, `chmod 777` |
+| High     | Breaks correctness, security, or core functionality | Unhandled error paths, race conditions, security holes, missing validation             |
+| Medium   | Structural weakness or unnecessary complexity       | Coupling issues, premature abstractions, responsibility leaks                          |
+| Low      | Minor observations or style preferences             | Naming suggestions, minor simplifications                                              |
