@@ -3,7 +3,7 @@ name: coordinator
 description: Coordinator Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Coordinator - Team Lead Agent (v3.0.5)
+# Coordinator - Team Lead Agent (v3.0.6)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 

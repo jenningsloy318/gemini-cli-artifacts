@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.0.5"
+  version: "3.0.6"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
