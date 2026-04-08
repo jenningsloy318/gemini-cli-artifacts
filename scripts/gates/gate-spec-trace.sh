@@ -1,7 +1,7 @@
 #!/bin/bash
 # Gate: Spec-to-BDD Traceability Check
 # Verifies that every scenario in BDD file is mapped to a component/function in the spec
-# Also verifies existence of separate implementation plan and task list files.
+# Also verifies XML structure of specification and implementation plan.
 #
 # Usage: gate-spec-trace.sh <spec-dir>
 # Exit 0 = PASS, Exit 1 = FAIL
@@ -34,45 +34,26 @@ check() {
     fi
 }
 
-echo "GATE: Spec-to-BDD Traceability & Artifact Check"
+echo "GATE: Spec-to-BDD Traceability (XML Template Alignment)"
 
-# S1: BDD File Existence
-if [ -n "$BDD_FILE" ] && [ -f "$BDD_FILE" ]; then
-    check "S1" "BDD scenarios file found" "true"
-else
-    check "S1" "BDD scenarios file found" "false"
-fi
+# 1. Existence Checks
+[ -n "$BDD_FILE" ] && [ -f "$BDD_FILE" ] && check "S1" "BDD scenarios file found" "true" || check "S1" "BDD scenarios file found" "false"
+[ -n "$SPEC_FILE" ] && [ -f "$SPEC_FILE" ] && check "S2" "Specification file found" "true" || check "S2" "Specification file found" "false"
+[ -n "$PLAN_FILE" ] && [ -f "$PLAN_FILE" ] && check "S3" "Implementation plan file found" "true" || check "S3" "Implementation plan file found" "false"
+[ -n "$TASK_FILE" ] && [ -f "$TASK_FILE" ] && check "S4" "Task list file found" "true" || check "S4" "Task list file found" "false"
 
-# S2: Specification File Existence
-if [ -n "$SPEC_FILE" ] && [ -f "$SPEC_FILE" ]; then
-    check "S2" "Specification file found" "true"
-else
-    check "S2" "Specification file found" "false"
-fi
-
-# S3: Implementation Plan File Existence (Mandatory in v3.4+)
-if [ -n "$PLAN_FILE" ] && [ -f "$PLAN_FILE" ]; then
-    check "S3" "Separate implementation plan file found" "true"
-else
-    check "S3" "Separate implementation plan file found" "false"
-fi
-
-# S4: Task List File Existence (Mandatory in v3.4+)
-if [ -n "$TASK_FILE" ] && [ -f "$TASK_FILE" ]; then
-    check "S4" "Separate task list file found" "true"
-else
-    check "S4" "Separate task list file found" "false"
-fi
-
-# If critical files are missing, we can't continue deep checks
-if [ "$FAIL" -gt 0 ] && ([ -z "$BDD_FILE" ] || [ -z "$SPEC_FILE" ]); then
-    echo -e "\nCritical artifacts missing. Cannot perform traceability check."
+# If critical files are missing, we can't continue
+if [ -z "$BDD_FILE" ] || [ -z "$SPEC_FILE" ] || [ -z "$PLAN_FILE" ]; then
+    echo -e "\nCritical artifacts missing. Cannot perform deep validation."
     echo "GATE RESULT: FAIL"
     exit 1
 fi
 
-# S5: Traceability Check
-# Get list of scenario IDs from BDD file
+# 2. XML Wrapper Checks
+grep -q "<template name=\"specification\">" "$SPEC_FILE" && check "S2.1" "Spec has <template> wrapper" "true" || check "S2.1" "Spec has <template> wrapper" "false"
+grep -q "<template name=\"implementation-plan\">" "$PLAN_FILE" && check "S3.1" "Plan has <template> wrapper" "true" || check "S3.1" "Plan has <template> wrapper" "false"
+
+# 3. Traceability Check
 scenario_ids=$(grep -oE 'SCENARIO-[0-9]+' "$BDD_FILE" | sort -u || true)
 scenario_count=$(echo "$scenario_ids" | grep -c "SCENARIO" || true)
 
@@ -80,32 +61,22 @@ if [ "$scenario_count" -eq 0 ]; then
     check "S5" "Has scenario IDs to trace" "false"
 else
     check "S5" "Has scenario IDs to trace (found: ${scenario_count})" "true"
-    
-    # Check if each scenario ID is mentioned in the spec file
     for id in $scenario_ids; do
-        # We search in BOTH spec and plan files for the scenario ID
         found_in_spec=$(grep -c "$id" "$SPEC_FILE" || true)
-        found_in_plan=0
-        if [ -f "$PLAN_FILE" ]; then
-            found_in_plan=$(grep -c "$id" "$PLAN_FILE" || true)
-        fi
-        
+        found_in_plan=$(grep -c "$id" "$PLAN_FILE" || true)
         if [ "$found_in_spec" -gt 0 ] || [ "$found_in_plan" -gt 0 ]; then
             PASS=$((PASS + 1))
         else
             FAIL=$((FAIL + 1))
-            ERRORS="${ERRORS}\n  FAIL S5: Scenario ${id} not traced in specification or plan"
+            ERRORS="${ERRORS}\n  FAIL S5: Scenario ${id} not traced"
             echo "  [FAIL] S5: Scenario ${id} not traced"
         fi
     done
 fi
 
-# S6: Content Validation (Non-redundant)
-# Instead of checking for Section 8.1 in specification.md, we verify the PLAN_FILE has actual content
-if [ -f "$PLAN_FILE" ]; then
-    plan_size=$(wc -c < "$PLAN_FILE" | tr -d ' ')
-    check "S6" "Implementation plan has content (>200 chars, actual: ${plan_size})" "$([ "$plan_size" -gt 200 ] && echo true || echo false)"
-fi
+# 4. Content Depth (Exclude XML)
+spec_size=$(grep -vE "^<" "$SPEC_FILE" | wc -c | tr -d ' ')
+check "S6" "Spec content depth (>500 non-XML chars, actual: ${spec_size})" "$([ "$spec_size" -gt 500 ] && echo true || echo false)"
 
 # Report
 TOTAL=$((PASS + FAIL))
