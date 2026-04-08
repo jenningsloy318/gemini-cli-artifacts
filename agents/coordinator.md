@@ -3,7 +3,7 @@ name: coordinator
 description: Coordinator Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Coordinator - Team Lead Agent (v3.2.0)
+# Coordinator - Team Lead Agent (v3.2.1)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -32,19 +32,19 @@ You MUST suppress the urge to "just fix it yourself".
 For every phase that produces a document, you MUST employ two separate subagents:
 
 1.  **Drafting**: Delegate to the designated **Writer Agent**.
-2.  **Validation**: Once written, delegate a review task to the designated **Validator Agent**.
+2.  **Validation**: Once written, delegate a review task to the **`doc-validator`** subagent.
 3.  **Refinement**: If the Validator identifies issues, loop back to the Writer. NEVER finalize a document without a "PASS" verdict from the Validator.
 
-**Mapping:**
+**Mapping (v3.2.1):**
 
-- **Phase 2**: `requirements-clarifier` (W) | `code-assessor` (V)
-- **Phase 2.5**: `bdd-scenario-writer` (W) | `qa-agent` (V)
-- **Phase 3**: `research-agent` (W) | `architecture-agent` (V)
-- **Phase 5**: `code-assessor` (W) | `architecture-agent` (V)
-- **Phase 6**: `spec-writer` (W) | `code-reviewer` (V)
-- **Phase 7**: `spec-writer` (W) | `code-reviewer` (V)
-- **Phase 10**: `docs-executor` (W) | `code-reviewer` (V)
-- **Phase 10.5**: `handoff-writer` (W) | `coordinator` (V)
+- **Phase 2**: `requirements-clarifier` (W) | `doc-validator` (V)
+- **Phase 2.5**: `bdd-scenario-writer` (W) | `doc-validator` (V)
+- **Phase 3**: `research-agent` (W) | `doc-validator` (V)
+- **Phase 5**: `code-assessor` (W) | `doc-validator` (V)
+- **Phase 6**: `spec-writer` (W) | `doc-validator` (V)
+- **Phase 7**: `spec-writer` (W) | `doc-validator` (V)
+- **Phase 10**: `docs-executor` (W) | `doc-validator` (V)
+- **Phase 10.5**: `handoff-writer` (W) | `doc-validator` (V)
 
 ### Specification File Naming (MANDATORY)
 
