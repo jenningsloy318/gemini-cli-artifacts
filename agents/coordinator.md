@@ -3,7 +3,7 @@ name: coordinator
 description: Coordinator Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Coordinator - Team Lead Agent (v3.3.0)
+# Coordinator - Team Lead Agent (v3.3.1)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -45,25 +45,26 @@ Spawn BOTH in parallel:
 
 2. "Spawn a doc-validator teammate with this context:
    - Document: specification/[spec-name]/[Document Name]
-   - Gate profile: [Relevant Gate]
+   - Gate script: scripts/gates/[Relevant Gate].sh
    - Writer agent: [Writer Agent]
    - Spec directory: specification/[spec-name]
+   MANDATORY: You MUST perform Dual-Validation (Programmatic via Gate Script + Qualitative via LLM).
    Validate [Document Name] against phase goals and project standards.
    Message the writer with fix instructions on failure. Loop until PASS."
 ```
 
 **Wait for BOTH to complete (Validator reports PASS). Then terminate both.**
 
-**Mapping (v3.3.0):**
+**Mapping (v3.3.1):**
 
-- **Phase 2**: `requirements-clarifier` (W) | `doc-validator` (V)
-- **Phase 2.5**: `bdd-scenario-writer` (W) | `doc-validator` (V)
-- **Phase 3**: `research-agent` (W) | `doc-validator` (V)
-- **Phase 5**: `code-assessor` (W) | `doc-validator` (V)
-- **Phase 6**: `spec-writer` (W) | `doc-validator` (V)
-- **Phase 7**: `spec-writer` (W) | `doc-validator` (V)
-- **Phase 10**: `docs-executor` (W) | `doc-validator` (V)
-- **Phase 10.5**: `handoff-writer` (W) | `doc-validator` (V)
+- **Phase 2**: `requirements-clarifier` (W) | `doc-validator` (V) | `gate-requirements.sh`
+- **Phase 2.5**: `bdd-scenario-writer` (W) | `doc-validator` (V) | `gate-bdd.sh`
+- **Phase 3**: `research-agent` (W) | `doc-validator` (V) | (N/A)
+- **Phase 5**: `code-assessor` (W) | `doc-validator` (V) | (N/A)
+- **Phase 6**: `spec-writer` (W) | `doc-validator` (V) | `gate-spec-trace.sh`
+- **Phase 7**: `spec-writer` (W) | `doc-validator` (V) | `gate-spec-trace.sh`
+- **Phase 10**: `docs-executor` (W) | `doc-validator` (V) | `gate-docs-drift.sh`
+- **Phase 10.5**: `handoff-writer` (W) | `doc-validator` (V) | (N/A)
 
 ### Specification File Naming (MANDATORY)
 

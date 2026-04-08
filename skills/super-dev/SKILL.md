@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.3.0"
+  version: "3.3.1"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -28,36 +28,37 @@ metadata:
     - isolation
     - writer-validator
     - parallel-docs
----
+    - dual-validation
+  ---
 
-# Super Dev Workflow
+  # Super Dev Workflow
 
-A team-based development system where the Coordinator acts as Team Lead, orchestrating specialized subagents who work in their own independent context loops, returning structured results to the main session.
+  A team-based development system where the Coordinator acts as Team Lead, orchestrating specialized subagents who work in their own independent context loops, returning structured results to the main session.
 
-**Announce at start:** YOU MUST say "I'm using the super-dev skill with super-dev subagents to systematically implement this task." at the beginning of every run.
+  **Announce at start:** YOU MUST say "I'm using the super-dev skill with super-dev subagents to systematically implement this task." at the beginning of every run.
 
-## Mandatory Worktree Enforcement (NEW in v3.1.2)
+  ## Mandatory Worktree Enforcement (NEW in v3.1.2)
 
-Super-dev now strictly enforces that ALL development work happens inside a git worktree.
+  Super-dev now strictly enforces that ALL development work happens inside a git worktree.
 
-- **Phase 1 Identification:** Before doing any work, the Team Lead MUST define:
+  - **Phase 1 Identification:** Before doing any work, the Team Lead MUST define:
   - `SPEC_INDEX`: Next sequential index (e.g., `01`).
   - `FEATURE_NAME`: Kebab-case name of the task (e.g., `auth-fix`).
   - `SPEC_NAME`: `${SPEC_INDEX}-${FEATURE_NAME}` (e.g., `01-auth-fix`).
   - `BRANCH_NAME`: `${SPEC_NAME}` (Identical to SPEC_NAME, e.g., `01-auth-fix`).
   - `WORKTREE_DIR`: `.worktree/${SPEC_NAME}` (Directory part identical to SPEC_NAME, e.g., `.worktree/01-auth-fix`).
-- **Explicit Creation:** Team Lead MUST run `git worktree add -b ${BRANCH_NAME} ${WORKTREE_DIR}`.
-- **Strict Isolation:** Once the worktree is created, ALL subsequent labor (Phases 2-11) MUST occur within that worktree. Any edit to the main repository tree during these phases is a VIOLATION.
-- **Mandatory Navigation:** Subagents are explicitly instructed to `cd` into `${WORKTREE_DIR}` at the start of every session. NAVIGATION is mandatory, not just switching branches.
-- **Global Rule:** The `dev-rules` skill makes worktree navigation a mandatory initial step for all agents.
-- **Verification:** Agents are required to verify their environment using `git worktree list`.
+  - **Explicit Creation:** Team Lead MUST run `git worktree add -b ${BRANCH_NAME} ${WORKTREE_DIR}`.
+  - **Strict Isolation:** Once the worktree is created, ALL subsequent labor (Phases 2-11) MUST occur within that worktree. Any edit to the main repository tree during these phases is a VIOLATION.
+  - **Mandatory Navigation:** Subagents are explicitly instructed to `cd` into `${WORKTREE_DIR}` at the start of every session. NAVIGATION is mandatory, not just switching branches.
+  - **Global Rule:** The `dev-rules` skill makes worktree navigation a mandatory initial step for all agents.
+  - **Verification:** Agents are required to verify their environment using `git worktree list`.
 
-## Specification Directory Naming Convention (NEW in v3.1.2)
+  ## Specification Directory Naming Convention (NEW in v3.1.2)
 
-To maintain a clear audit trail and logical order, all files created within the specification directory (`${WORKTREE_DIR}/specification/${SPEC_NAME}/`) MUST follow a strict sequential naming convention:
+  To maintain a clear audit trail and logical order, all files created within the specification directory (`${WORKTREE_DIR}/specification/${SPEC_NAME}/`) MUST follow a strict sequential naming convention:
 
-- **Format:** `[doc-index]-[descriptive-name].md`
-- **Example Indexing:**
+  - **Format:** `[doc-index]-[descriptive-name].md`
+  - **Example Indexing:**
   - `01-requirements.md`
   - `01.1-behavior-scenarios.md`
   - `02-research.md`
@@ -66,36 +67,43 @@ To maintain a clear audit trail and logical order, all files created within the 
   - `07-implementation-plan.md`
   - `11-handoff.md`
 
-The Team Lead is responsible for enforcing this convention across all subagents.
+  The Team Lead is responsible for enforcing this convention across all subagents.
 
-## Parallel Writer-Validator Strategy (NEW in v3.3.0)
+  ## Parallel Writer-Validator Strategy (NEW in v3.3.0)
 
-To ensure maximum document quality and technical accuracy, every phase that produces a document MUST employ a **Parallel Writer-Validator** dual-agent strategy. Self-checks by the writer are FORBIDDEN as a substitute for peer review.
+  To ensure maximum document quality and technical accuracy, every phase that produces a document MUST employ a **Parallel Writer-Validator** dual-agent strategy. Self-checks by the writer are FORBIDDEN as a substitute for peer review.
 
-### Execution Pattern:
+  ### Execution Pattern:
 
-1.  **Parallel Spawning**: The Team Lead spawns BOTH the designated **Writer Agent** and the **`doc-validator`** subagent in parallel.
-2.  **Collaborative loop**:
-    - The **Writer** drafts/updates the document.
-    - The **Validator** reviews the draft against phase goals, project standards, and previous artifacts.
-    - If validation fails, the Validator provides explicit fix instructions to the Writer.
-    - The Writer applies fixes and notifies the Validator.
-3.  **Phase Exit**: The phase is complete ONLY when the Validator reports a "PASS" verdict to the Team Lead.
+  1.  **Parallel Spawning**: The Team Lead spawns BOTH the designated **Writer Agent** and the **`doc-validator`** subagent in parallel.
+  2.  **Collaborative loop**:
+    -   The **Writer** drafts/updates the document.
+    -   The **Validator** reviews the draft using the **Dual-Validation** method.
+    -   If validation fails, the Validator provides explicit fix instructions to the Writer.
+    -   The Writer applies fixes and notifies the Validator.
+  3.  **Phase Exit**: The phase is complete ONLY when the Validator reports a "PASS" verdict to the Team Lead.
 
-### Mandatory Role Mapping (v3.3.0):
+  ### Dual-Validation Method (NEW in v3.3.1):
+  The `doc-validator` MUST perform two distinct types of validation for every document:
+  -   **Programmatic**: Execute the relevant gate script from `scripts/gates/` (e.g., `gate-bdd.sh`).
+  -   **Qualitative**: Perform deep LLM analysis against phase goals, project standards, and previous artifacts.
+  A "PASS" verdict requires success in BOTH methods.
 
-| Phase | Document                     | Writer Agent             | Validator Agent |
-| ----- | ---------------------------- | ------------------------ | --------------- |
-| 2     | `01-requirements.md`         | `requirements-clarifier` | `doc-validator` |
-| 2.5   | `01.1-behavior-scenarios.md` | `bdd-scenario-writer`    | `doc-validator` |
-| 3     | `02-research.md`             | `research-agent`         | `doc-validator` |
-| 5     | `04-assessment.md`           | `code-assessor`          | `doc-validator` |
-| 6     | `06-specification.md`        | `spec-writer`            | `doc-validator` |
-| 7     | `07-implementation-plan.md`  | `spec-writer`            | `doc-validator` |
-| 10    | Documentation Updates        | `docs-executor`          | `doc-validator` |
-| 10.5  | `11-handoff.md`              | `handoff-writer`         | `doc-validator` |
+  ### Mandatory Role Mapping (v3.3.1):
 
-## Mandatory Requirement Clarification (NEW in v3.0.9)
+  | Phase | Document                     | Writer Agent             | Validator Agent | Gate Script            |
+  | ----- | ---------------------------- | ------------------------ | --------------- | ---------------------- |
+  | 2     | `01-requirements.md`         | `requirements-clarifier` | `doc-validator` | `gate-requirements.sh` |
+  | 2.5   | `01.1-behavior-scenarios.md` | `bdd-scenario-writer`    | `doc-validator` | `gate-bdd.sh`          |
+  | 3     | `02-research.md`             | `research-agent`         | `doc-validator` | (N/A)                  |
+  | 5     | `04-assessment.md`           | `code-assessor`          | `doc-validator` | (N/A)                  |
+  | 6     | `06-specification.md`        | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
+  | 7     | `07-implementation-plan.md`  | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
+  | 10    | Documentation Updates        | `docs-executor`          | `doc-validator` | `gate-docs-drift.sh`   |
+  | 10.5  | `11-handoff.md`              | `handoff-writer`         | `doc-validator` | (N/A)                  |
+
+  ## Mandatory Requirement Clarification (NEW in v3.0.9)
+
 
 To ensure technical integrity and eliminate ambiguity, **Phase 2 (Requirements)** now mandates the use of the `clarify` skill.
 
