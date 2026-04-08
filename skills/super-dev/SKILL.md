@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.0.8"
+  version: "3.0.9"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -24,6 +24,7 @@ metadata:
     - parallel-execution
     - hooks
     - git-worktree
+    - requirement-clarification
 ---
 
 # Super Dev Workflow
@@ -46,6 +47,14 @@ Super-dev now strictly enforces that ALL development work happens inside a git w
 - **Mandatory Navigation:** Subagents are explicitly instructed to `cd` into `${WORKTREE_DIR}` at the start of every session. NAVIGATION is mandatory, not just switching branches.
 - **Global Rule:** The `dev-rules` skill makes worktree navigation a mandatory initial step for all agents.
 - **Verification:** Agents are required to verify their environment using `git worktree list`.
+
+## Mandatory Requirement Clarification (NEW in v3.0.9)
+
+To ensure technical integrity and eliminate ambiguity, **Phase 2 (Requirements)** now mandates the use of the `clarify` skill.
+
+- **SOP Integration:** The Coordinator MUST invoke `activate_skill(name: "clarify")` at the start of Phase 2.
+- **Prompt Mode Enforcement:** Use the `clarify` Prompt Mode SOP (Wittgenstein language decomposition -> Socratic triple-query -> Polanyi tacit extraction) to turn the user's initial request into a structured technical directive.
+- **Output Validation:** Phase 2 is NOT complete until the user confirms the `clarify` structural assembly output (Type, Goal, Core Info, Constraints, Implicit Preferences, Acceptance Criteria).
 
 ## Hook-Driven Quality Gates (NEW in v3.0.1)
 
