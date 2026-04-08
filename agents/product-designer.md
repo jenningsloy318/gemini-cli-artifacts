@@ -438,7 +438,7 @@ Recommendation: Option C - balances complexity and UX
 
 ## Integration
 
-**Triggered by:** TechLead Phase 5.3 (when both architecture and UI work needed)
+**Triggered by:** Tech Lead Phase 5.3 (when both architecture and UI work needed)
 
 **Inputs:**
 - `[index]-requirements.md` (required)

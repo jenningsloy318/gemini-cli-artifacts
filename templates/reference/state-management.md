@@ -112,7 +112,7 @@ Tracks which skills and agents are invoked for optimization.
     "dev-rules": 0
   },
   "agent_invocations": {
-    "TechLead": 0,
+    "Tech Lead": 0,
     "dev-executor": 0,
     "qa-agent": 0,
     "code-reviewer": 0,

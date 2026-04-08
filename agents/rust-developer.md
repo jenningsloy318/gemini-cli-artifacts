@@ -454,7 +454,7 @@ pedantic = { level = "warn", priority = -1 }
 
 ## Integration
 
-**Triggered by:** execution-TechLead for Rust tasks
+**Triggered by:** execution-tech-lead for Rust tasks
 
 **Input:**
 - Task from task list

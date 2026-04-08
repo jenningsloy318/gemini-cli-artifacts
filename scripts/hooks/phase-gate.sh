@@ -24,7 +24,7 @@ REQUEST=$(echo "$INPUT" | jq -r '.tool_input.request // .tool_input.objective //
 AGENT_NAME=$(echo "$REQUEST" | grep -oP "Act as the \K[a-zA-Z0-9_-]+" | head -1 || echo "")
 AGENT_TYPE="super-dev:$AGENT_NAME"
 
-# Skip if no agent name found or it's TechLead
+# Skip if no agent name found or it's Tech Lead
 if [[ -z "$AGENT_NAME" || "$AGENT_NAME" == "tech-lead" ]]; then
   echo '{"decision": "allow"}'
   exit 0

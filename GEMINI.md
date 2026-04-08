@@ -1,12 +1,12 @@
 # Super Dev Gemini Extension
 
-A comprehensive TechLead-driven development workflow extension for Gemini CLI with parallel agent execution for implementing features, fixing bugs, and refactoring code.
+A comprehensive Tech Lead-driven development workflow extension for Gemini CLI with parallel agent execution for implementing features, fixing bugs, and refactoring code.
 
 **v2.2.0 — Enhanced with 2026 AI Development Best Practices**
 
 ## Overview
 
-This extension provides a systematic development workflow orchestrated by a **TechLead Agent** that:
+This extension provides a systematic development workflow orchestrated by a **Tech Lead Agent** that:
 
 - Assigns tasks to specialized sub-agents
 - Enforces quality gates at each phase
@@ -21,7 +21,7 @@ Invoke the `super-dev` skill to start the orchestrated workflow:
 
 The extension includes several specialized sub-agents:
 
-- `TechLead`: Central orchestrator for all workflow phases.
+- `Tech Lead`: Central orchestrator for all workflow phases.
 - `dev-executor`: Implements code changes.
 - `backend-developer`: Expert backend developer for Node.js/Python.
 - `qa-agent`: Plans and runs tests.
@@ -59,7 +59,7 @@ The extension includes several specialized sub-agents:
 9.  **Code & Adversarial Review** (`code-reviewer`, `adversarial-reviewer`)
 10. **Documentation Update** (`docs-executor`)
 11. **Handoff Writing** (`handoff-writer`)
-12. **Commit & Merge** (TechLead)
+12. **Commit & Merge** (Tech Lead)
 
 ## Configuration
 

@@ -52,7 +52,7 @@ When invoked, this command activates TWO agents in PARALLEL:
 
 For Rust and Go projects:
 - Only ONE build at a time
-- Coordinator manages build queue
+- Tech Lead manages build queue
 - Prevents resource conflicts
 
 ## Execution Process

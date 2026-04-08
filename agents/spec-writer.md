@@ -54,7 +54,7 @@ Provide the granular, atomic tasks for execution. Load structure from `task-list
 
 1. **Navigate to Worktree**: At the start of the session, if a Worktree path is provided, **IMMEDIATELY** `cd` into it.
 2. **Load Templates**: You MUST load document structures from `./templates/reference/specification-template.md`, `./templates/reference/implementation-plan-template.md`, and `./templates/reference/task-list-template.md`.
-3. **Triple-File Output**: You MUST create three distinct files using the indices assigned by the TechLead.
+3. **Triple-File Output**: You MUST create three distinct files using the indices assigned by the Tech Lead.
 4. **Dynamic Naming**: Use the format `[doc-index]-[doc-type].md`.
 5. **BDD Traceability**: Every scenario ID from the BDD document MUST be referenced in either the Specification or the Implementation Plan.
 

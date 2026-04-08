@@ -429,7 +429,7 @@ src/
 
 ## Integration
 
-**Triggered by:** execution-TechLead for frontend tasks
+**Triggered by:** execution-tech-lead for frontend tasks
 
 **Input:**
 - Task from task list
