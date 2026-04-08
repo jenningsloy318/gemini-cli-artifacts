@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.4.6"
+  version: "3.5.0"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -30,6 +30,7 @@ metadata:
     - parallel-docs
     - dual-validation
     - proactive-indexing
+    - single-turn-parallel
 ---
 
 # Super Dev Workflow
@@ -72,17 +73,17 @@ To maintain a clear audit trail and logical order, all files created within the 
 
 The Team Lead is responsible for adapting to any renames reported by the validator.
 
-## Parallel Writer-Validator Strategy (NEW in v3.3.0)
+## Parallel Writer-Validator Strategy (NEW in v3.5.0)
 
-To ensure maximum document quality and technical accuracy, every phase that produces a document MUST employ a **Parallel Writer-Validator** dual-agent strategy. Self-checks by the writer are FORBIDDEN as a substitute for peer review.
+To ensure maximum document quality and speed, every phase that produces a document MUST employ a **Single-Turn Parallel** dual-agent strategy.
 
 ### Execution Pattern:
 
-1.  **Index Assignment (v3.4.2)**: Before spawning, the Team Lead determines the next sequential index (e.g., if `01-...` exists, the next is `02-...`).
-2.  **Parallel Spawning**: The Team Lead spawns BOTH the designated **Writer Agent** and the **`doc-validator`** subagent in parallel, passing the target filename (with the assigned index) to both.
+1.  **Index Assignment**: Before spawning, the Team Lead determines the next sequential index.
+2.  **Single-Turn Spawning (MANDATORY)**: The Team Lead MUST issue BOTH subagent delegation calls (Writer + Validator) in a **SINGLE RESPONSE**. Tools in Gemini CLI execute in parallel by default; separate turns for spawning is a violation.
 3.  **Collaborative loop**:
     - The **Writer** drafts/updates the document using the assigned index.
-    - The **Validator** reviews the draft using the **Dual-Validation** method.
+    - The **Validator** (`doc-validator`) waits for the file to appear and then reviews it using the **Dual-Validation** method.
     - **Validation**: The Validator MUST verify that the assigned index is strictly incremental and has NO GAPS.
     - If validation fails, the Validator provides explicit fix instructions to the Writer.
     - The Writer applies fixes and notifies the Validator.
@@ -96,7 +97,7 @@ The `doc-validator` MUST perform two distinct types of validation for every docu
 - **Qualitative**: Perform deep LLM analysis against phase goals, project standards, and previous artifacts.
   A "PASS" verdict requires success in BOTH methods.
 
-### Mandatory Role Mapping (v3.4.2):
+### Mandatory Role Mapping (v3.5.0):
 
 | Phase | Document                       | Writer Agent             | Validator Agent | Gate Script            |
 | ----- | ------------------------------ | ------------------------ | --------------- | ---------------------- |
@@ -250,7 +251,7 @@ Grade each completed workflow run against these three dimensions:
 - Code review resolves all Critical, High, and Medium issues to zero
 - BDD scenario coverage: 100% of scenarios have corresponding passing tests
 - Documentation updated to reflect changes
-- Handoff document generated in spec directory (`11-handoff.md`)
+- Handoff document generated in spec directory (`[doc-index]-handoff.md`)
 
 ### Efficiency (Undervalued — two correct runs can differ 3x in cost)
 
@@ -459,7 +460,7 @@ In Phase 5.4, ALWAYS present COMBINED architecture+UI options together.
 
 ### BDD Scenario Propagation Rule
 
-`01.1-behavior-scenarios.md` MUST be passed as input to ALL downstream phases after Phase 2.5.
+`[doc-index]-scenarios.md` MUST be passed as input to ALL downstream phases after Phase 2.5.
 
 ## Investigation Protocol (Any Phase — On-Demand)
 
