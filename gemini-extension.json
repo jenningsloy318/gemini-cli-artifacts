@@ -1,7 +1,7 @@
 {
   "name": "super-dev",
-  "version": "3.6.2",
-  "description": "TechLead-driven development workflow with parallel agent execution and hook-driven quality gates",
+  "version": "3.7.1",
+  "description": "tech-lead-driven development workflow with parallel agent execution and hook-driven quality gates",
   "author": "Jennings Liu <jenningsloy318@gmail.com>",
   "homepage": "https://github.com/jenningsloy318/gemini-cli-artifacts",
   "repository": "https://github.com/jenningsloy318/gemini-cli-artifacts",
@@ -13,7 +13,7 @@
     "implementation",
     "refactoring",
     "specification",
-    "TechLead",
+    "tech-lead",
     "parallel",
     "hooks"
   ],

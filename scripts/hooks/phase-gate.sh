@@ -25,7 +25,7 @@ AGENT_NAME=$(echo "$REQUEST" | grep -oP "Act as the \K[a-zA-Z0-9_-]+" | head -1 
 AGENT_TYPE="super-dev:$AGENT_NAME"
 
 # Skip if no agent name found or it's TechLead
-if [[ -z "$AGENT_NAME" || "$AGENT_NAME" == "TechLead" ]]; then
+if [[ -z "$AGENT_NAME" || "$AGENT_NAME" == "tech-lead" ]]; then
   echo '{"decision": "allow"}'
   exit 0
 fi

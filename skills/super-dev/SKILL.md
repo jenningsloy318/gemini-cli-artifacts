@@ -14,13 +14,13 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.6.2"
+  version: "3.7.1"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
     - workflow
     - subagents
-    - TechLead
+    - tech-lead
     - parallel-execution
     - hooks
     - git-worktree
@@ -35,7 +35,7 @@ metadata:
 
 # Super Dev Workflow
 
-A team-based development system where the TechLead acts as Team Lead, orchestrating specialized subagents who work in their own independent context loops, returning structured results to the main session.
+A team-based development system where the Tech Lead acts as Team Lead, orchestrating specialized subagents who work in their own independent context loops, returning structured results to the main session.
 
 **Announce at start:** YOU MUST say "I'm using the super-dev skill with super-dev subagents to systematically implement this task." at the beginning of every run.
 
@@ -114,7 +114,7 @@ The `doc-validator` MUST perform two distinct types of validation for every docu
 
 To ensure technical integrity and eliminate ambiguity, **Phase 2 (Requirements)** now mandates the use of the `clarify` skill.
 
-- **SOP Integration:** The TechLead MUST invoke `activate_skill(name: "clarify")` at the start of Phase 2.
+- **SOP Integration:** The tech-lead MUST invoke `activate_skill(name: "clarify")` at the start of Phase 2.
 - **Prompt Mode Enforcement:** Use the `clarify` Prompt Mode SOP (Wittgenstein language decomposition -> Socratic triple-query -> Polanyi tacit extraction) to turn the user's initial request into a structured technical directive.
 - **Output Validation:** Phase 2 is NOT complete until the user confirms the `clarify` structural assembly output (Type, Goal, Core Info, Constraints, Implicit Preferences, Acceptance Criteria).
 
@@ -193,7 +193,7 @@ On subsequent runs, read `${extensionPath}/data/config.json` silently and apply 
 
 ```
                     ┌─────────────────┐
-                    │   TechLead   │ ◄── Team Lead (Orchestration Only)
+                    │   tech-lead   │ ◄── Team Lead (Orchestration Only)
                     │   (Main Agent)  │     Delegates to Subagents
                     └────────┬────────┘     Manages shared task list file
                              │              Synthesizes subagent results
@@ -215,7 +215,7 @@ On subsequent runs, read `${extensionPath}/data/config.json` silently and apply 
 
 ## Main Agent vs Subagents
 
-|                  | Main Agent (TechLead)  | Subagents                       |
+|                  | Main Agent (tech-lead)  | Subagents                       |
 | ---------------- | ------------------------- | ------------------------------- |
 | **Context**      | Full session history      | Independent/Fresh context       |
 | **Tools**        | Full toolset access       | Specialized/Restricted toolsets |
@@ -340,14 +340,14 @@ bash ${extensionPath}/scripts/gates/<gate-name>.sh <spec-dir>
 3. After fix, re-run the gate
 4. Only proceed when gate returns PASS (exit 0)
 
-## Entry Point: Team Lead TechLead
+## Entry Point: Team Lead (tech-lead)
 
-**ROLE:** Your current session becomes the Team Lead (TechLead).
+**ROLE:** Your current session becomes the Team Lead (tech-lead).
 
 **To start:**
 
 ```
-"I'm using super-dev. I will assume the TechLead role to implement: [task]"
+"I'm using super-dev. I will assume the Tech Lead role to implement: [task]"
 ```
 
 ## Team Lead Responsibilities (Delegate Mode)
@@ -359,7 +359,7 @@ bash ${extensionPath}/scripts/gates/<gate-name>.sh <spec-dir>
 **Once the Git worktree is created in Phase 1, ALL work from Phase 2 through Phase 11 MUST occur inside that worktree.**
 
 1. **Subagent Working Directory**: Every `generalist` call MUST include the worktree path and a mandatory `cd` instruction as the first step of the request.
-2. **Context Passing**: The TechLead MUST track the worktree path in the session context and pass it to every subagent.
+2. **Context Passing**: The tech-lead MUST track the worktree path in the session context and pass it to every subagent.
 3. **No Main Tree Edits**: Any edit to the main repository tree (outside the worktree) during Phases 2-11 is a **VIOLATION** of the isolation policy.
 
 **CRITICAL PRIME DIRECTIVE:**
@@ -449,9 +449,9 @@ generalist(request: "Act as the [Agent Name] subagent. Your instructions are loc
 
 ### Shared Task List (File-based)
 
-- TechLead maintains a `specification/[name]/task-list.md` file.
+- tech-lead maintains a `specification/[name]/task-list.md` file.
 - Subagents read this file to understand their current context.
-- TechLead updates the file after each delegation returns.
+- tech-lead updates the file after each delegation returns.
 
 ### Option Presentation
 
@@ -464,7 +464,7 @@ In Phase 5.4, ALWAYS present COMBINED architecture+UI options together.
 
 ## Investigation Protocol (Any Phase — On-Demand)
 
-**Subagent:** `investigator` — can be delegated by any phase agent or TechLead when unknowns arise.
+**Subagent:** `investigator` — can be delegated by any phase agent or tech-lead when unknowns arise.
 
 ### Auto-Trigger Conditions
 
@@ -483,7 +483,7 @@ Delegate to `investigator` when:
 
 ## Phase 12: Commit & Merge to Main
 
-**Executed by:** TechLead (Main Agent)
+**Executed by:** tech-lead (Main Agent)
 
 **PRE-CONDITION CHECK (MANDATORY):**
 Verify Phase 8, 9, 10, 10.5, and 11 are complete before starting Phase 12.
@@ -496,9 +496,9 @@ The `specification/[spec-index]-[spec-name]/` directory MUST always be committed
 | Issue                     | Solution                                                 |
 | ------------------------- | -------------------------------------------------------- |
 | Subagent hits token limit | Use `codebase_investigator` for smaller, scoped searches |
-| Delegation loop           | Assume TechLead role and resolve manually             |
+| Delegation loop           | Assume Tech Lead role and resolve manually             |
 | Gate failure              | Loop back to the relevant phase and fix the artifact     |
 
 ---
 
-**For detailed phase-by-phase implementation, see:** `${extensionPath}/agents/TechLead.md`
+**For detailed phase-by-phase implementation, see:** `${extensionPath}/agents/tech-lead.md`

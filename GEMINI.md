@@ -67,4 +67,4 @@ The extension auto-detects project settings on first run and stores them in `${e
 
 ## Maintenance Rules
 
-- **Patch Versioning:** Each time a modification is made to the codebase, the extension's patch version MUST be incremented in `gemini-extension.json`, `agents/TechLead.md`, and `skills/super-dev/SKILL.md` before committing changes.
+- **Patch Versioning:** Each time a modification is made to the codebase, the extension's patch version MUST be incremented in `gemini-extension.json`, `agents/tech-lead.md`, and `skills/super-dev/SKILL.md` before committing changes.
