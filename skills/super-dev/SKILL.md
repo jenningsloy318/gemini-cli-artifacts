@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.3.1"
+  version: "3.4.1"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -58,16 +58,18 @@ metadata:
   To maintain a clear audit trail and logical order, all files created within the specification directory (`${WORKTREE_DIR}/specification/${SPEC_NAME}/`) MUST follow a strict sequential naming convention:
 
   - **Format:** `[doc-index]-[descriptive-name].md`
+  - **Dynamic Indexing (NEW in v3.4.0)**: The `doc-validator` MUST ensure NO GAPS exist in the indexing, even if phases are skipped.
+  - **Normalization**: The `doc-validator` is authorized to rename files to enforce strict incremental indexing (e.g., `01`, `02`, `03`...).
   - **Example Indexing:**
-  - `01-requirements.md`
-  - `01.1-behavior-scenarios.md`
-  - `02-research.md`
-  - `04-assessment.md`
-  - `06-specification.md`
-  - `07-implementation-plan.md`
-  - `11-handoff.md`
+  - `[doc-index]-requirements.md`
+  - `[doc-index]-behavior-scenarios.md`
+  - `[doc-index]-research.md`
+  - `[doc-index]-assessment.md`
+  - `[doc-index]-specification.md`
+  - `[doc-index]-implementation-plan.md`
+  - `[doc-index]-handoff.md`
 
-  The Team Lead is responsible for enforcing this convention across all subagents.
+  The Team Lead is responsible for adapting to any renames reported by the validator.
 
   ## Parallel Writer-Validator Strategy (NEW in v3.3.0)
 
@@ -79,6 +81,7 @@ metadata:
   2.  **Collaborative loop**:
     -   The **Writer** drafts/updates the document.
     -   The **Validator** reviews the draft using the **Dual-Validation** method.
+    -   **Normalization (v3.4.0)**: The Validator MUST first check and normalize the filename to ensure strict incremental indexing.
     -   If validation fails, the Validator provides explicit fix instructions to the Writer.
     -   The Writer applies fixes and notifies the Validator.
   3.  **Phase Exit**: The phase is complete ONLY when the Validator reports a "PASS" verdict to the Team Lead.
@@ -89,18 +92,18 @@ metadata:
   -   **Qualitative**: Perform deep LLM analysis against phase goals, project standards, and previous artifacts.
   A "PASS" verdict requires success in BOTH methods.
 
-  ### Mandatory Role Mapping (v3.3.1):
+  ### Mandatory Role Mapping (v3.4.1):
 
-  | Phase | Document                     | Writer Agent             | Validator Agent | Gate Script            |
-  | ----- | ---------------------------- | ------------------------ | --------------- | ---------------------- |
-  | 2     | `01-requirements.md`         | `requirements-clarifier` | `doc-validator` | `gate-requirements.sh` |
-  | 2.5   | `01.1-behavior-scenarios.md` | `bdd-scenario-writer`    | `doc-validator` | `gate-bdd.sh`          |
-  | 3     | `02-research.md`             | `research-agent`         | `doc-validator` | (N/A)                  |
-  | 5     | `04-assessment.md`           | `code-assessor`          | `doc-validator` | (N/A)                  |
-  | 6     | `06-specification.md`        | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
-  | 7     | `07-implementation-plan.md`  | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
-  | 10    | Documentation Updates        | `docs-executor`          | `doc-validator` | `gate-docs-drift.sh`   |
-  | 10.5  | `11-handoff.md`              | `handoff-writer`         | `doc-validator` | (N/A)                  |
+  | Phase | Document                        | Writer Agent             | Validator Agent | Gate Script            |
+  | ----- | ------------------------------- | ------------------------ | --------------- | ---------------------- |
+  | 2     | `[doc-index]-requirements.md`   | `requirements-clarifier` | `doc-validator` | `gate-requirements.sh` |
+  | 2.5   | `[doc-index]-scenarios.md`      | `bdd-scenario-writer`    | `doc-validator` | `gate-bdd.sh`          |
+  | 3     | `[doc-index]-research.md`       | `research-agent`         | `doc-validator` | (N/A)                  |
+  | 5     | `[doc-index]-assessment.md`     | `code-assessor`          | `doc-validator` | (N/A)                  |
+  | 6     | `[doc-index]-specification.md`  | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
+  | 7     | `[doc-index]-plan.md`           | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
+  | 10    | Documentation Updates           | `docs-executor`          | `doc-validator` | `gate-docs-drift.sh`   |
+  | 10.5  | `[doc-index]-handoff.md`        | `handoff-writer`         | `doc-validator` | (N/A)                  |
 
   ## Mandatory Requirement Clarification (NEW in v3.0.9)
 
