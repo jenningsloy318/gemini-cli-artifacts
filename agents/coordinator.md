@@ -3,7 +3,7 @@ name: coordinator
 description: Coordinator Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Coordinator - Team Lead Agent (v3.4.1)
+# Coordinator - Team Lead Agent (v3.4.2)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -40,29 +40,32 @@ Spawn BOTH in parallel:
    - Task: [Phase Task]
    - Spec directory: specification/[spec-name]
    - Inputs: [Reference Artifacts]
-   Your role is to produce [Document Name].
+   - Target Filename: [assigned-doc-index]-[Document Type].md
+   Your role is to produce [assigned-doc-index]-[Document Type].md.
    A doc-validator runs alongside you — respond to its VALIDATION FAILED messages by fixing and replying FIXED."
 
 2. "Spawn a doc-validator teammate with this context:
-   - Document: specification/[spec-name]/[Document Name]
+   - Document: specification/[spec-name]/[assigned-doc-index]-[Document Type].md
    - Gate script: scripts/gates/[Relevant Gate].sh
    - Writer agent: [Writer Agent]
    - Spec directory: specification/[spec-name]
    MANDATORY: You MUST perform Dual-Validation (Programmatic via Gate Script + Qualitative via LLM).
-   FIRST STEP: Normalize filename to [doc-index]-[doc-type].md (incremental indexing, NO GAPS).
-   Validate [Document Name] against phase goals and project standards.
+   FIRST STEP: Verify filename is strictly sequential [assigned-doc-index] (NO GAPS).
+   Validate the document against phase goals and project standards.
    Message the writer with fix instructions on failure. Loop until PASS."
 ```
 
 **Wait for BOTH to complete (Validator reports PASS).**
 
-**Monitoring Renames (CRITICAL)**: If the `doc-validator` reports a rename (e.g., "Rename Occurred: Yes"), you MUST immediately:
+**Proactive Indexing (CRITICAL)**: You MUST track the `doc-index` for every document created. For every new document delegation, you MUST proactively assign the next sequential number (`last_index + 1`) to both the Writer and the Validator. Do NOT wait for the validator to normalize gaps.
+
+**Monitoring Renames**: If the `doc-validator` reports a rename (e.g., "Rename Occurred: Yes"), you MUST immediately:
 
 1. Update `[spec-name]-workflow-tracking.json`: Reflect the new path in the tasks array.
 2. Update `task-list.md`: Update the filename in the status table.
 3. Update Context: Use the NEW filename for all subsequent subagent requests.
 
-**Mapping (v3.4.0):**
+**Mapping (v3.4.2):**
 
 - **Phase 2**: `requirements-clarifier` (W) | `doc-validator` (V) | `gate-requirements.sh`
 - **Phase 2.5**: `bdd-scenario-writer` (W) | `doc-validator` (V) | `gate-bdd.sh`
@@ -85,7 +88,7 @@ You MUST ensure all artifacts in the spec directory follow the sequential index 
 - `[doc-index]-implementation-plan.md`
 - `[doc-index]-handoff.md`
 
-**Dynamic Indexing**: The `doc-validator` is authorized to increment these indexes to ensure NO GAPS exist, even if phases are skipped. You MUST adapt to any renames reported by the validator.
+**Proactive Sequential Indexing**: You are responsible for assigning these indexes sequentially (01, 02, 03...). The `doc-validator` acts as a safety layer to normalize any discrepancies.
 
 ### Mandatory Requirement Clarification (NEW)
 
