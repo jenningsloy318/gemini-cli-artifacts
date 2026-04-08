@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.0.7"
+  version: "3.0.8"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -32,17 +32,17 @@ A team-based development system where the Coordinator acts as Team Lead, orchest
 
 **Announce at start:** YOU MUST say "I'm using the super-dev skill with super-dev subagents to systematically implement this task." at the beginning of every run.
 
-## Mandatory Worktree Enforcement (NEW in v3.0.5)
+## Mandatory Worktree Enforcement (NEW in v3.0.8)
 
 Super-dev now strictly enforces that ALL development work happens inside a git worktree.
 
 - **Phase 1 Identification:** Before doing any work, the Team Lead MUST define:
   - `SPEC_INDEX`: Next sequential index (e.g., `01`).
   - `FEATURE_NAME`: Kebab-case name of the task (e.g., `auth-fix`).
-  - `SPEC_NAME`: `spec-${SPEC_INDEX}-${FEATURE_NAME}` (e.g., `spec-01-auth-fix`).
-  - `BRANCH_NAME`: `${SPEC_NAME}` (e.g., `spec-01-auth-fix`).
-  - `WORKTREE_DIR`: `.worktree/${SPEC_NAME}`.
-- **Explicit Creation:** Team Lead MUST run `git worktree add -b ${BRANCH_NAME} ${WORKTREE_DIR}`. (Note: Branch name and folder name are kept identical).
+  - `SPEC_NAME`: `${SPEC_INDEX}-${FEATURE_NAME}` (e.g., `01-auth-fix`).
+  - `BRANCH_NAME`: `${SPEC_NAME}` (Identical to SPEC_NAME, e.g., `01-auth-fix`).
+  - `WORKTREE_DIR`: `.worktree/${SPEC_NAME}` (Directory part identical to SPEC_NAME, e.g., `.worktree/01-auth-fix`).
+- **Explicit Creation:** Team Lead MUST run `git worktree add -b ${BRANCH_NAME} ${WORKTREE_DIR}`.
 - **Mandatory Navigation:** Subagents are explicitly instructed to `cd` into `${WORKTREE_DIR}` at the start of every session. NAVIGATION is mandatory, not just switching branches.
 - **Global Rule:** The `dev-rules` skill makes worktree navigation a mandatory initial step for all agents.
 - **Verification:** Agents are required to verify their environment using `git worktree list`.
