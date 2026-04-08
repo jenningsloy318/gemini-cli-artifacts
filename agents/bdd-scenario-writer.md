@@ -107,78 +107,13 @@ This is BAD because: imperative style (click, type, field), implementation detai
 ### MANDATORY Behavior
 
 1. **Navigate to Worktree**: At the start of the session, if a Worktree path is provided, **IMMEDIATELY** `cd` into it.
-2. **Declarative Style**: Focus on behavior, not implementation details.
-3. **Traceability**: Ensure every scenario maps to an acceptance criterion.
+2. **Load Template**: You MUST load the document structure from `./templates/reference/bdd-scenarios-template.md`.
+3. **Declarative Style**: Focus on behavior, not implementation details.
+4. **Traceability**: Ensure every scenario maps to an acceptance criterion.
 
-## Output Template
+## Output Format
 
-The output file is `01.1-behavior-scenarios.md` in the spec directory:
-
-```markdown
-# Behavior Scenarios: [Feature Name]
-
-**Date:** [timestamp]
-**Author:** super-dev:bdd-scenario-writer
-**Source:** ./01-requirements.md
-**Total Scenarios:** [count]
-
-## Feature: [Feature Name]
-
-### SCENARIO-001: [Meaningful Behavior Title]
-
-**Acceptance Criteria:** AC-XX from requirements
-**Priority:** P0/P1/P2
-
-**Given** [precondition in business language]
-**When** [single action/event in business language]
-**Then** [verifiable outcome in business language]
-
-### SCENARIO-002: [Meaningful Behavior Title]
-
-**Acceptance Criteria:** AC-XX from requirements
-**Priority:** P0/P1/P2
-
-**Given** [precondition]
-**When** [action]
-**Then** [outcome]
-**And** [additional outcome if needed]
-
-[... more scenarios ...]
-
-## Scenario-Acceptance Criteria Traceability Matrix
-
-| Acceptance Criterion | Scenario IDs               | Coverage |
-| -------------------- | -------------------------- | -------- |
-| AC-01: [description] | SCENARIO-001, SCENARIO-002 | Covered  |
-| AC-02: [description] | SCENARIO-003               | Covered  |
-
-## Coverage Summary
-
-- **Total Acceptance Criteria:** [X]
-- **Covered by Scenarios:** [Y]
-- **Uncovered:** [Z] (must be 0)
-- **Total Scenarios:** [N]
-- **Scenarios per AC (avg):** [N/X]
-
-## Quality Validation
-
-### Per-Scenario Checks
-
-| Scenario     | Q1  | Q2  | Q3  | Q4  | Q5  | Q6  | Q7  | Q8  | Q9  | Q10 | Pass |
-| ------------ | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---- |
-| SCENARIO-001 | Y   | Y   | Y   | Y   | Y   | Y   | Y   | Y   | Y   | Y   | Y    |
-
-### Per-Document Checks
-
-- [x] D1: All AC covered
-- [x] D2: Scenario count within limits
-- [x] D3: Traceability matrix complete
-- [x] D4: All IDs unique
-- [x] D5: Priorities assigned
-- [x] D6: Happy paths first
-- [x] D7: Error cases included
-- [x] D8: No duplicates
-```
+The output file is `[doc-index]-scenarios.md` in the spec directory. You MUST produce a document following the structure defined in `templates/reference/bdd-scenarios-template.md`. Use the XML tags defined there to guide your sectioning and content depth.
 
 ## Quality Gates
 

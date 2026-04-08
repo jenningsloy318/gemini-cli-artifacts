@@ -36,15 +36,15 @@ Review all input documents and extract key constraints, patterns, and scenarios.
 
 ### Step 2: Create Technical Specification (`[doc-index]-specification.md`)
 
-Focus on ARCHITECTURE and INTERFACES. Do NOT include rollout or task details here.
+Focus on ARCHITECTURE and INTERFACES. Load structure from `specification-template.md`.
 
 ### Step 3: Create Implementation Plan (`[doc-index]-plan.md`)
 
-Detail the execution strategy, milestones, and file inventory.
+Detail the execution strategy and file inventory. Load structure from `implementation-plan-template.md`.
 
 ### Step 4: Create Task List (`[doc-index]-task-list.md`)
 
-Provide the granular, atomic tasks for the dev-executor.
+Provide the granular, atomic tasks for execution. Load structure from `task-list-template.md`.
 
 ---
 
@@ -53,98 +53,14 @@ Provide the granular, atomic tasks for the dev-executor.
 ### MANDATORY Behavior
 
 1. **Navigate to Worktree**: At the start of the session, if a Worktree path is provided, **IMMEDIATELY** `cd` into it.
-2. **Triple-File Output**: You MUST create three distinct files using the indices assigned by the Coordinator.
-3. **Dynamic Naming**: Use the format `[doc-index]-[doc-type].md`.
-4. **BDD Traceability**: Every scenario ID from the BDD document MUST be referenced in either the Specification or the Implementation Plan.
+2. **Load Templates**: You MUST load document structures from `./templates/reference/specification-template.md`, `./templates/reference/implementation-plan-template.md`, and `./templates/reference/task-list-template.md`.
+3. **Triple-File Output**: You MUST create three distinct files using the indices assigned by the Coordinator.
+4. **Dynamic Naming**: Use the format `[doc-index]-[doc-type].md`.
+5. **BDD Traceability**: Every scenario ID from the BDD document MUST be referenced in either the Specification or the Implementation Plan.
 
-### Document 1 Template: Technical Specification (`[index]-specification.md`)
+## Output Format
 
-```markdown
-# Technical Specification: [Feature Name]
-
-**Status:** Draft
-**Writer:** super-dev:spec-writer
-
-## 1. Overview
-
-[Brief description of what will be built/fixed]
-
-## 2. Technical Design
-
-### 2.1 Architecture
-
-[ASCII Diagram of components]
-
-### 2.2 Component Specifications
-
-- **Component:** [Name]
-- **Interface:** [Code block]
-- **Responsibilities:** [List]
-
-### 2.3 Data Model
-
-[Interfaces and Field Names - NO generic names like 'data' or 'item']
-
-### 2.4 API Design
-
-[Endpoint definitions if applicable]
-
-## 3. Testing Strategy
-
-[Unit, Integration, and BDD mapping]
-
-## 4. Unambiguous Implementation Requirements
-
-[Naming rules and implementation constraints]
-
-## 5. References
-
-[Relative links to input artifacts]
-```
-
-### Document 2 Template: Implementation Plan (`[index]-plan.md`)
-
-```markdown
-# Implementation Plan: [Feature Name]
-
-## 1. File Inventory (MANDATORY)
-
-| File Path | Action                 | Purpose  |
-| --------- | ---------------------- | -------- |
-| [path]    | [Create/Modify/Delete] | [Reason] |
-
-## 2. Milestones
-
-### Milestone 1: [Name]
-
-- **Goal:** [description]
-- **Scenarios:** [SCENARIO-XXX]
-- **Files:** [paths]
-
-## 3. Risk Assessment
-
-[Potential issues and mitigations]
-```
-
-### Document 3 Template: Task List (`[index]-task-list.md`)
-
-```markdown
-# Task List: [Feature Name]
-
-## Tasks
-
-### Milestone 1: [Name]
-
-- [ ] **T1.1** [Description]
-  - **Files:** [path]
-  - **Acceptance:** [criteria]
-
-### Final Tasks
-
-- [ ] **TF.1** Run tests (`npm test` / `cargo test`)
-- [ ] **TF.2** Update project docs
-- [ ] **TF.3** Code review
-```
+You MUST produce three documents following the structures defined in the respective reference templates. Use the XML tags defined there to guide your sectioning and content depth.
 
 ## Quality Standards
 
