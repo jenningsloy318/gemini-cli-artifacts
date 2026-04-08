@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.1.2"
+  version: "3.2.0"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -26,6 +26,7 @@ metadata:
     - git-worktree
     - requirement-clarification
     - isolation
+    - writer-validator
 ---
 
 # Super Dev Workflow
@@ -65,6 +66,29 @@ To maintain a clear audit trail and logical order, all files created within the 
   - `11-handoff.md`
 
 The Team Lead is responsible for enforcing this convention across all subagents.
+
+## Writer-Validator Strategy (NEW in v3.2.0)
+
+To ensure maximum document quality and technical accuracy, every phase that produces a document MUST employ a **Writer-Validator** dual-agent strategy. Self-checks by the writer are FORBIDDEN as a substitute for peer review.
+
+### Execution Pattern:
+
+1.  **Drafting (Writer)**: The Team Lead delegates the phase task to the primary specialist subagent to produce the document draft.
+2.  **Validation (Validator)**: Once the draft is written, the Team Lead delegates a review task to a _different_ specialist subagent. The Validator must check the draft against the phase inputs, project standards, and the previous phase's confirmed artifacts.
+3.  **Synthesis**: The Team Lead reviews the Validator's findings. If issues are found, the Team Lead loops back to the Writer for corrections until the Validator gives a "PASS" verdict.
+
+### Mandatory Role Mapping:
+
+| Phase | Document                     | Writer Agent             | Validator Agent      |
+| ----- | ---------------------------- | ------------------------ | -------------------- |
+| 2     | `01-requirements.md`         | `requirements-clarifier` | `code-assessor`      |
+| 2.5   | `01.1-behavior-scenarios.md` | `bdd-scenario-writer`    | `qa-agent`           |
+| 3     | `02-research.md`             | `research-agent`         | `architecture-agent` |
+| 5     | `04-assessment.md`           | `code-assessor`          | `architecture-agent` |
+| 6     | `06-specification.md`        | `spec-writer`            | `code-reviewer`      |
+| 7     | `07-implementation-plan.md`  | `spec-writer`            | `code-reviewer`      |
+| 10    | Documentation Updates        | `docs-executor`          | `code-reviewer`      |
+| 10.5  | `11-handoff.md`              | `handoff-writer`         | `coordinator` (Main) |
 
 ## Mandatory Requirement Clarification (NEW in v3.0.9)
 
