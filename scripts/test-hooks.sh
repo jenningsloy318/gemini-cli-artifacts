@@ -52,4 +52,24 @@ else
   exit 1
 fi
 
+echo "Testing phase-integrity.sh..."
+
+# Test no phase
+NO_PHASE_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "No phase here"}}' | bash scripts/hooks/phase-integrity.sh)
+if [[ "$NO_PHASE_RESULT" == *"allow"* ]]; then
+  echo "✅ Request without phase allowed"
+else
+  echo "❌ Request without phase blocked: $NO_PHASE_RESULT"
+  exit 1
+fi
+
+# Test missing directory (soft allow)
+MISSING_DIR_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "Phase 3 in specification/non-existent"}}' | bash scripts/hooks/phase-integrity.sh)
+if [[ "$MISSING_DIR_RESULT" == *"allow"* ]]; then
+  echo "✅ Missing directory handled (soft allow)"
+else
+  echo "❌ Missing directory blocked: $MISSING_DIR_RESULT"
+  exit 1
+fi
+
 echo "All tests passed! 🎉"

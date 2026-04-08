@@ -18,7 +18,8 @@ fi
 REQUEST=$(echo "$INPUT" | jq -r '.tool_input.request // ""')
 
 # Extract phase number from the request if present (e.g., "Act as the requirements-clarifier subagent for Phase 2")
-PHASE=$(echo "$REQUEST" | grep -oE "Phase [0-9.]+" | head -1 | awk '{print $2}')
+# Fix: Use || echo "" to prevent set -e from exiting on non-match
+PHASE=$(echo "$REQUEST" | grep -oE "Phase [0-9.]+" | head -1 | awk '{print $2}' || echo "")
 
 if [ -z "$PHASE" ]; then
   echo '{"decision": "allow"}'
@@ -26,11 +27,12 @@ if [ -z "$PHASE" ]; then
 fi
 
 # Extract spec directory from the request
-SPEC_DIR=$(echo "$REQUEST" | grep -oE "specification/[^ ]+" | head -1)
+# We look for paths like .worktree/.../specification/... or just specification/...
+SPEC_DIR=$(echo "$REQUEST" | grep -oE "(\.worktree/[^/]+/)?specification/[^ ]+" | head -1 || echo "")
 
 if [ -z "$SPEC_DIR" ]; then
   # Try to find spec directory in the request string if it's not preceded by 'specification/'
-  SPEC_DIR=$(echo "$REQUEST" | grep -oE "specification/[a-zA-Z0-9_-]+" | head -1)
+  SPEC_DIR=$(echo "$REQUEST" | grep -oE "(\.worktree/[^/]+/)?specification/[a-zA-Z0-9_-]+" | head -1 || echo "")
 fi
 
 # If we can't find the spec directory, we can't check integrity
