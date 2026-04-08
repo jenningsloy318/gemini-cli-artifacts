@@ -72,4 +72,15 @@ else
   exit 1
 fi
 
+echo "Testing require-tests-for-pr.sh..."
+
+# Test non-PR tool
+NON_PR_RESULT=$(echo '{"tool_name": "ls"}' | bash scripts/hooks/require-tests-for-pr.sh)
+if [[ "$NON_PR_RESULT" == *"allow"* ]]; then
+  echo "✅ Non-PR tool allowed"
+else
+  echo "❌ Non-PR tool blocked: $NON_PR_RESULT"
+  exit 1
+fi
+
 echo "All tests passed! 🎉"
