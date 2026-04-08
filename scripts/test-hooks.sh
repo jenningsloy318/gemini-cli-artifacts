@@ -72,6 +72,33 @@ else
   exit 1
 fi
 
+# Test worktree isolation (v3.6.1)
+mkdir -p .worktree/test-spec/specification/test-spec
+echo '{"tool_name": "generalist", "tool_input": {"request": "Phase 2.5 in .worktree/test-spec/specification/test-spec"}}' | bash scripts/hooks/phase-integrity.sh > /dev/null
+if [[ $? -eq 0 ]]; then
+  # Result should be deny because 01-requirements.md is missing in the worktree
+  INTEGRITY_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "Phase 2.5 in .worktree/test-spec/specification/test-spec"}}' | bash scripts/hooks/phase-integrity.sh)
+  if [[ "$INTEGRITY_RESULT" == *"deny"* ]]; then
+    echo "✅ Worktree integrity check (missing req) PASSED"
+  else
+    echo "❌ Worktree integrity check (missing req) FAILED: $INTEGRITY_RESULT"
+    rm -rf .worktree/test-spec
+    exit 1
+  fi
+fi
+
+# Test worktree success
+touch .worktree/test-spec/specification/test-spec/01-requirements.md
+SUCCESS_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "Phase 2.5 in .worktree/test-spec/specification/test-spec"}}' | bash scripts/hooks/phase-integrity.sh)
+if [[ "$SUCCESS_RESULT" == *"allow"* ]]; then
+  echo "✅ Worktree integrity check (with req) PASSED"
+else
+  echo "❌ Worktree integrity check (with req) FAILED: $SUCCESS_RESULT"
+  rm -rf .worktree/test-spec
+  exit 1
+fi
+rm -rf .worktree/test-spec
+
 echo "Testing require-tests-for-pr.sh..."
 
 # Test non-PR tool
