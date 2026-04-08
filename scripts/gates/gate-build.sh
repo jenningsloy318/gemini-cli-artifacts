@@ -8,7 +8,9 @@
 set -euo pipefail
 
 SPEC_DIR="${1:?Usage: gate-build.sh <spec-dir>}"
-TEST_REPORT="${SPEC_DIR}/08-test-report.md"
+
+# Find test report dynamically
+TEST_REPORT=$(find "$SPEC_DIR" -maxdepth 1 -name "*-test-report.md" | head -1)
 
 PASS=0
 FAIL=0
@@ -19,15 +21,19 @@ check() {
     local result="$2"
     if [ "$result" = "true" ]; then
         PASS=$((PASS + 1))
+        echo "  [PASS] ${desc}"
     else
         FAIL=$((FAIL + 1))
         ERRORS="${ERRORS}\n  FAIL: ${desc}"
+        echo "  [FAIL] ${desc}"
     fi
 }
 
+echo "GATE: Build & Test (Dynamic Resolution)"
+
 # Check report file exists
-if [ ! -f "$TEST_REPORT" ]; then
-    echo "GATE FAIL: Test report not found: ${TEST_REPORT}"
+if [ -z "$TEST_REPORT" ] || [ ! -f "$TEST_REPORT" ]; then
+    echo "GATE FAIL: Test report (*-test-report.md) not found in ${SPEC_DIR}"
     exit 1
 fi
 
@@ -45,7 +51,7 @@ if [ -z "$fail_count" ]; then
   # Alternative format check
   fail_count=$(grep -ci "FAILURES\|ERRORS" "$TEST_REPORT" || true)
 fi
-check "Zero failing tests (found: ${fail_count})" "$([ "${fail_count:-0}" -eq 0 ] && echo true || echo false)"
+check "Zero failing tests (found: ${fail_count:-0})" "$([ "${fail_count:-0}" -eq 0 ] && echo true || echo false)"
 
 # Check for lint status
 has_lint_pass=$(grep -ci "lint.*pass\|linting.*success" "$TEST_REPORT" || true)
@@ -53,11 +59,10 @@ check "Linting passing" "$([ "$has_lint_pass" -gt 0 ] && echo true || echo false
 
 # Report
 TOTAL=$((PASS + FAIL))
-echo "GATE: Build & Test"
-echo "  Score: ${PASS}/${TOTAL} checks passed"
+echo -e "\nFinal Score: ${PASS}/${TOTAL} checks passed"
 
 if [ "$FAIL" -gt 0 ]; then
-    echo -e "  Failures:${ERRORS}"
+    echo -e "Failures:${ERRORS}"
     echo "GATE RESULT: FAIL"
     exit 1
 else

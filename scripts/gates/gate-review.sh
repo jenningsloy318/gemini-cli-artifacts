@@ -8,8 +8,10 @@
 set -euo pipefail
 
 SPEC_DIR="${1:?Usage: gate-review.sh <spec-dir>}"
-REVIEW_FILE="${SPEC_DIR}/09-code-review.md"
-ADV_REVIEW_FILE="${SPEC_DIR}/09.1-adversarial-review.md"
+
+# Find review files dynamically
+REVIEW_FILE=$(find "$SPEC_DIR" -maxdepth 1 -name "*-code-review.md" | head -1)
+ADV_REVIEW_FILE=$(find "$SPEC_DIR" -maxdepth 1 -name "*-adversarial-review.md" | head -1)
 
 PASS=0
 FAIL=0
@@ -20,14 +22,18 @@ check() {
     local result="$2"
     if [ "$result" = "true" ]; then
         PASS=$((PASS + 1))
+        echo "  [PASS] ${desc}"
     else
         FAIL=$((FAIL + 1))
         ERRORS="${ERRORS}\n  FAIL: ${desc}"
+        echo "  [FAIL] ${desc}"
     fi
 }
 
-# Check Code Review
-if [ -f "$REVIEW_FILE" ]; then
+echo "GATE: Review Verdicts (Dynamic Resolution)"
+
+# 1. Check Code Review
+if [ -n "$REVIEW_FILE" ] && [ -f "$REVIEW_FILE" ]; then
     # Verdict should be APPROVED
     verdict=$(grep -i "verdict:" "$REVIEW_FILE" | head -n 1 | cut -d':' -f2 | tr -d ' ' || true)
     check "Code Review Verdict: APPROVED (found: ${verdict:-none})" "$([ "${verdict^^}" = "APPROVED" ] && echo true || echo false)"
@@ -40,25 +46,24 @@ if [ -f "$REVIEW_FILE" ]; then
     high_count=$(grep -i "high:" "$REVIEW_FILE" | head -n 1 | cut -d':' -f2 | tr -d ' ' || true)
     check "Zero High findings (found: ${high_count:-none})" "$([ "${high_count:-0}" -eq 0 ] && echo true || echo false)"
 else
-    check "Code Review file exists" "false"
+    check "Code Review file (*-code-review.md) found" "false"
 fi
 
-# Check Adversarial Review
-if [ -f "$ADV_REVIEW_FILE" ]; then
+# 2. Check Adversarial Review
+if [ -n "$ADV_REVIEW_FILE" ] && [ -f "$ADV_REVIEW_FILE" ]; then
     # Verdict should be PASS
     verdict=$(grep -i "verdict:" "$ADV_REVIEW_FILE" | head -n 1 | cut -d':' -f2 | tr -d ' ' || true)
     check "Adversarial Review Verdict: PASS (found: ${verdict:-none})" "$([ "${verdict^^}" = "PASS" ] && echo true || echo false)"
 else
-    check "Adversarial Review file exists" "false"
+    check "Adversarial Review file (*-adversarial-review.md) found" "false"
 fi
 
 # Report
 TOTAL=$((PASS + FAIL))
-echo "GATE: Review Verdicts"
-echo "  Score: ${PASS}/${TOTAL} checks passed"
+echo -e "\nFinal Score: ${PASS}/${TOTAL} checks passed"
 
 if [ "$FAIL" -gt 0 ]; then
-    echo -e "  Failures:${ERRORS}"
+    echo -e "Failures:${ERRORS}"
     echo "GATE RESULT: FAIL"
     exit 1
 else
