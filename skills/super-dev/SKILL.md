@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.1.1"
+  version: "3.1.2"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -25,6 +25,7 @@ metadata:
     - hooks
     - git-worktree
     - requirement-clarification
+    - isolation
 ---
 
 # Super Dev Workflow
@@ -33,7 +34,7 @@ A team-based development system where the Coordinator acts as Team Lead, orchest
 
 **Announce at start:** YOU MUST say "I'm using the super-dev skill with super-dev subagents to systematically implement this task." at the beginning of every run.
 
-## Mandatory Worktree Enforcement (NEW in v3.0.8)
+## Mandatory Worktree Enforcement (NEW in v3.1.2)
 
 Super-dev now strictly enforces that ALL development work happens inside a git worktree.
 
@@ -44,9 +45,26 @@ Super-dev now strictly enforces that ALL development work happens inside a git w
   - `BRANCH_NAME`: `${SPEC_NAME}` (Identical to SPEC_NAME, e.g., `01-auth-fix`).
   - `WORKTREE_DIR`: `.worktree/${SPEC_NAME}` (Directory part identical to SPEC_NAME, e.g., `.worktree/01-auth-fix`).
 - **Explicit Creation:** Team Lead MUST run `git worktree add -b ${BRANCH_NAME} ${WORKTREE_DIR}`.
+- **Strict Isolation:** Once the worktree is created, ALL subsequent labor (Phases 2-11) MUST occur within that worktree. Any edit to the main repository tree during these phases is a VIOLATION.
 - **Mandatory Navigation:** Subagents are explicitly instructed to `cd` into `${WORKTREE_DIR}` at the start of every session. NAVIGATION is mandatory, not just switching branches.
 - **Global Rule:** The `dev-rules` skill makes worktree navigation a mandatory initial step for all agents.
 - **Verification:** Agents are required to verify their environment using `git worktree list`.
+
+## Specification Directory Naming Convention (NEW in v3.1.2)
+
+To maintain a clear audit trail and logical order, all files created within the specification directory (`${WORKTREE_DIR}/specification/${SPEC_NAME}/`) MUST follow a strict sequential naming convention:
+
+- **Format:** `[doc-index]-[descriptive-name].md`
+- **Example Indexing:**
+  - `01-requirements.md`
+  - `01.1-behavior-scenarios.md`
+  - `02-research.md`
+  - `04-assessment.md`
+  - `06-specification.md`
+  - `07-implementation-plan.md`
+  - `11-handoff.md`
+
+The Team Lead is responsible for enforcing this convention across all subagents.
 
 ## Mandatory Requirement Clarification (NEW in v3.0.9)
 

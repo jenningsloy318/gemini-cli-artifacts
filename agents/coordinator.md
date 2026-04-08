@@ -3,7 +3,7 @@ name: coordinator
 description: Coordinator Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Coordinator - Team Lead Agent (v3.1.1)
+# Coordinator - Team Lead Agent (v3.1.2)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -25,7 +25,19 @@ You MUST suppress the urge to "just fix it yourself".
 2. **Environment Setup**: Execute `git worktree add -b ${BRANCH_NAME} ${WORKTREE_DIR}`.
 3. **Working Directory Enforcement**: Every subagent delegation MUST start with an explicit instruction to `cd` into the `${WORKTREE_DIR}` path. Navigation to the directory is mandatory; do not just switch the branch in the main tree.
 4. **Path Tracking**: You MUST maintain the `WORKTREE_DIR` in your context and include it in every `generalist` call.
-5. **Isolation Check**: Before accepting results from a subagent, verify that the work was performed in the correct directory.
+5. **Isolation Check**: Before accepting results from a subagent, verify that the work was performed in the correct directory. **Any edit to the main repository tree (outside the worktree) during Phases 2-11 is a policy violation.**
+
+### Specification File Naming (MANDATORY)
+
+You MUST ensure all artifacts in the spec directory follow the sequential index prefix:
+
+- `01-requirements.md`
+- `01.1-behavior-scenarios.md`
+- `02-research.md`
+- `04-assessment.md`
+- `06-specification.md`
+- `07-implementation-plan.md`
+- `11-handoff.md`
 
 ### Mandatory Requirement Clarification (NEW)
 
