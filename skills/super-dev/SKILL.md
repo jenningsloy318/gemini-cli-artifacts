@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.2.1"
+  version: "3.3.0"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -27,6 +27,7 @@ metadata:
     - requirement-clarification
     - isolation
     - writer-validator
+    - parallel-docs
 ---
 
 # Super Dev Workflow
@@ -67,17 +68,21 @@ To maintain a clear audit trail and logical order, all files created within the 
 
 The Team Lead is responsible for enforcing this convention across all subagents.
 
-## Writer-Validator Strategy (NEW in v3.2.0)
+## Parallel Writer-Validator Strategy (NEW in v3.3.0)
 
-To ensure maximum document quality and technical accuracy, every phase that produces a document MUST employ a **Writer-Validator** dual-agent strategy. Self-checks by the writer are FORBIDDEN as a substitute for peer review.
+To ensure maximum document quality and technical accuracy, every phase that produces a document MUST employ a **Parallel Writer-Validator** dual-agent strategy. Self-checks by the writer are FORBIDDEN as a substitute for peer review.
 
 ### Execution Pattern:
 
-1.  **Drafting (Writer)**: The Team Lead delegates the phase task to the primary specialist subagent to produce the document draft.
-2.  **Validation (Validator)**: Once the draft is written, the Team Lead delegates a review task to the **`doc-validator`** subagent. The Validator must check the draft against the phase inputs, project standards, and the previous phase's confirmed artifacts.
-3.  **Synthesis**: The Team Lead reviews the Validator's findings. If issues are found, the Team Lead loops back to the Writer for corrections until the Validator gives a "PASS" verdict.
+1.  **Parallel Spawning**: The Team Lead spawns BOTH the designated **Writer Agent** and the **`doc-validator`** subagent in parallel.
+2.  **Collaborative loop**:
+    - The **Writer** drafts/updates the document.
+    - The **Validator** reviews the draft against phase goals, project standards, and previous artifacts.
+    - If validation fails, the Validator provides explicit fix instructions to the Writer.
+    - The Writer applies fixes and notifies the Validator.
+3.  **Phase Exit**: The phase is complete ONLY when the Validator reports a "PASS" verdict to the Team Lead.
 
-### Mandatory Role Mapping (v3.2.1):
+### Mandatory Role Mapping (v3.3.0):
 
 | Phase | Document                     | Writer Agent             | Validator Agent |
 | ----- | ---------------------------- | ------------------------ | --------------- |
