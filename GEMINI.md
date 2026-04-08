@@ -1,12 +1,12 @@
 # Super Dev Gemini Extension
 
-A comprehensive coordinator-driven development workflow extension for Gemini CLI with parallel agent execution for implementing features, fixing bugs, and refactoring code.
+A comprehensive TechLead-driven development workflow extension for Gemini CLI with parallel agent execution for implementing features, fixing bugs, and refactoring code.
 
 **v2.2.0 — Enhanced with 2026 AI Development Best Practices**
 
 ## Overview
 
-This extension provides a systematic development workflow orchestrated by a **Coordinator Agent** that:
+This extension provides a systematic development workflow orchestrated by a **TechLead Agent** that:
 
 - Assigns tasks to specialized sub-agents
 - Enforces quality gates at each phase
@@ -21,7 +21,7 @@ Invoke the `super-dev` skill to start the orchestrated workflow:
 
 The extension includes several specialized sub-agents:
 
-- `coordinator`: Central orchestrator for all workflow phases.
+- `TechLead`: Central orchestrator for all workflow phases.
 - `dev-executor`: Implements code changes.
 - `backend-developer`: Expert backend developer for Node.js/Python.
 - `qa-agent`: Plans and runs tests.
@@ -59,7 +59,7 @@ The extension includes several specialized sub-agents:
 9.  **Code & Adversarial Review** (`code-reviewer`, `adversarial-reviewer`)
 10. **Documentation Update** (`docs-executor`)
 11. **Handoff Writing** (`handoff-writer`)
-12. **Commit & Merge** (Coordinator)
+12. **Commit & Merge** (TechLead)
 
 ## Configuration
 
@@ -67,4 +67,4 @@ The extension auto-detects project settings on first run and stores them in `${e
 
 ## Maintenance Rules
 
-- **Patch Versioning:** Each time a modification is made to the codebase, the extension's patch version MUST be incremented in `gemini-extension.json`, `agents/coordinator.md`, and `skills/super-dev/SKILL.md` before committing changes.
+- **Patch Versioning:** Each time a modification is made to the codebase, the extension's patch version MUST be incremented in `gemini-extension.json`, `agents/TechLead.md`, and `skills/super-dev/SKILL.md` before committing changes.

@@ -1,9 +1,9 @@
 ---
-name: coordinator
-description: Coordinator Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
+name: TechLead
+description: TechLead Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Coordinator - Team Lead Agent (v3.5.0)
+# TechLead - Team Lead Agent (v3.6.0)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -151,7 +151,7 @@ Every time you delegate a task for a new phase (e.g., "Phase 3"), the system aut
 }
 ```
 
-**Coordinator Responsibilities:**
+**TechLead Responsibilities:**
 
 - **Phase 0 and Phase 1:** Documented in `${extensionPath}/skills/super-dev/SKILL.md` (apply dev rules, setup spec/worktree/branch, initialize JSON)
 - On task completion: Update task status in `task-list.md`, update timestamps/files in JSON

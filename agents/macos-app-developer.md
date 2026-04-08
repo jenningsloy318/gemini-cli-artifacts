@@ -106,7 +106,7 @@ Use `@Observable` (macOS 14+) instead of `ObservableObject`:
 ### NSViewRepresentable
 - Create `NSView` in `makeNSView(context:)`
 - Update in `updateNSView(_:context:)`
-- Use `Coordinator` for delegate handling
+- Use `TechLead` for delegate handling
 
 ### AppDelegate
 - Use `@NSApplicationDelegateAdaptor` in SwiftUI
@@ -231,7 +231,7 @@ MyMacApp/
 
 ## Integration
 
-**Triggered by:** execution-coordinator for macOS tasks
+**Triggered by:** execution-TechLead for macOS tasks
 
 **Input:**
 - Task from task list

@@ -987,12 +987,12 @@ When the application is a web app with UI changes, run this quick smoke test usi
 
 ## Integration
 
-**Triggered by:** execution-coordinator during QA phases
+**Triggered by:** execution-TechLead during QA phases
 
 **Input:**
 
 - Specification from spec-writer
-- Implementation summary from execution-coordinator
+- Implementation summary from execution-TechLead
 - Application type (CLI, Desktop UI, Web App)
 
 **Output:**

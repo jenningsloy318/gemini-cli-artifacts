@@ -463,7 +463,7 @@ uv.lock                     # uv lockfile
 
 ## Integration
 
-**Triggered by:** execution-coordinator for backend tasks
+**Triggered by:** execution-TechLead for backend tasks
 
 **Input:**
 - Task from task list

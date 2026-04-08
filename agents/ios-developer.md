@@ -323,7 +323,7 @@ MyApp/
 
 ## Integration
 
-**Triggered by:** execution-coordinator for iOS tasks
+**Triggered by:** execution-TechLead for iOS tasks
 
 **Input:**
 - Task from task list

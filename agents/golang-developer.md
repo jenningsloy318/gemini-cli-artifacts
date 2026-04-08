@@ -253,7 +253,7 @@ func BenchmarkNew(b *testing.B) {
 
 ## Integration
 
-**Triggered by:** execution-coordinator for Go tasks
+**Triggered by:** execution-TechLead for Go tasks
 
 **Input:**
 - Task from task list

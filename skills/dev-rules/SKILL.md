@@ -162,7 +162,7 @@ When searching the local codebase for code patterns, structures, or specific con
 
 ### Mandatory Initial Step (MANDATORY)
 
-**At the beginning of EVERY session (Coordinator or Subagent), if a Worktree path is provided in the context/request:**
+**At the beginning of EVERY session (TechLead or Subagent), if a Worktree path is provided in the context/request:**
 
 1. **Navigate IMMEDIATELY** to the worktree directory using `cd`.
 2. **Verify environment** using the checks below.
@@ -202,16 +202,16 @@ test -f .git && echo "In worktree" || test -d .git && echo "In main repo"
 **If a Worktree path is provided in your context/request:**
 
 - **Navigate to it**: `cd [provided-worktree-path]`
-- **If it doesn't exist**: Report error to Coordinator (subagents) or create it (Coordinator).
+- **If it doesn't exist**: Report error to TechLead (subagents) or create it (TechLead).
 
-**If NOT in a worktree and NO path is provided (Coordinator only):**
+**If NOT in a worktree and NO path is provided (TechLead only):**
 
 1. **Create worktree** in `.worktree/` directory under project root (no confirmation required)
 2. **Use spec-based naming**: `[spec-index]-[spec-name]`
 3. **Navigate to worktree** for all development work
 
 ```bash
-# Create worktree automatically (Coordinator)
+# Create worktree automatically (TechLead)
 git worktree add .worktree/[spec-index]-[spec-name] -b [spec-index]-[spec-name]
 cd .worktree/[spec-index]-[spec-name]
 ```

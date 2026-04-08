@@ -1,6 +1,6 @@
 # Super Dev Gemini Extension
 
-A comprehensive coordinator-driven development workflow for Gemini CLI, using specialized subagents to implement features, fix bugs, and refactor code.
+A comprehensive TechLead-driven development workflow for Gemini CLI, using specialized subagents to implement features, fix bugs, and refactor code.
 
 ## 🚀 Getting Started
 
@@ -57,7 +57,7 @@ All commands are namespaced under `/super-dev:`. Available commands include:
 5. **Quality Gates**: `qa-agent` runs build/test scripts and ensures all programmatic gates pass.
 6. **Review**: `code-reviewer` and `adversarial-reviewer` audit the implementation for risks.
 7. **Documentation**: `docs-executor` updates documentation to match the new code.
-8. **Merge**: The Coordinator merges the verified worktree back to your main branch.
+8. **Merge**: The TechLead merges the verified worktree back to your main branch.
 
 ## 📂 Project Structure
 - `${extensionPath}/agents/`: Definitions for specialized subagents.
