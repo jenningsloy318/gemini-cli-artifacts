@@ -27,9 +27,9 @@
         "matcher": "generalist",
         "hooks": [
           {
-            "name": "phase-integrity",
+            "name": "phase-gate",
             "type": "command",
-            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}phase-integrity.sh",
+            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}phase-gate.sh",
             "description": "Check previous phase artifacts at start of each phase"
           }
         ]

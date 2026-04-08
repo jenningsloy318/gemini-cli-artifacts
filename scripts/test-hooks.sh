@@ -52,10 +52,10 @@ else
   exit 1
 fi
 
-echo "Testing phase-integrity.sh..."
+echo "Testing phase-gate.sh..."
 
 # Test no phase
-NO_PHASE_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "No phase here"}}' | bash scripts/hooks/phase-integrity.sh)
+NO_PHASE_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "No phase here"}}' | bash scripts/hooks/phase-gate.sh)
 if [[ "$NO_PHASE_RESULT" == *"allow"* ]]; then
   echo "✅ Request without phase allowed"
 else
@@ -64,7 +64,7 @@ else
 fi
 
 # Test missing directory (soft allow)
-MISSING_DIR_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "Phase 3 in specification/non-existent"}}' | bash scripts/hooks/phase-integrity.sh)
+MISSING_DIR_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "Act as the requirements-clarifier subagent for Phase 2 in specification/non-existent"}}' | bash scripts/hooks/phase-gate.sh)
 if [[ "$MISSING_DIR_RESULT" == *"allow"* ]]; then
   echo "✅ Missing directory handled (soft allow)"
 else
@@ -74,10 +74,10 @@ fi
 
 # Test worktree isolation (v3.6.1)
 mkdir -p .worktree/test-spec/specification/test-spec
-echo '{"tool_name": "generalist", "tool_input": {"request": "Phase 2.5 in .worktree/test-spec/specification/test-spec"}}' | bash scripts/hooks/phase-integrity.sh > /dev/null
+echo '{"tool_name": "generalist", "tool_input": {"request": "Act as the bdd-scenario-writer subagent for Phase 2.5 in .worktree/test-spec/specification/test-spec"}}' | bash scripts/hooks/phase-gate.sh > /dev/null
 if [[ $? -eq 0 ]]; then
   # Result should be deny because 01-requirements.md is missing in the worktree
-  INTEGRITY_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "Phase 2.5 in .worktree/test-spec/specification/test-spec"}}' | bash scripts/hooks/phase-integrity.sh)
+  INTEGRITY_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "Act as the bdd-scenario-writer subagent for Phase 2.5 in .worktree/test-spec/specification/test-spec"}}' | bash scripts/hooks/phase-gate.sh)
   if [[ "$INTEGRITY_RESULT" == *"deny"* ]]; then
     echo "✅ Worktree integrity check (missing req) PASSED"
   else
@@ -89,7 +89,9 @@ fi
 
 # Test worktree success
 touch .worktree/test-spec/specification/test-spec/01-requirements.md
-SUCCESS_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "Phase 2.5 in .worktree/test-spec/specification/test-spec"}}' | bash scripts/hooks/phase-integrity.sh)
+# We need to add "Acceptance Criteria" text to satisfy the manifest requirement
+echo "Acceptance Criteria" > .worktree/test-spec/specification/test-spec/01-requirements.md
+SUCCESS_RESULT=$(echo '{"tool_name": "generalist", "tool_input": {"request": "Act as the bdd-scenario-writer subagent for Phase 2.5 in .worktree/test-spec/specification/test-spec"}}' | bash scripts/hooks/phase-gate.sh)
 if [[ "$SUCCESS_RESULT" == *"allow"* ]]; then
   echo "✅ Worktree integrity check (with req) PASSED"
 else
