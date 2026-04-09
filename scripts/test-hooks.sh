@@ -3,34 +3,8 @@
 
 set -euo pipefail
 
-echo "Testing block-dangerous.sh..."
-
-# Test safe command
-SAFE_RESULT=$(echo '{"tool_name": "run_shell_command", "tool_input": {"command": "ls"}}' | bash scripts/hooks/block-dangerous.sh)
-if [[ "$SAFE_RESULT" == *"allow"* ]]; then
-  echo "✅ Safe command allowed"
-else
-  echo "❌ Safe command blocked: $SAFE_RESULT"
-  exit 1
-fi
-
-# Test dangerous command
-DANGEROUS_RESULT=$(echo '{"tool_name": "run_shell_command", "tool_input": {"command": "rm -rf /"}}' | bash scripts/hooks/block-dangerous.sh)
-if [[ "$DANGEROUS_RESULT" == *"deny"* ]]; then
-  echo "✅ Dangerous command blocked"
-else
-  echo "❌ Dangerous command allowed!"
-  exit 1
-fi
-
-# Test project script
-SCRIPT_RESULT=$(echo '{"tool_name": "run_shell_command", "tool_input": {"command": "bash scripts/hooks/auto-commit.sh"}}' | bash scripts/hooks/block-dangerous.sh)
-if [[ "$SCRIPT_RESULT" == *"allow"* ]]; then
-  echo "✅ Project script allowed"
-else
-  echo "❌ Project script blocked: $SCRIPT_RESULT"
-  exit 1
-fi
+# Run comprehensive block-dangerous tests
+bash scripts/test-block-dangerous.sh
 
 echo "Testing protect-files.sh..."
 

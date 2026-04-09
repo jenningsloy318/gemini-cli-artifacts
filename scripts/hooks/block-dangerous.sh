@@ -19,6 +19,7 @@ DANGEROUS_PATTERNS=(
   "rm -rf"
   "git reset --hard"
   "git push.*--force"
+  "git push.*-f\b"
   "DROP TABLE"
   "DROP DATABASE"
 )
