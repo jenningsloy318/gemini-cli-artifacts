@@ -4,17 +4,17 @@
 # Input: JSON via stdin with tool_name, tool_input fields
 # Output: JSON decision to stdout
 
-set -euo pipefail
+set -uo pipefail
 
 INPUT=$(cat)
-TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // ""')
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // ""' 2>/dev/null || echo "")
 
-if [ "$TOOL_NAME" != "write_file" ] && [ "$TOOL_NAME" != "replace" ]; then
+if [[ -z "$TOOL_NAME" || ( "$TOOL_NAME" != "write_file" && "$TOOL_NAME" != "replace" ) ]]; then
   echo '{"decision": "allow"}'
   exit 0
 fi
 
-FILE=$(echo "$INPUT" | jq -r '.tool_input.file_path // ""')
+FILE=$(echo "$INPUT" | jq -r '.tool_input.file_path // ""' 2>/dev/null || echo "")
 PROTECTED=(
   ".env*"
   ".git/*"
@@ -28,8 +28,10 @@ PROTECTED=(
 )
 
 for pattern in "${PROTECTED[@]}"; do
-  if echo "$FILE" | grep -qiE "^${pattern//\*/.*}$"; then
-    echo "{\"decision\": \"deny\", \"reason\": \"Blocked: '$FILE' is protected. Explain why this edit is necessary.\"}"
+  # Use standard grep for portability
+  if echo "$FILE" | grep -qiE "^${pattern//\*/.*}$" > /dev/null 2>&1; then
+    REASON="Blocked: '$FILE' is protected. Explain why this edit is necessary."
+    jq -n --arg reason "$REASON" '{decision: "deny", reason: $reason}'
     exit 0
   fi
 done

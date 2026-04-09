@@ -4,17 +4,17 @@
 # Input: JSON via stdin with tool_name, tool_input fields
 # Output: JSON decision to stdout
 
-set -euo pipefail
+set -uo pipefail
 
 INPUT=$(cat)
-TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // ""')
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // ""' 2>/dev/null || echo "")
 
 if [ "$TOOL_NAME" != "run_shell_command" ]; then
   echo '{"decision": "allow"}'
   exit 0
 fi
 
-CMD=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
+CMD=$(echo "$INPUT" | jq -r '.tool_input.command // ""' 2>/dev/null || echo "")
 DANGEROUS_PATTERNS=(
   "rm -rf"
   "git reset --hard"
@@ -30,23 +30,21 @@ is_dangerous() {
   
   # Check for specific fixed strings
   for pattern in "${DANGEROUS_PATTERNS[@]}"; do
-    if echo "$command" | grep -qiE "$pattern" > /dev/null; then
+    if echo "$command" | grep -qiE "$pattern" > /dev/null 2>&1; then
       echo "$pattern"
       return 0
     fi
   done
 
   # Check for curl/wget/sh/bash only if they look like they are being executed
-  # We use word boundaries where possible or specific prefixes
-  # Note: be careful not to block local scripts used by the extension itself
-  if echo "$command" | grep -qiE "(^|[[:space:]])(curl|wget)([[:space:]]|$)"; then
+  if echo "$command" | grep -qiE "(^|[[:space:]])(curl|wget)([[:space:]]|$)" > /dev/null 2>&1; then
      echo "network command"
      return 0
   fi
   
   # Only block shell execution if it's NOT a script from this project
-  if echo "$command" | grep -qiE "(^|[[:space:]])(sh|bash|zsh|dash)([[:space:]]|$)" && ! echo "$command" | grep -qiE "scripts/"; then
-     if echo "$command" | grep -qiE "\.sh([[:space:]]|$)"; then
+  if echo "$command" | grep -qiE "(^|[[:space:]])(sh|bash|zsh|dash)([[:space:]]|$)" > /dev/null 2>&1 && ! echo "$command" | grep -qiE "scripts/" > /dev/null 2>&1; then
+     if echo "$command" | grep -qiE "\.sh([[:space:]]|$)" > /dev/null 2>&1; then
         echo "shell script execution"
         return 0
      fi
@@ -57,10 +55,10 @@ is_dangerous() {
   return 1
 }
 
-# Fix: Use || true to prevent set -e from exiting on non-match
 MATCHED_REASON=$(is_dangerous "$CMD" || echo "")
 if [ -n "$MATCHED_REASON" ]; then
-  echo "{\"decision\": \"deny\", \"reason\": \"Blocked: '$CMD' matches dangerous pattern rule ($MATCHED_REASON). Propose a safer alternative.\"}"
+  REASON="Blocked: '$CMD' matches dangerous pattern rule ($MATCHED_REASON). Propose a safer alternative."
+  jq -n --arg reason "$REASON" '{decision: "deny", reason: $reason}'
   exit 0
 fi
 
