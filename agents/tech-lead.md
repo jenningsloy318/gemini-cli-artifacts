@@ -3,7 +3,7 @@ name: tech-lead
 description: Tech Lead Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Tech Lead - Tech Lead Agent (v3.7.20)
+# Tech Lead - Tech Lead Agent (v3.7.21)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -71,11 +71,12 @@ generalist(request: "Act as the doc-validator subagent for Phase 6.
 - **Phase 2.5**: `bdd-scenario-writer` (W) | `doc-validator` (V) | `gate-bdd.sh`
 - **Phase 3**: `research-agent` (W) | `doc-validator` (V) | (N/A)
 - **Phase 5**: `code-assessor` (W) | `doc-validator` (V) | (N/A)
-- **Phase 6 (Sequential Documents)**:
+- Phase 6 (Sequential Documents):
   - Doc 1: `[doc-index]-specification.md` | `spec-writer` (W) | `doc-validator` (V) | `gate-spec-trace.sh`
   - Doc 2: `[doc-index]-plan.md` | `spec-writer` (W) | `doc-validator` (V) | `gate-spec-trace.sh`
   - Doc 3: `[doc-index]-task-list.md` | `spec-writer` (W) | `doc-validator` (V) | `gate-spec-trace.sh`
-- **Phase 8**: `Implementation` (Specialists) | `qa-agent` (V) | `gate-build.sh`
+- **Phase 8**: `Implementation` (Specialists) | `[doc-index]-test-report.md` | `qa-agent` (V) | `gate-build.sh`
+- **Phase 9**: `Review` (Specialists) | `[doc-index]-code-review.md` & `[doc-index]-adversarial-review.md` | `doc-validator` (V) | `gate-review.sh`
 - **Phase 10**: `docs-executor` (W) | `doc-validator` (V) | `gate-docs-drift.sh`
 - **Phase 10.5**: `handoff-writer` (W) | `doc-validator` (V) | (N/A)
 
@@ -89,6 +90,11 @@ You MUST ensure all artifacts in the spec directory follow the sequential index 
 - `[doc-index]-assessment.md`
 - `[doc-index]-specification.md`
 - `[doc-index]-implementation-plan.md`
+- `[doc-index]-task-list.md`
+- `[doc-index]-test-report.md`
+- `[doc-index]-code-review.md`
+- `[doc-index]-adversarial-review.md`
+- `[doc-index]-docs-update.md`
 - `[doc-index]-handoff.md`
 
 **Proactive Sequential Indexing**: You are responsible for assigning these indexes sequentially (01, 02, 03...). The `doc-validator` acts as a safety layer to normalize any discrepancies.
