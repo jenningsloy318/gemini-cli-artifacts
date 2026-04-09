@@ -1,6 +1,6 @@
 {
   "name": "super-dev",
-  "version": "3.7.11",
+  "version": "3.7.12",
   "description": "tech-lead-driven development workflow with parallel agent execution and hook-driven quality gates",
   "author": "Jennings Liu <jenningsloy318@gmail.com>",
   "homepage": "https://github.com/jenningsloy318/gemini-cli-artifacts",
