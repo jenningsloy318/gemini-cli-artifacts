@@ -532,7 +532,7 @@ All tasks are complete when:
 
 ### DON'T: Skip References
 ❌ "See research report"
-✅ "**Research Report** (specification/02-research-report.md)"
+✅ "**Research Report** (specification/[doc-index]-research-report.md)"
 ```
 
 ## Reference

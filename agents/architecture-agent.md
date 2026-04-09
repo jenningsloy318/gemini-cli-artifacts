@@ -1256,13 +1256,13 @@ response:
 
 **Deliverables:**
 
-1. **Architecture Overview** (`05-architecture.md`)
+1. **Architecture Overview** (`[doc-index]-architecture.md`)
    - High-level system description
    - Module diagram
    - Data flow
    - Technology decisions
 
-2. **ADRs** (`05-adr-[topic].md`)
+2. **ADRs** (`[doc-index]-adr-[topic].md`)
    - One ADR per major decision
    - Using MADR 3.0.0 format
 
@@ -1486,7 +1486,7 @@ project/
 
 ## Output Format
 
-### Primary Output: `05-architecture.md`
+### Primary Output: `[doc-index]-architecture.md`
 
 ```markdown
 # Architecture: [Feature Name]
@@ -1600,7 +1600,7 @@ Every architecture must:
 **Inputs:**
 - `[index]-requirements.md` (required)
 - `[index]-assessment.md` (required)
-- `01.1-behavior-scenarios.md` (required — BDD scenarios for behavior-driven module boundaries)
+- `[doc-index]-scenarios.md` (required — BDD scenarios for behavior-driven module boundaries)
 
 **Outputs:**
 - `[index]-architecture.md` → used by spec-writer and ui-ux-designer

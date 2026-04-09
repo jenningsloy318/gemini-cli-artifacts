@@ -286,19 +286,19 @@ Type your selection as: "I choose Option [X]" or "Combined Option [X]"
 2. **Finalize Architecture Document**
    ```
    Message architecture-agent teammate:
-   "User selected [Architecture Option X]. Please finalize 05-architecture.md
+   "User selected [Architecture Option X]. Please finalize [doc-index]-architecture.md
    and any required ADRs based on this selection."
    ```
 
 3. **Finalize UI/UX Document**
    ```
    Message ui-ux-designer teammate:
-   "User selected [UI Option Y]. Please finalize 05-design-spec.md
+   "User selected [UI Option Y]. Please finalize [doc-index]-design-spec.md
    based on this selection and the confirmed architecture constraints."
    ```
 
 4. **Create Cross-Reference Document**
-   Generate `05-product-design-summary.md`:
+   Generate `[doc-index]-product-design-summary.md`:
    ```markdown
    # Product Design Summary: [Feature Name]
 
@@ -308,12 +308,12 @@ Type your selection as: "I choose Option [X]" or "Combined Option [X]"
    ## Architecture Decision
    - Approach: [Name]
    - Key patterns: [list]
-   - Reference: 05-architecture.md
+   - Reference: [doc-index]-architecture.md
 
    ## UI/UX Decision
    - Approach: [Name]
    - Key patterns: [list]
-   - Reference: 05-design-spec.md
+   - Reference: [doc-index]-design-spec.md
 
    ## Cross-Domain Contracts
 
@@ -337,9 +337,9 @@ Type your selection as: "I choose Option [X]" or "Combined Option [X]"
    ```
 
 **Output:**
-- `05-architecture.md` (from architecture-agent)
-- `05-design-spec.md` (from ui-ux-designer)
-- `05-product-design-summary.md` (cross-reference)
+- `[doc-index]-architecture.md` (from architecture-agent)
+- `[doc-index]-design-spec.md` (from ui-ux-designer)
+- `[doc-index]-product-design-summary.md` (cross-reference)
 
 ---
 
@@ -413,14 +413,14 @@ Recommendation: Option C - balances complexity and UX
 
 ### Primary Outputs
 
-1. **05-architecture.md** - Full architecture specification (from architecture-agent)
-2. **05-design-spec.md** - Full UI/UX specification (from ui-ux-designer)
-3. **05-product-design-summary.md** - Cross-reference and contracts
+1. **[doc-index]-architecture.md** - Full architecture specification (from architecture-agent)
+2. **[doc-index]-design-spec.md** - Full UI/UX specification (from ui-ux-designer)
+3. **[doc-index]-product-design-summary.md** - Cross-reference and contracts
 
 ### Delegation Outputs (when not FULL_STACK)
 
-- ARCHITECTURE_ONLY: Only `05-architecture.md`
-- UI_ONLY: Only `05-design-spec.md`
+- ARCHITECTURE_ONLY: Only `[doc-index]-architecture.md`
+- UI_ONLY: Only `[doc-index]-design-spec.md`
 
 ---
 
@@ -443,7 +443,7 @@ Recommendation: Option C - balances complexity and UX
 **Inputs:**
 - `[index]-requirements.md` (required)
 - `[index]-assessment.md` (required)
-- `01.1-behavior-scenarios.md` (required — BDD scenarios for behavior-driven design)
+- `[doc-index]-scenarios.md` (required — BDD scenarios for behavior-driven design)
 
 **Outputs:**
 - `[index]-architecture.md` → used by spec-writer

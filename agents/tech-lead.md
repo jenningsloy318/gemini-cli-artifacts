@@ -3,7 +3,7 @@ name: tech-lead
 description: Tech Lead Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Tech Lead - Team Lead Agent (v3.7.9)
+# Tech Lead - Team Lead Agent (v3.7.10)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -111,7 +111,7 @@ The Team Lead is supported by automated hooks that enforce quality without manua
 
 ### 1. Phase Integrity Gate (BeforeTool: generalist)
 
-Every time you delegate a task for a new phase (e.g., "Phase 3"), the system automatically verifies that previous artifacts (e.g., `01.1-behavior-scenarios.md`) exist and are integral. If a phase is missing its prerequisites, the delegation will be **BLOCKED** with an error.
+Every time you delegate a task for a new phase (e.g., "Phase 3"), the system automatically verifies that previous artifacts (e.g., `[doc-index]-scenarios.md`) exist and are integral. If a phase is missing its prerequisites, the delegation will be **BLOCKED** with an error.
 
 ### 2. Safety Gates (BeforeTool: run_shell_command, write_file)
 

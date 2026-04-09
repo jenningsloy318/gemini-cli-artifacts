@@ -56,7 +56,111 @@
     },
     "super-dev:dev-executor": {
       "phase": "8",
-      "description": "Execution requires complete specification, plan, and task list",
+      "description": "Implementation requires complete specification, plan, and task list",
+      "requires": [
+        "[doc-index]-specification.md",
+        "[doc-index]-plan.md",
+        "[doc-index]-task-list.md"
+      ],
+      "sections": {
+        "[doc-index]-specification.md": ["Technical Design"],
+        "[doc-index]-task-list.md": ["Tasks"]
+      }
+    },
+    "super-dev:rust-developer": {
+      "phase": "8",
+      "description": "Implementation requires complete specification, plan, and task list",
+      "requires": [
+        "[doc-index]-specification.md",
+        "[doc-index]-plan.md",
+        "[doc-index]-task-list.md"
+      ],
+      "sections": {
+        "[doc-index]-specification.md": ["Technical Design"],
+        "[doc-index]-task-list.md": ["Tasks"]
+      }
+    },
+    "super-dev:golang-developer": {
+      "phase": "8",
+      "description": "Implementation requires complete specification, plan, and task list",
+      "requires": [
+        "[doc-index]-specification.md",
+        "[doc-index]-plan.md",
+        "[doc-index]-task-list.md"
+      ],
+      "sections": {
+        "[doc-index]-specification.md": ["Technical Design"],
+        "[doc-index]-task-list.md": ["Tasks"]
+      }
+    },
+    "super-dev:frontend-developer": {
+      "phase": "8",
+      "description": "Implementation requires complete specification, plan, and task list",
+      "requires": [
+        "[doc-index]-specification.md",
+        "[doc-index]-plan.md",
+        "[doc-index]-task-list.md"
+      ],
+      "sections": {
+        "[doc-index]-specification.md": ["Technical Design"],
+        "[doc-index]-task-list.md": ["Tasks"]
+      }
+    },
+    "super-dev:backend-developer": {
+      "phase": "8",
+      "description": "Implementation requires complete specification, plan, and task list",
+      "requires": [
+        "[doc-index]-specification.md",
+        "[doc-index]-plan.md",
+        "[doc-index]-task-list.md"
+      ],
+      "sections": {
+        "[doc-index]-specification.md": ["Technical Design"],
+        "[doc-index]-task-list.md": ["Tasks"]
+      }
+    },
+    "super-dev:android-developer": {
+      "phase": "8",
+      "description": "Implementation requires complete specification, plan, and task list",
+      "requires": [
+        "[doc-index]-specification.md",
+        "[doc-index]-plan.md",
+        "[doc-index]-task-list.md"
+      ],
+      "sections": {
+        "[doc-index]-specification.md": ["Technical Design"],
+        "[doc-index]-task-list.md": ["Tasks"]
+      }
+    },
+    "super-dev:ios-developer": {
+      "phase": "8",
+      "description": "Implementation requires complete specification, plan, and task list",
+      "requires": [
+        "[doc-index]-specification.md",
+        "[doc-index]-plan.md",
+        "[doc-index]-task-list.md"
+      ],
+      "sections": {
+        "[doc-index]-specification.md": ["Technical Design"],
+        "[doc-index]-task-list.md": ["Tasks"]
+      }
+    },
+    "super-dev:macos-app-developer": {
+      "phase": "8",
+      "description": "Implementation requires complete specification, plan, and task list",
+      "requires": [
+        "[doc-index]-specification.md",
+        "[doc-index]-plan.md",
+        "[doc-index]-task-list.md"
+      ],
+      "sections": {
+        "[doc-index]-specification.md": ["Technical Design"],
+        "[doc-index]-task-list.md": ["Tasks"]
+      }
+    },
+    "super-dev:windows-app-developer": {
+      "phase": "8",
+      "description": "Implementation requires complete specification, plan, and task list",
       "requires": [
         "[doc-index]-specification.md",
         "[doc-index]-plan.md",

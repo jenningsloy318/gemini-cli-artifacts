@@ -15,7 +15,7 @@ At the start of every super-dev session, check for context from the previous com
 
 1. **Scan spec directories**: List all directories in `specification/` and extract the numeric prefix from each directory name (e.g., `20` from `20-bdd-integration`)
 2. **Sort descending**: Order directories by numeric prefix, highest first
-3. **Find the most recent handoff**: Starting from the highest-index directory, check if `11-handoff.md` exists
+3. **Find the most recent handoff**: Starting from the highest-index directory, check if `[doc-index]-handoff.md` exists
    - If found: Read the handoff file — proceed to step 4
    - If not found: Try the next-highest directory (graceful fallback for pre-handoff specs)
    - If no handoff found in any directory: Skip silently — this is the first run or all specs predate the handoff phase
@@ -284,20 +284,20 @@ All specification documents MUST be updated as work progresses:
 
 **IMPORTANT:** Files within each spec directory should start from 01, not use the spec directory index.
 
-1. **Task List (`01-task-list.md`)**
+1. **Task List (`[doc-index]-task-list.md`)**
    - Mark tasks complete immediately when done: `- [x] Task description`
    - Add new tasks discovered during implementation
    - Update status at every milestone boundary
    - Never leave task list stale between commits
 
-2. **Implementation Summary (`06-implementation-summary.md`)**
+2. **Implementation Summary (`[doc-index]-implementation-summary.md`)**
    - Update after EACH milestone/phase completion
    - Document files created/modified/deleted
    - Record technical decisions and rationale
    - Track challenges encountered and solutions
    - Note any deviations from original specification
 
-3. **Specification (`03-specification.md`)**
+3. **Specification (`[doc-index]-specification.md`)**
    - Update when implementation differs from original spec
    - Use `[UPDATED: YYYY-MM-DD]` marker for changed sections
    - Document why the change was necessary

@@ -709,7 +709,7 @@ organisms:  # Complex sections
 3. Provide .pen file path for developers to reference
 4. Document component node IDs for precise implementation reference
 
-**Output: `05-design-spec.md`**
+**Output: `[doc-index]-design-spec.md`**
 
 ```markdown
 # Design Specification: {Feature Name}
@@ -804,7 +804,7 @@ Two deliverables:
 
 1. **`.pen` design file** — Visual design with all screens, components, states, and interactions. Created using Pencil MCP tools throughout the design process. Export key screens as PNG/PDF using `export_nodes`.
 
-2. **`05-design-spec.md`** — Structured markdown companion document:
+2. **`[doc-index]-design-spec.md`** — Structured markdown companion document:
 
 ```markdown
 # Design Specification: {Feature Name}
@@ -871,7 +871,7 @@ Single deliverable — design specification as a structured markdown document wi
 **Inputs:**
 - requirements-{feature}.md (required)
 - assessment-{feature}.md (required)
-- 01.1-behavior-scenarios.md (required — BDD scenarios for behavior-driven UX design)
+- [doc-index]-scenarios.md (required — BDD scenarios for behavior-driven UX design)
 - research-report-{feature}.md (optional)
 
 **Output:**

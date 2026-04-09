@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.7.9"
+  version: "3.7.10"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -69,10 +69,10 @@ To maintain a clear audit trail and logical order, all files created within the 
 - **Proactive Indexing**: The Tech Lead proactively assigns the next sequential number (`prev + 1`) and defines the **EXACT** filename before spawning subagents.
 - **Normalization**: The `doc-validator` remains as a safety layer to ensure **NO GAPS** exist, even if phases are skipped.
 - **Example Indexing:**
-  - `01-requirements.md`
+  - `[doc-index]-requirements.md`
   - `02-behavior-scenarios.md` (Note: Gap-free even if phase skipped)
   - `03-research.md`
-  - `04-assessment.md`
+  - `[doc-index]-assessment.md`
   - `05-specification.md`
   - `06-implementation-plan.md`
   - `07-handoff.md`
