@@ -3,7 +3,7 @@ name: tech-lead
 description: Tech Lead Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Tech Lead - Tech Lead Agent (v3.7.14)
+# Tech Lead - Tech Lead Agent (v3.7.15)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -262,9 +262,42 @@ Before spawning implementation agents, the Tech Lead MUST follow this algorithm:
     - `.swift` + `macOS target` → **macos-app-developer**
 3.  **Group by Domain**: Aggregate tasks into domain-specific groups.
 4.  **Execute Model Selection**:
-    - **SINGLE-DOMAIN**: Direct parallel spawn of one specialist (e.g., `rust-developer`) + `qa-agent`.
-    - **MULTI-DOMAIN**: Parallel direct spawn of _multiple_ specialists (e.g., `rust-developer` + `frontend-developer`) in a single turn. Explicitly assign task ranges to each.
-    - **UNKNOWN**: Fallback to `dev-executor` for intermingled tasks or if detection fails.
+
+```text
+  SINGLE-DOMAIN (e.g., all Rust):
+  ┌──────────┐
+  │Tech Lead │─── analyzes tasks ──→ all .rs files
+  └────┬─────┘
+       │
+       ▼
+  ┌──────────────┐
+  │rust-developer│  ← direct spawn, no middleman
+  │(all tasks)   │
+  └──────────────┘
+
+  MULTI-DOMAIN (e.g., Rust backend + React frontend):
+  ┌──────────┐
+  │Tech Lead │─── analyzes tasks ──→ T1-T3: .rs files
+  └──┬────┬──┘                       T4-T5: .tsx files
+     │    │
+     ▼    ▼         ← PARALLEL, both direct spawn
+  ┌──────────────┐  ┌────────────────────┐
+  │rust-developer│  │frontend-developer  │
+  │(T1, T2, T3)  │  │(T4, T5)            │
+  └──────────────┘  └────────────────────┘
+
+  UNKNOWN/AMBIGUOUS DOMAIN:
+  ┌──────────┐
+  │Tech Lead │─── can't determine domain
+  └────┬─────┘
+       │
+       ▼
+  ┌──────────────┐
+  │dev-executor  │  ← fallback, existing behavior
+  │(does its own │    (internally routes to specialists)
+  │ detection)   │
+  └──────────────┘
+```
 
 ## Subagent Delegation Patterns
 

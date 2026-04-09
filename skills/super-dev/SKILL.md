@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.7.14"
+  version: "3.7.15"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -132,10 +132,43 @@ The Tech Lead MUST select the implementation model based on **Domain Detection A
     - `.xaml` / `.csproj` → **windows-app-developer**
     - `.swift` + `macOS target` → **macos-app-developer**
 3.  **Group Tasks**: Bundle tasks by detected domain.
-4.  **Execute Model**:
-    - **SINGLE-DOMAIN**: Direct spawn of one specialist (e.g., `rust-developer`) for all tasks.
-    - **MULTI-DOMAIN**: Parallel direct spawn of multiple specialists. Tasks MUST be explicitly partitioned.
-    - **UNKNOWN/AMBIGUOUS**: Fallback to `dev-executor`.
+4.  **Execute Model Selection**:
+
+```text
+  SINGLE-DOMAIN (e.g., all Rust):
+  ┌──────────┐
+  │Tech Lead │─── analyzes tasks ──→ all .rs files
+  └────┬─────┘
+       │
+       ▼
+  ┌──────────────┐
+  │rust-developer│  ← direct spawn, no middleman
+  │(all tasks)   │
+  └──────────────┘
+
+  MULTI-DOMAIN (e.g., Rust backend + React frontend):
+  ┌──────────┐
+  │Tech Lead │─── analyzes tasks ──→ T1-T3: .rs files
+  └──┬────┬──┘                       T4-T5: .tsx files
+     │    │
+     ▼    ▼         ← PARALLEL, both direct spawn
+  ┌──────────────┐  ┌────────────────────┐
+  │rust-developer│  │frontend-developer  │
+  │(T1, T2, T3)  │  │(T4, T5)            │
+  └──────────────┘  └────────────────────┘
+
+  UNKNOWN/AMBIGUOUS DOMAIN:
+  ┌──────────┐
+  │Tech Lead │─── can't determine domain
+  └────┬─────┘
+       │
+       ▼
+  ┌──────────────┐
+  │dev-executor  │  ← fallback, existing behavior
+  │(does its own │    (internally routes to specialists)
+  │ detection)   │
+  └──────────────┘
+```
 
 ## Mandatory Requirement Clarification (NEW in v3.0.9)
 
