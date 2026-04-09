@@ -3,7 +3,7 @@ name: tech-lead
 description: Tech Lead Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Tech Lead - Tech Lead Agent (v3.7.16)
+# Tech Lead - Tech Lead Agent (v3.7.17)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
