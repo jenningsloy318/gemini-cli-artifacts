@@ -306,7 +306,7 @@ When used within the super-dev workflow:
 - Runs in **Phase 9** in parallel with code-reviewer
 - Both reviews must pass (Code Review = Approved AND Adversarial = PASS) to proceed
 - REJECT forces loop back to Phase 8 (Implementation)
-- CONTESTED allows Team Lead to decide
+- CONTESTED allows Tech Lead to decide
 
 When used standalone (outside super-dev):
 - Run after implementation is complete

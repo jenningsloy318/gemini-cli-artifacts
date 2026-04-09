@@ -276,7 +276,7 @@ NG-1: [non-goal] → Not implemented (correct) / Implemented (issue)
   - Include the missing SCENARIO-IDs in finding evidence
   - Verdict: "Changes Requested" (scenario coverage gap blocks approval)
 
-  6.5) External Expert Review (SECONDARY REVIEW - Optional Enhancement)
+    6.5) External Expert Review (SECONDARY REVIEW - Optional Enhancement)
 
 - Check if external `code-review-expert` skill is available
 - If available, invoke for senior engineer perspective:
@@ -308,107 +308,9 @@ Else if High/Medium exist → Approved with Comments
 Else → Approved
 ```
 
-## Output Template
+## Output Format
 
-```markdown
-# Code Review: [Feature/Fix Name]
-
-**Date:** [timestamp]
-**Reviewer:** super-dev:code-reviewer
-**Secondary Reviewer:** code-review-expert (if available)
-**Status:** [Approved / Approved with Comments / Changes Requested / Blocked]
-**Base SHA:** [sha or N/A]
-**Head SHA:** [sha or N/A]
-
-## Summary Statistics
-
-| Severity | Count |
-| -------- | ----- |
-| Critical | X     |
-| High     | X     |
-| Medium   | X     |
-| Low      | X     |
-| Info     | X     |
-
-| Dimension       | Issues |
-| --------------- | ------ |
-| Correctness     | X      |
-| Security        | X      |
-| Performance     | X      |
-| Maintainability | X      |
-| Testability     | X      |
-| Error Handling  | X      |
-| Consistency     | X      |
-| Accessibility   | X      |
-
-## Specification Validation
-
-| Criterion           | Status              | Evidence    |
-| ------------------- | ------------------- | ----------- |
-| AC-1: [description] | Met/Not Met/Partial | [file:line] |
-| AC-2: [description] | Met/Not Met/Partial | [file:line] |
-| ...                 | ...                 | ...         |
-
-### Non-Goals Check
-
-- [x] NG-1: [non-goal] - Not implemented (correct)
-- [ ] NG-2: [non-goal] - Implemented (issue - see F-XXX)
-
-## BDD Scenario Coverage
-
-| Scenario ID  | Title   | Test Reference                | Status            |
-| ------------ | ------- | ----------------------------- | ----------------- |
-| SCENARIO-001 | [title] | [test file:line or test name] | Covered / Missing |
-
-**Coverage:** [M/N] scenarios covered
-**Gate:** PASS / FAIL
-
-## Findings
-
-> **Note:** Findings include both specification-first review (internal) and senior engineer review (external code-review-expert skill, if available). Findings identified by both reviewers are marked with **[Dual]**.
-
-### Critical
-
-**F-001** | [Dimension] | `file:line` **[Dual]** (if identified by both)
-**Issue:** [description]
-**Suggestion:** [concrete fix]
-**Rationale:** [why it matters]
-
-### High
-
-**F-002** | [Dimension] | `file:line`
-**Issue:** [description]
-**Suggestion:** [fix]
-**Rationale:** [why]
-
-### Medium
-
-[Same format]
-
-### Low
-
-[Same format]
-
-### Info
-
-[Same format]
-
-## Strengths
-
-- [Specific good patterns with file:line references]
-
-## Recommendations
-
-- [Non-blocking improvements and future considerations]
-
-## Verdict
-
-**[Approved / Approved with Comments / Changes Requested / Blocked]**
-
-**Reasoning:** [brief technical assessment]
-
-**Blocking Issues:** [F-XXX IDs or “None”]
-```
+The output file is `[doc-index]-code-review.md` in the spec directory. You MUST produce a document following the structure defined in `templates/reference/code-review-template.md`. Use the XML tags defined there to guide your sectioning and content depth.
 
 ## Severity Reference
 

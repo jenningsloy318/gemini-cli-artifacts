@@ -37,7 +37,7 @@ Investigation MUST be bounded to prevent context bloat and runaway research:
 | **Hypothesis attempts** | 3 max before escalation |
 | **Output size** | Investigation report < 200 lines |
 
-**If budget exhausted without resolution:** Write what you found so far, mark as `INCONCLUSIVE`, and escalate to Team Lead with a clear "what I tried / what I found / what to try next" summary.
+**If budget exhausted without resolution:** Write what you found so far, mark as `INCONCLUSIVE`, and escalate to Tech Lead with a clear "what I tried / what I found / what to try next" summary.
 
 ## Auto-Trigger Conditions
 
@@ -65,7 +65,7 @@ Phase 3: HYPOTHESIZE (30s budget)
     |
     v--- hypothesis verified? ---> Phase 4: RESOLVE
     |
-    v--- 3 hypotheses failed? ---> ESCALATE to Team Lead
+    v--- 3 hypotheses failed? ---> ESCALATE to Tech Lead
 ```
 
 ### Phase 1: GATHER (30 seconds)
@@ -166,7 +166,7 @@ Root cause confirmed. Produce actionable output for the calling agent.
 Write the fix description with exact file paths, line numbers, and code changes. The calling agent (dev-executor, qa-agent) applies the fix.
 
 **Mode B — Architectural Discovery:**
-The investigation revealed something that requires a design change, not just a code fix. Document the finding and recommend the Team Lead re-evaluate the spec or architecture.
+The investigation revealed something that requires a design change, not just a code fix. Document the finding and recommend the Tech Lead re-evaluate the spec or architecture.
 
 **Output of Phase 4:**
 ```markdown
@@ -307,10 +307,10 @@ Task(
 → code-reviewer includes finding in review
 ```
 
-### Team Lead Direct Trigger
+### Tech Lead Direct Trigger
 
 ```
-Team Lead can spawn investigator at ANY phase:
+Tech Lead can spawn investigator at ANY phase:
 
 Task(
   prompt: "Investigate: [description of unknown].

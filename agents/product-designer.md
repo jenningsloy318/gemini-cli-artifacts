@@ -110,7 +110,7 @@ When invoked, you receive:
 1. **Invoke Architecture Agent**
 
    ```
-   Spawn architecture-agent teammate with context:
+   Spawn architecture-agent subagent with context:
    - Task: Design architecture for [feature_name]
    - Requirements: [requirements path]
    - Assessment: [assessment path]
@@ -151,7 +151,7 @@ When invoked, you receive:
 1. **Invoke UI/UX Designer Agent**
 
    ```
-   Spawn ui-ux-designer teammate with context:
+   Spawn ui-ux-designer subagent with context:
    - Task: Design UI/UX for [feature_name]
    - Requirements: [requirements path]
    - Assessment: [assessment path]
@@ -302,7 +302,7 @@ Type your selection as: "I choose Option [X]" or "Combined Option [X]"
 2. **Finalize Architecture Document**
 
    ```
-   Message architecture-agent teammate:
+   Message architecture-agent subagent:
    "User selected [Architecture Option X]. Please finalize [doc-index]-architecture.md
    and any required ADRs based on this selection."
    ```
@@ -310,7 +310,7 @@ Type your selection as: "I choose Option [X]" or "Combined Option [X]"
 3. **Finalize UI/UX Document**
 
    ```
-   Message ui-ux-designer teammate:
+   Message ui-ux-designer subagent:
    "User selected [UI Option Y]. Please finalize [doc-index]-design-spec.md
    based on this selection and the confirmed architecture constraints."
    ```

@@ -214,100 +214,17 @@ ELSE:
 - HALT findings cannot be downgraded by the reviewer
 - Single HALT → CONTESTED minimum
 - Multiple HALTs → REJECT
-- HALT findings require explicit Team Lead acknowledgment
+- HALT findings require explicit Tech Lead acknowledgment
 
-## Output Template
 
-```markdown
-# Adversarial Review: [Feature/Fix Name]
+## Output Format
 
-**Date:** [timestamp]
-**Reviewer:** super-dev:adversarial-reviewer
-**Verdict:** PASS | CONTESTED | REJECT
-
-## Intent
-
-<what the author is trying to achieve>
-
-## Verdict Summary
-
-<one-line summary>
-
-## Change Scope
-
-| Metric                 | Value                                |
-| ---------------------- | ------------------------------------ |
-| Lines changed          | X                                    |
-| Files changed          | X                                    |
-| Size classification    | Small/Medium/Large                   |
-| Reviewers activated    | Skeptic [+ Architect] [+ Minimalist] |
-| Attack vectors applied | V1-V6, V8 [+ V7]                     |
-
-## Destructive Action Gate
-
-**Gate Verdict:** CLEAR | BLOCKED
-
-| Check                       | Status     | Evidence               |
-| --------------------------- | ---------- | ---------------------- |
-| Data Destruction (DAT)      | CLEAR/HALT | [details or file:line] |
-| Irreversible State (IRR)    | CLEAR/HALT | [details or file:line] |
-| Production Impact (PRD)     | CLEAR/HALT | [details or file:line] |
-| Permission Escalation (PRM) | CLEAR/HALT | [details or file:line] |
-| Secret Operations (SEC)     | CLEAR/HALT | [details or file:line] |
-
-### HALT Findings
-
-<DAG-XXX entries if any, or "None">
-
-## Findings
-
-<numbered list, ordered by severity: HALT -> high -> medium -> low>
-<each finding tagged with Lens/Vector: e.g., Skeptic/V2>
-
-### High
-
-**AF-001** | Skeptic/V2 | `file:line`
-**Issue:** [description]
-**Recommendation:** [concrete action, not vague advice]
-
-### Medium
-
-**AF-002** | Architect/V7 | `file:line`
-**Issue:** [description]
-**Recommendation:** [concrete action]
-
-### Low
-
-**AF-003** | Minimalist/V7 | `file:line`
-**Issue:** [description]
-**Recommendation:** [concrete action]
-
-## Vector Coverage
-
-| Vector                  | Lens      | Findings | Highest Severity |
-| ----------------------- | --------- | -------- | ---------------- |
-| V1: False Assumptions   | Skeptic   | 0        | --               |
-| V2: Edge Cases          | Skeptic   | 0        | --               |
-| V3: Failure Modes       | Skeptic   | 0        | --               |
-| V4: Adversarial Input   | Skeptic   | 0        | --               |
-| V5: Safety & Compliance | Skeptic   | 0        | --               |
-| V6: Grounding Audit     | Skeptic   | 0        | --               |
-| V7: Dependencies        | Architect | 0        | --               |
-| V8: Behavior Coverage   | Skeptic   | 0        | --               |
-
-## What Went Well
-
-<1-3 things the reviewers found no issue with>
-
-## Lead Judgment
-
-<for each finding: accept or reject with a one-line rationale>
-```
+The output file is `[doc-index]-adversarial-review.md` in the spec directory. You MUST produce a document following the structure defined in `templates/reference/adversarial-review-template.md`. Use the XML tags defined there to guide your sectioning and content depth.
 
 ## Iteration Behavior
 
 - **PASS** → proceed to Phase 10 (Documentation Update)
-- **CONTESTED** → Team Lead reviews findings, decides accept or loop back to Phase 8 (Implementation)
+- **CONTESTED** → Tech Lead reviews findings, decides accept or loop back to Phase 8 (Implementation)
 - **REJECT** → YOU MUST loop back to Phase 8 (Implementation) with the findings as input for dev-executor to fix
 
 ## Severity Reference
@@ -318,3 +235,4 @@ ELSE:
 | High     | Breaks correctness, security, or core functionality | Unhandled error paths, race conditions, security holes, missing validation             |
 | Medium   | Structural weakness or unnecessary complexity       | Coupling issues, premature abstractions, responsibility leaks                          |
 | Low      | Minor observations or style preferences             | Naming suggestions, minor simplifications                                              |
+

@@ -43,7 +43,7 @@ First agent 1, then agent 2, then agent 3
 
 **TERMINATE IMMEDIATELY AFTER COMPLETION:**
 
-When an agent/subagent/teammate finishes their assigned task:
+When an agent/subagent/subagent finishes their assigned task:
 1. Verify the agent's output is complete
 2. **Terminate the agent immediately** - Do NOT keep idle agents running
 3. **Close the tmux pane** (if using tmux mode) to free resources

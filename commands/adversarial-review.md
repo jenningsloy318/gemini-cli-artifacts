@@ -74,7 +74,7 @@ An always-on checkpoint that scans every diff for irreversible operations, regar
 | Verdict | Meaning | Action |
 |---------|---------|--------|
 | **PASS** | No high-severity findings | Proceed to documentation |
-| **CONTESTED** | High-severity findings, reviewers disagree | Team Lead decides |
+| **CONTESTED** | High-severity findings, reviewers disagree | Tech Lead decides |
 | **REJECT** | High-severity findings, reviewer consensus | Loop back to execution |
 
 **Note:** HALT findings from the Destructive Action Gate force CONTESTED minimum (single HALT) or REJECT (multiple HALTs), regardless of other findings.

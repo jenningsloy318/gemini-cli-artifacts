@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.7.13"
+  version: "3.7.14"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -40,7 +40,7 @@ metadata:
 
 # Super Dev Workflow
 
-A team-based development system where the Tech Lead acts as Team Lead, orchestrating specialized subagents who work in their own independent context loops, returning structured results to the main session.
+A team-based development system where the Tech Lead acts as Tech Lead, orchestrating specialized subagents who work in their own independent context loops, returning structured results to the main session.
 
 **Announce at start:** YOU MUST say "I'm using the super-dev skill with super-dev subagents to systematically implement this task." at the beginning of every run.
 
@@ -54,7 +54,7 @@ Super-dev now strictly enforces that ALL development work happens inside a git w
   - `SPEC_NAME`: `${SPEC_INDEX}-${FEATURE_NAME}` (e.g., `01-auth-fix`).
   - `BRANCH_NAME`: `${SPEC_NAME}` (Identical to SPEC_NAME, e.g., `01-auth-fix`).
   - `WORKTREE_DIR`: `.worktree/${SPEC_NAME}` (Directory part identical to SPEC_NAME, e.g., `.worktree/01-auth-fix`).
-- **Explicit Creation:** Team Lead MUST run `git worktree add -b ${BRANCH_NAME} ${WORKTREE_DIR}`.
+- **Explicit Creation:** Tech Lead MUST run `git worktree add -b ${BRANCH_NAME} ${WORKTREE_DIR}`.
 - **Strict Isolation:** Once the worktree is created, ALL subsequent labor (Phases 2-11) MUST occur within that worktree. Any edit to the main repository tree during these phases is a VIOLATION.
 - **Mandatory Navigation:** Subagents are explicitly instructed to `cd` into `${WORKTREE_DIR}` at the start of every session. NAVIGATION is mandatory, not just switching branches.
 - **Global Rule:** The `dev-rules` skill makes worktree navigation a mandatory initial step for all agents.
@@ -220,7 +220,7 @@ On subsequent runs, read `${extensionPath}/data/config.json` silently and apply 
 
 ```
                     ┌─────────────────┐
-                    │    Tech Lead    │ ◄── Team Lead (Orchestration Only)
+                    │    Tech Lead    │ ◄── Tech Lead (Orchestration Only)
                     │   (Main Agent)  │     Delegates to Subagents
                     └────────┬────────┘     Manages shared task list file
                              │              Synthesizes subagent results
@@ -284,7 +284,7 @@ Grade each completed workflow run against these three dimensions:
 
 - Phase iteration loops < 3 (Phase 8/9 loop)
 - Subagents used for high-volume or speculative work
-- Team Lead NEVER performs agent work directly (delegation enforcement)
+- Tech Lead NEVER performs agent work directly (delegation enforcement)
 - No redundant phase execution or unnecessary retries
 
 ### Style & Instructions (Conventions followed)
@@ -350,7 +350,7 @@ After Phase 9 passes, you MUST execute these phases in strict order. Do NOT jump
 
 Gates are **programmatic quality checks** that run between phases to catch problems early. Each gate is a script in `${extensionPath}/scripts/gates/` that exits 0 (PASS) or 1 (FAIL).
 
-**CRITICAL:** Gates are NON-NEGOTIABLE. If a gate fails, the Team Lead MUST NOT proceed to the next phase. Instead, loop back to the failing phase and fix the issue.
+**CRITICAL:** Gates are NON-NEGOTIABLE. If a gate fails, the Tech Lead MUST NOT proceed to the next phase. Instead, loop back to the failing phase and fix the issue.
 
 ### Gate Execution
 
@@ -361,14 +361,14 @@ bash ${extensionPath}/scripts/gates/<gate-name>.sh <spec-dir>
 
 ### Gate Failure Handling
 
-1. Gate fails → Team Lead reports which gate and which checks failed
-2. Team Lead delegates a subagent to fix the failing phase
+1. Gate fails → Tech Lead reports which gate and which checks failed
+2. Tech Lead delegates a subagent to fix the failing phase
 3. After fix, re-run the gate
 4. Only proceed when gate returns PASS (exit 0)
 
-## Entry Point: Team Lead (tech-lead)
+## Entry Point: Tech Lead (tech-lead)
 
-**ROLE:** Your current session becomes the Team Lead (tech-lead).
+**ROLE:** Your current session becomes the Tech Lead (tech-lead).
 
 **To start:**
 
@@ -376,7 +376,7 @@ bash ${extensionPath}/scripts/gates/<gate-name>.sh <spec-dir>
 "I'm using super-dev. I will assume the Tech Lead role to implement: [task]"
 ```
 
-## Team Lead Responsibilities (Delegate Mode)
+## Tech Lead Responsibilities (Delegate Mode)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -389,7 +389,7 @@ bash ${extensionPath}/scripts/gates/<gate-name>.sh <spec-dir>
 3. **No Main Tree Edits**: Any edit to the main repository tree (outside the worktree) during Phases 2-11 is a **VIOLATION** of the isolation policy.
 
 **CRITICAL PRIME DIRECTIVE:**
-You are the **Team Lead**, NOT an individual contributor.
+You are the **Tech Lead**, NOT an individual contributor.
 Your core function is to **manage resources**, not perform labor.
 You MUST suppress the urge to "just fix it yourself".
 
@@ -422,7 +422,7 @@ generalist(request: "Act as the [Agent Name] subagent. Your instructions are loc
 - Ask: "Which subagent handles this?"
 - Use the **`generalist` tool** to delegate to that subagent.
 
-**CRITICAL ENFORCEMENT:** Team Lead operates in orchestration-only mode. The ONLY way to do work in Phases 2-11 is via delegation tools.
+**CRITICAL ENFORCEMENT:** Tech Lead operates in orchestration-only mode. The ONLY way to do work in Phases 2-11 is via delegation tools.
 
 ✅ **CAN (Phases 0-1 only):**
 

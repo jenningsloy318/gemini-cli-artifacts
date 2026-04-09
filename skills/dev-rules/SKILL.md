@@ -19,7 +19,7 @@ At the start of every super-dev session, check for context from the previous com
    - If found: Read the handoff file — proceed to step 4
    - If not found: Try the next-highest directory (graceful fallback for pre-handoff specs)
    - If no handoff found in any directory: Skip silently — this is the first run or all specs predate the handoff phase
-4. **Present prior context**: Display a brief summary to the Team Lead:
+4. **Present prior context**: Display a brief summary to the Tech Lead:
    - What was done in the previous session (from section 2)
    - Key decisions made (from section 3)
    - Unfinished items / follow-ups (from section 5)
