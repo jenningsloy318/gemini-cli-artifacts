@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.7.5"
+  version: "3.7.6"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -33,6 +33,7 @@ metadata:
     - single-turn-parallel
     - index-discovery
     - specialist-selection
+    - multi-domain-parallel
 ---
 
 # Super Dev Workflow
@@ -99,7 +100,7 @@ The `doc-validator` MUST perform two distinct types of validation for every docu
 - **Qualitative**: Perform deep LLM analysis against phase goals, project standards, and previous artifacts.
   A "PASS" verdict requires success in BOTH methods.
 
-### Mandatory Role Mapping (v3.7.5):
+### Mandatory Role Mapping (v3.7.6):
 
 | Phase | Document                       | Writer Agent             | Validator Agent | Gate Script            |
 | ----- | ------------------------------ | ------------------------ | --------------- | ---------------------- |
@@ -109,23 +110,26 @@ The `doc-validator` MUST perform two distinct types of validation for every docu
 | 5     | `[doc-index]-assessment.md`    | `code-assessor`          | `doc-validator` | (N/A)                  |
 | 6     | `[doc-index]-specification.md` | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
 | 7     | `[doc-index]-plan.md`          | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
-| 8     | **Specialized Specialist**     | **Execution Specialist** | `qa-agent`      | `gate-build.sh`        |
+| 8     | **Specialist(s)**              | **Execution Specialist** | `qa-agent`      | `gate-build.sh`        |
 | 10    | Documentation Updates          | `docs-executor`          | `doc-validator` | `gate-docs-drift.sh`   |
 | 10.5  | `[doc-index]-handoff.md`       | `handoff-writer`         | `doc-validator` | (N/A)                  |
 
-### Phase 8 Specialist Selection Logic (MANDATORY)
+### Phase 8 Execution Architecture (3-Tier)
 
-The Tech Lead MUST select the best-fit execution subagent based on the implementation plan and codebase:
+The Tech Lead MUST select the execution model based on task analysis:
 
-- **Rust project**: Delegate to `rust-developer`
-- **Go project**: Delegate to `golang-developer`
-- **Frontend / Web (React/Next.js/Vue)**: Delegate to `frontend-developer`
-- **Backend (Node.js/Python/General)**: Delegate to `backend-developer`
-- **Android App**: Delegate to `android-developer`
-- **iOS App**: Delegate to `ios-developer`
-- **macOS App**: Delegate to `macos-app-developer`
-- **Windows App**: Delegate to `windows-app-developer`
-- **Unknown/General Scripting**: Fallback to `dev-executor`
+1.  **SINGLE-DOMAIN**: Direct spawn of one specialist (e.g., `rust-developer`) for all tasks.
+2.  **MULTI-DOMAIN**: Parallel direct spawn of multiple specialists (e.g., `rust-developer` for API + `frontend-developer` for UI). Tasks MUST be explicitly partitioned.
+3.  **UNKNOWN/AMBIGUOUS**: Fallback to `dev-executor` for intermingled tasks or legacy routing.
+
+### Specialist Selection Mapping
+
+- **Rust**: `rust-developer`
+- **Go**: `golang-developer`
+- **Frontend**: `frontend-developer`
+- **Backend/Python/Node**: `backend-developer`
+- **Android/iOS/macOS/Windows**: `[platform]-developer`
+- **Fallback**: `dev-executor`
 
 ## Mandatory Requirement Clarification (NEW in v3.0.9)
 
@@ -454,7 +458,7 @@ generalist(request: "Act as the [Agent Name] subagent. Your instructions are loc
 | 5.4   | product-designer       | Coordinate architecture + UI design together                                  |
 | 5.5   | ui-ux-designer         | Create UI/UX design (UI only)                                                 |
 | 6     | spec-writer            | Write spec, plan, task list                                                   |
-| 8     | **Specialist**         | **Execution Specialist** (Rust, Go, Frontend, Backend, Android, etc.)         |
+| 8     | **Specialist(s)**      | **Execution Specialists** (Single-domain OR Multi-domain parallel)            |
 | 8     | qa-agent               | **QA Lead:** Plan tests, run tests + browser smoke tests                      |
 | 9     | code-reviewer          | **Staff Engineer:** Spec-aware review focused on production-risk bugs         |
 | 9     | adversarial-reviewer   | **Red Team:** Multi-lens adversarial challenge with Destructive Action Gate   |

@@ -190,21 +190,44 @@ Every time you delegate a task for a new phase (e.g., "Phase 3"), the system aut
 | 10    | Updating documentation                        | `docs-executor`                                               |
 | 10.5  | Writing handoff document                      | `handoff-writer`                                              |
 
-### Phase 8 Specialist Selection Logic (MANDATORY)
+### Phase 8 Execution Architecture (MANDATORY)
 
-Before spawning Phase 8 subagents, you MUST analyze the implementation plan and project files to select the best-fit **Execution Specialist**:
+Before spawning execution agents, you MUST analyze the `task-list.md` and `plan.md` to determine the domain(s). Follow one of these three patterns:
 
-- **Rust project**: Delegate to `rust-developer`
-- **Go project**: Delegate to `golang-developer`
-- **Frontend / Web (React/Next.js/Vue)**: Delegate to `frontend-developer`
-- **Backend (Node.js/Python/General)**: Delegate to `backend-developer`
-- **Android App**: Delegate to `android-developer`
-- **iOS App**: Delegate to `ios-developer`
-- **macOS App**: Delegate to `macos-app-developer`
-- **Windows App**: Delegate to `windows-app-developer`
-- **Unknown/General Scripting**: Fallback to `dev-executor`
+#### 1. SINGLE-DOMAIN (e.g., all Rust, all Frontend)
 
-**USER ENFORCEMENT:** If the user sees Team Lead using `dev-executor` for a known stack (like Rust or Frontend), they will intervene.
+If all implementation tasks belong to a single technology stack:
+
+- **Action**: Spawn the specific specialist (e.g., `rust-developer`) + `qa-agent` in parallel.
+- **Task Assignment**: The specialist handles ALL tasks.
+
+#### 2. MULTI-DOMAIN (e.g., Rust backend + React frontend)
+
+If tasks are split across distinct stacks (e.g., T1-T3 are `.rs`, T4-T5 are `.tsx`):
+
+- **Action**: Spawn MULTIPLE specialists + `qa-agent` in a **SINGLE TURN**.
+- **Task Assignment**: Explicitly assign task ranges to each specialist (e.g., "rust-developer: handle T1-T3", "frontend-developer: handle T4-T5").
+- **Constraint**: Specialists MUST NOT edit the same files.
+
+#### 3. UNKNOWN / AMBIGUOUS
+
+If the domain cannot be clearly determined or tasks are heavily intermingled:
+
+- **Action**: Spawn `dev-executor` + `qa-agent`.
+- **Note**: `dev-executor` will perform its own internal routing.
+
+---
+
+### Specialist Selection Mapping:
+
+- **Rust**: `rust-developer`
+- **Go**: `golang-developer`
+- **Frontend / Web**: `frontend-developer`
+- **Backend (Node/Python)**: `backend-developer`
+- **Mobile/Platform**: `[platform]-developer`
+- **Fallback**: `dev-executor`
+
+**USER ENFORCEMENT:** If the user sees you spawning a generalist for a clearly defined multi-domain task, they will intervene.
 
 ## Phase Flow
 
