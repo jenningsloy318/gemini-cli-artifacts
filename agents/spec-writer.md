@@ -36,15 +36,15 @@ Review all input documents and extract key constraints, patterns, and scenarios.
 
 ### Step 2: Create Technical Specification (`[doc-index]-specification.md`)
 
-Focus on ARCHITECTURE and INTERFACES. Load structure from `specification-template.md`.
+Focus on ARCHITECTURE, INTERFACES, and COMPONENT DEPENDENCIES. Load structure from `specification-template.md`.
 
 ### Step 3: Create Implementation Plan (`[doc-index]-plan.md`)
 
-Detail the execution strategy and file inventory. Load structure from `implementation-plan-template.md`.
+Detail the execution strategy, milestone dependencies, and file inventory. Load structure from `implementation-plan-template.md`.
 
 ### Step 4: Create Task List (`[doc-index]-task-list.md`)
 
-Provide the granular, atomic tasks for execution. Load structure from `task-list-template.md`.
+Provide the granular, atomic tasks for execution, explicitly defining the dependencies between tasks. Load structure from `task-list-template.md`.
 
 ---
 
@@ -57,6 +57,7 @@ Provide the granular, atomic tasks for execution. Load structure from `task-list
 3. **Triple-File Output**: You MUST create three distinct files using the indices assigned by the Tech Lead.
 4. **Dynamic Naming**: Use the format `[doc-index]-[doc-type].md`.
 5. **BDD Traceability**: Every scenario ID from the BDD document MUST be referenced in either the Specification or the Implementation Plan.
+6. **Explicit Dependencies**: You MUST explicitly define dependencies for components, milestones, and individual tasks across all three files.
 
 ## Output Format
 
@@ -67,3 +68,4 @@ You MUST produce three documents following the structures defined in the respect
 - [ ] **Prohibited Generic Names**: `data`, `item`, `value`, `result`, `temp`, `obj`, `val`, `list`, `array`, `map`.
 - [ ] **Relative Paths**: Always use `./filename.md`.
 - [ ] **Single Implementation Guarantee**: No ambiguity; exactly one way to implement correctly.
+- [ ] **Dependency Chain**: All components, milestones, and tasks must have explicit dependencies defined.

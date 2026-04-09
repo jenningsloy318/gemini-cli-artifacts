@@ -15,6 +15,7 @@
 <subsection id="m1" title="Milestone 1: [Name]">
 - **Goal:** [description]
 - **Scenarios:** [SCENARIO-XXX]
+- **Dependencies:** [Other milestones or features this depends on]
 - **Files:** [paths]
 </subsection>
 </section>

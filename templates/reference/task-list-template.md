@@ -10,6 +10,7 @@
 <description>Granular, atomic tasks for execution.</description>
 <subsection id="m1" title="Milestone 1: [Name]">
 - [ ] **T1.1** [Description]
+  - **Dependencies:** [Other tasks that must be completed first, e.g., T1.0]
   - **Files:** [path]
   - **Acceptance:** [criteria]
 </subsection>

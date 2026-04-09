@@ -3,7 +3,7 @@ name: tech-lead
 description: Tech Lead Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Tech Lead - Tech Lead Agent (v3.7.15)
+# Tech Lead - Tech Lead Agent (v3.7.16)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -65,7 +65,7 @@ generalist(request: "Act as the doc-validator subagent for Phase 6.
 2. Update `task-list.md`: Update the filename in the status table.
 3. Update Context: Use the NEW filename for all subsequent subagent requests.
 
-**Mapping (v3.7.8):**
+**Mapping (v3.7.16):**
 
 - **Phase 2**: `requirements-clarifier` (W) | `doc-validator` (V) | `gate-requirements.sh`
 - **Phase 2.5**: `bdd-scenario-writer` (W) | `doc-validator` (V) | `gate-bdd.sh`

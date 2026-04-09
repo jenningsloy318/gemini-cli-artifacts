@@ -22,6 +22,7 @@
 - **Component:** [Name]
 - **Interface:** [Code block]
 - **Responsibilities:** [List]
+- **Dependencies:** [List of other components or features this depends on]
 </subsection>
 
 <subsection id="data-model" title="2.3 Data Model">

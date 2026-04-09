@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.7.15"
+  version: "3.7.16"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -102,7 +102,7 @@ The `doc-validator` MUST perform two distinct types of validation for every docu
 - **Qualitative**: Perform deep LLM analysis against phase goals, project standards, and previous artifacts.
   A "PASS" verdict requires success in BOTH methods.
 
-### Mandatory Role Mapping (v3.7.8):
+### Mandatory Role Mapping (v3.7.16):
 
 | Phase | Document                       | Writer Agent                  | Validator Agent | Gate Script            |
 | ----- | ------------------------------ | ----------------------------- | --------------- | ---------------------- |
