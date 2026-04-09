@@ -4,7 +4,7 @@
 # Input: JSON via stdin with tool_name, tool_input fields
 # Output: JSON decision to stdout
 
-set -euo pipefail
+set -uo pipefail
 
 INPUT=$(cat)
 TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // ""')

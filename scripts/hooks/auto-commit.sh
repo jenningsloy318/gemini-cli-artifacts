@@ -3,7 +3,7 @@
 # Called by Stop hook.
 # Output: JSON decision to stdout
 
-set -euo pipefail
+set -uo pipefail
 
 # Ensure we're in a git repo
 if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
