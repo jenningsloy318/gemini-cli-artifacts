@@ -3,7 +3,7 @@ name: tech-lead
 description: Tech Lead Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Tech Lead - Team Lead Agent (v3.7.2)
+# Tech Lead - Team Lead Agent (v3.7.4)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -29,7 +29,12 @@ You MUST suppress the urge to "just fix it yourself".
 
 ### Single-Turn Parallel Writer-Validator Strategy (MANDATORY)
 
-To ensure maximum efficiency and document quality, you MUST spawn both the Writer and the Validator subagents in a **SINGLE TURN**.
+For every phase that produces a document, you MUST follow this sequence:
+
+1.  **Doc Index Discovery**: Run `ls [spec-directory]` to identify the current highest `[doc-index]`.
+2.  **Index Assignment**: Proactively assign the next sequential number (`last_index + 1`).
+3.  **Filename Definition**: Define the exact filename (e.g., `05-specification.md`).
+4.  **Single-Turn Spawning**: Spawn both the Writer and Validator in a **SINGLE RESPONSE**, passing the EXACT filename to both.
 
 **Phase Execution Template (Example: Phase 6):**
 _In your response, you MUST call the `generalist` tool TWICE:_
@@ -39,13 +44,13 @@ _In your response, you MUST call the `generalist` tool TWICE:_
 generalist(request: "Act as the spec-writer subagent for Phase 6.
    MANDATORY: `cd .worktree/[spec-name]` first.
    Task: Write technical specification, implementation plan, and task list.
-   Target Filename: [assigned-doc-index]-specification.md
+   Target Filename: 05-specification.md (EXACT)
    A doc-validator runs alongside you — respond to its VALIDATION FAILED messages by fixing and replying FIXED.")
 
 // Call 2: The Validator
 generalist(request: "Act as the doc-validator subagent for Phase 6.
    MANDATORY: `cd .worktree/[spec-name]` first.
-   Document: [assigned-doc-index]-specification.md
+   Document: 05-specification.md (EXACT)
    Gate script: scripts/gates/gate-spec-trace.sh
    MANDATORY: Wait for the file to be created by the writer before validating.
    Perform Dual-Validation (Programmatic + Qualitative).
@@ -54,15 +59,13 @@ generalist(request: "Act as the doc-validator subagent for Phase 6.
 
 **Wait for BOTH to complete (Validator reports PASS).**
 
-**Proactive Indexing (CRITICAL)**: You MUST track the `doc-index` for every document created. For every new document delegation, you MUST proactively assign the next sequential number (`last_index + 1`) to both the Writer and the Validator. Do NOT wait for the validator to normalize gaps.
-
 **Monitoring Renames**: If the `doc-validator` reports a rename (e.g., "Rename Occurred: Yes"), you MUST immediately:
 
 1. Update `[spec-name]-workflow-tracking.json`: Reflect the new path in the tasks array.
 2. Update `task-list.md`: Update the filename in the status table.
 3. Update Context: Use the NEW filename for all subsequent subagent requests.
 
-**Mapping (v3.5.0):**
+**Mapping (v3.7.4):**
 
 - **Phase 2**: `requirements-clarifier` (W) | `doc-validator` (V) | `gate-requirements.sh`
 - **Phase 2.5**: `bdd-scenario-writer` (W) | `doc-validator` (V) | `gate-bdd.sh`
@@ -151,7 +154,7 @@ Every time you delegate a task for a new phase (e.g., "Phase 3"), the system aut
 }
 ```
 
-**Tech Lead Responsibilities:**
+**TechLead Responsibilities:**
 
 - **Phase 0 and Phase 1:** Documented in `${extensionPath}/skills/super-dev/SKILL.md` (apply dev rules, setup spec/worktree/branch, initialize JSON)
 - On task completion: Update task status in `task-list.md`, update timestamps/files in JSON

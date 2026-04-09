@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.7.2"
+  version: "3.7.4"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -31,6 +31,7 @@ metadata:
     - dual-validation
     - proactive-indexing
     - single-turn-parallel
+    - index-discovery
 ---
 
 # Super Dev Workflow
@@ -60,34 +61,34 @@ Super-dev now strictly enforces that ALL development work happens inside a git w
 To maintain a clear audit trail and logical order, all files created within the specification directory (`${WORKTREE_DIR}/specification/${SPEC_NAME}/`) MUST follow a strict sequential naming convention:
 
 - **Format:** `[doc-index]-[descriptive-name].md`
-- **Proactive Indexing (NEW in v3.4.2)**: The Team Lead MUST track the current highest index and proactively assign the next sequential number (`prev + 1`) to every new document delegation. Do NOT wait for the validator to fix gaps.
-- **Normalization**: The `doc-validator` remains as a safety layer to ensure **NO GAPS** exist in the indexing, even if phases are skipped.
+- **Doc Index Discovery (NEW in v3.7.4)**: At the start of every document-producing phase, the Tech Lead MUST run `ls` on the spec directory to identify the current highest index.
+- **Proactive Indexing**: The Tech Lead proactively assigns the next sequential number (`prev + 1`) and defines the **EXACT** filename before spawning subagents.
+- **Normalization**: The `doc-validator` remains as a safety layer to ensure **NO GAPS** exist, even if phases are skipped.
 - **Example Indexing:**
   - `01-requirements.md`
-  - `02-behavior-scenarios.md` (Note: Gap-free even if phase skipped)
+  - `02-behavior-scenarios.md`
   - `03-research.md`
   - `04-assessment.md`
   - `05-specification.md`
   - `06-implementation-plan.md`
   - `07-handoff.md`
 
-The Team Lead is responsible for adapting to any renames reported by the validator.
-
-## Parallel Writer-Validator Strategy (NEW in v3.5.0)
+## Single-Turn Parallel Writer-Validator Strategy (NEW in v3.5.0)
 
 To ensure maximum document quality and speed, every phase that produces a document MUST employ a **Single-Turn Parallel** dual-agent strategy.
 
-### Execution Pattern:
+### Execution Pattern (v3.7.4):
 
-1.  **Index Assignment**: Before spawning, the Team Lead determines the next sequential index.
-2.  **Single-Turn Spawning (MANDATORY)**: The Team Lead MUST issue BOTH subagent delegation calls (Writer + Validator) in a **SINGLE RESPONSE**. Tools in Gemini CLI execute in parallel by default; separate turns for spawning is a violation.
-3.  **Collaborative loop**:
-    - The **Writer** drafts/updates the document using the assigned index.
+1.  **Index Discovery**: Team Lead runs `ls` to find the last index.
+2.  **Filename Definition**: Team Lead defines the EXACT target filename (e.g., `05-specification.md`).
+3.  **Single-Turn Spawning (MANDATORY)**: The Team Lead MUST issue BOTH subagent delegation calls (Writer + Validator) in a **SINGLE RESPONSE**.
+4.  **Collaborative loop**:
+    - The **Writer** drafts the document using the EXACT filename provided.
     - The **Validator** (`doc-validator`) waits for the file to appear and then reviews it using the **Dual-Validation** method.
     - **Validation**: The Validator MUST verify that the assigned index is strictly incremental and has NO GAPS.
     - If validation fails, the Validator provides explicit fix instructions to the Writer.
     - The Writer applies fixes and notifies the Validator.
-4.  **Phase Exit**: The phase is complete ONLY when the Validator reports a "PASS" verdict to the Team Lead.
+5.  **Phase Exit**: The phase is complete ONLY when the Validator reports a "PASS" verdict to the Team Lead.
 
 ### Dual-Validation Method (NEW in v3.3.1):
 
@@ -97,7 +98,7 @@ The `doc-validator` MUST perform two distinct types of validation for every docu
 - **Qualitative**: Perform deep LLM analysis against phase goals, project standards, and previous artifacts.
   A "PASS" verdict requires success in BOTH methods.
 
-### Mandatory Role Mapping (v3.5.0):
+### Mandatory Role Mapping (v3.7.4):
 
 | Phase | Document                       | Writer Agent             | Validator Agent | Gate Script            |
 | ----- | ------------------------------ | ------------------------ | --------------- | ---------------------- |
@@ -114,7 +115,7 @@ The `doc-validator` MUST perform two distinct types of validation for every docu
 
 To ensure technical integrity and eliminate ambiguity, **Phase 2 (Requirements)** now mandates the use of the `clarify` skill.
 
-- **SOP Integration:** The tech-lead MUST invoke `activate_skill(name: "clarify")` at the start of Phase 2.
+- **SOP Integration:** The Tech Lead MUST invoke `activate_skill(name: "clarify")` at the start of Phase 2.
 - **Prompt Mode Enforcement:** Use the `clarify` Prompt Mode SOP (Wittgenstein language decomposition -> Socratic triple-query -> Polanyi tacit extraction) to turn the user's initial request into a structured technical directive.
 - **Output Validation:** Phase 2 is NOT complete until the user confirms the `clarify` structural assembly output (Type, Goal, Core Info, Constraints, Implicit Preferences, Acceptance Criteria).
 
@@ -193,7 +194,7 @@ On subsequent runs, read `${extensionPath}/data/config.json` silently and apply 
 
 ```
                     ┌─────────────────┐
-                    │   tech-lead   │ ◄── Team Lead (Orchestration Only)
+                    │    Tech Lead    │ ◄── Team Lead (Orchestration Only)
                     │   (Main Agent)  │     Delegates to Subagents
                     └────────┬────────┘     Manages shared task list file
                              │              Synthesizes subagent results
@@ -215,7 +216,7 @@ On subsequent runs, read `${extensionPath}/data/config.json` silently and apply 
 
 ## Main Agent vs Subagents
 
-|                  | Main Agent (tech-lead)  | Subagents                       |
+|                  | Main Agent (Tech Lead)    | Subagents                       |
 | ---------------- | ------------------------- | ------------------------------- |
 | **Context**      | Full session history      | Independent/Fresh context       |
 | **Tools**        | Full toolset access       | Specialized/Restricted toolsets |
@@ -359,7 +360,7 @@ bash ${extensionPath}/scripts/gates/<gate-name>.sh <spec-dir>
 **Once the Git worktree is created in Phase 1, ALL work from Phase 2 through Phase 11 MUST occur inside that worktree.**
 
 1. **Subagent Working Directory**: Every `generalist` call MUST include the worktree path and a mandatory `cd` instruction as the first step of the request.
-2. **Context Passing**: The tech-lead MUST track the worktree path in the session context and pass it to every subagent.
+2. **Context Passing**: The Tech Lead MUST track the worktree path in the session context and pass it to every subagent.
 3. **No Main Tree Edits**: Any edit to the main repository tree (outside the worktree) during Phases 2-11 is a **VIOLATION** of the isolation policy.
 
 **CRITICAL PRIME DIRECTIVE:**
@@ -449,9 +450,9 @@ generalist(request: "Act as the [Agent Name] subagent. Your instructions are loc
 
 ### Shared Task List (File-based)
 
-- tech-lead maintains a `specification/[name]/task-list.md` file.
+- Tech Lead maintains a `specification/[name]/task-list.md` file.
 - Subagents read this file to understand their current context.
-- tech-lead updates the file after each delegation returns.
+- Tech Lead updates the file after each delegation returns.
 
 ### Option Presentation
 
@@ -464,7 +465,7 @@ In Phase 5.4, ALWAYS present COMBINED architecture+UI options together.
 
 ## Investigation Protocol (Any Phase — On-Demand)
 
-**Subagent:** `investigator` — can be delegated by any phase agent or tech-lead when unknowns arise.
+**Subagent:** `investigator` — can be delegated by any phase agent or Tech Lead when unknowns arise.
 
 ### Auto-Trigger Conditions
 
@@ -483,7 +484,7 @@ Delegate to `investigator` when:
 
 ## Phase 12: Commit & Merge to Main
 
-**Executed by:** tech-lead (Main Agent)
+**Executed by:** Tech Lead (Main Agent)
 
 **PRE-CONDITION CHECK (MANDATORY):**
 Verify Phase 8, 9, 10, 10.5, and 11 are complete before starting Phase 12.
@@ -496,7 +497,7 @@ The `specification/[spec-index]-[spec-name]/` directory MUST always be committed
 | Issue                     | Solution                                                 |
 | ------------------------- | -------------------------------------------------------- |
 | Subagent hits token limit | Use `codebase_investigator` for smaller, scoped searches |
-| Delegation loop           | Assume Tech Lead role and resolve manually             |
+| Delegation loop           | Assume Tech Lead role and resolve manually               |
 | Gate failure              | Loop back to the relevant phase and fix the artifact     |
 
 ---
