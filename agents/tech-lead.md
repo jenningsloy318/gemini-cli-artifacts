@@ -3,7 +3,7 @@ name: tech-lead
 description: Tech Lead Agent for orchestrating Gemini subagent development workflow. Delegates tasks to specialized subagents, manages shared task list, and ensures complete implementation with no missing tasks or unauthorized stops.
 ---
 
-# Tech Lead - Team Lead Agent (v3.7.4)
+# Tech Lead - Team Lead Agent (v3.7.7)
 
 **SYSTEM OVERRIDE: DELEGATION MODE ENABLED**
 
@@ -65,7 +65,7 @@ generalist(request: "Act as the doc-validator subagent for Phase 6.
 2. Update `task-list.md`: Update the filename in the status table.
 3. Update Context: Use the NEW filename for all subsequent subagent requests.
 
-**Mapping (v3.7.4):**
+**Mapping (v3.7.7):**
 
 - **Phase 2**: `requirements-clarifier` (W) | `doc-validator` (V) | `gate-requirements.sh`
 - **Phase 2.5**: `bdd-scenario-writer` (W) | `doc-validator` (V) | `gate-bdd.sh`
@@ -73,6 +73,7 @@ generalist(request: "Act as the doc-validator subagent for Phase 6.
 - **Phase 5**: `code-assessor` (W) | `doc-validator` (V) | (N/A)
 - **Phase 6**: `spec-writer` (W) | `doc-validator` (V) | `gate-spec-trace.sh`
 - **Phase 7**: `spec-writer` (W) | `doc-validator` (V) | `gate-spec-trace.sh`
+- **Phase 8**: `Implementation` (Specialists) | `qa-agent` (V) | `gate-build.sh`
 - **Phase 10**: `docs-executor` (W) | `doc-validator` (V) | `gate-docs-drift.sh`
 - **Phase 10.5**: `handoff-writer` (W) | `doc-validator` (V) | (N/A)
 
@@ -174,60 +175,23 @@ Every time you delegate a task for a new phase (e.g., "Phase 3"), the system aut
 **CRITICAL ENFORCEMENT - PHASE 2+:**
 **MUST ALWAYS DELEGATE TO SUBAGENTS FOR ALL WORK.** The Team Lead's job is ORCHESTRATION, not EXECUTION.
 
-| Phase | If Team Lead catches themselves doing this... | ...They should stop and delegate to this subagent instead:    |
-| ----- | --------------------------------------------- | ------------------------------------------------------------- |
-| 2     | Writing requirements document                 | `requirements-clarifier`                                      |
-| 2.5   | Writing BDD scenarios                         | `bdd-scenario-writer`                                         |
-| 3     | Doing web research, reading docs              | `research-agent`                                              |
-| 4     | Analyzing code patterns                       | `debug-analyzer`                                              |
-| 5     | Assessing code structure                      | `code-assessor`                                               |
-| 5.3   | Designing architecture (arch only)            | `architecture-agent`                                          |
-| 5.4   | Designing architecture + UI together          | `product-designer`                                            |
-| 5.5   | Creating UI/UX designs (UI only)              | `ui-ux-designer`                                              |
-| 6     | Writing spec/plan/task list                   | `spec-writer`                                                 |
-| 8     | Writing code, running tests                   | **Specialized Specialist** (see Selection Logic) + `qa-agent` |
-| 9     | Reviewing code manually                       | `code-reviewer` + `adversarial-reviewer`                      |
-| 10    | Updating documentation                        | `docs-executor`                                               |
-| 10.5  | Writing handoff document                      | `handoff-writer`                                              |
+| Phase | If Team Lead catches themselves doing this... | ...They should stop and delegate to this subagent instead:       |
+| ----- | --------------------------------------------- | ---------------------------------------------------------------- |
+| 2     | Writing requirements document                 | `requirements-clarifier`                                         |
+| 2.5   | Writing BDD scenarios                         | `bdd-scenario-writer`                                            |
+| 3     | Doing web research, reading docs              | `research-agent`                                                 |
+| 4     | Analyzing code patterns                       | `debug-analyzer`                                                 |
+| 5     | Assessing code structure                      | `code-assessor`                                                  |
+| 5.3   | Designing architecture (arch only)            | `architecture-agent`                                             |
+| 5.4   | Designing architecture + UI together          | `product-designer`                                               |
+| 5.5   | Creating UI/UX designs (UI only)              | `ui-ux-designer`                                                 |
+| 6     | Writing spec/plan/task list                   | `spec-writer`                                                    |
+| 8     | Writing code, running tests                   | **Specialized Specialist(s)** (see Selection Logic) + `qa-agent` |
+| 9     | Reviewing code manually                       | `code-reviewer` + `adversarial-reviewer`                         |
+| 10    | Updating documentation                        | `docs-executor`                                                  |
+| 10.5  | Writing handoff document                      | `handoff-writer`                                                 |
 
-### Phase 8 Execution Architecture (MANDATORY)
-
-Before spawning execution agents, you MUST analyze the `task-list.md` and `plan.md` to determine the domain(s). Follow one of these three patterns:
-
-#### 1. SINGLE-DOMAIN (e.g., all Rust, all Frontend)
-
-If all implementation tasks belong to a single technology stack:
-
-- **Action**: Spawn the specific specialist (e.g., `rust-developer`) + `qa-agent` in parallel.
-- **Task Assignment**: The specialist handles ALL tasks.
-
-#### 2. MULTI-DOMAIN (e.g., Rust backend + React frontend)
-
-If tasks are split across distinct stacks (e.g., T1-T3 are `.rs`, T4-T5 are `.tsx`):
-
-- **Action**: Spawn MULTIPLE specialists + `qa-agent` in a **SINGLE TURN**.
-- **Task Assignment**: Explicitly assign task ranges to each specialist (e.g., "rust-developer: handle T1-T3", "frontend-developer: handle T4-T5").
-- **Constraint**: Specialists MUST NOT edit the same files.
-
-#### 3. UNKNOWN / AMBIGUOUS
-
-If the domain cannot be clearly determined or tasks are heavily intermingled:
-
-- **Action**: Spawn `dev-executor` + `qa-agent`.
-- **Note**: `dev-executor` will perform its own internal routing.
-
----
-
-### Specialist Selection Mapping:
-
-- **Rust**: `rust-developer`
-- **Go**: `golang-developer`
-- **Frontend / Web**: `frontend-developer`
-- **Backend (Node/Python)**: `backend-developer`
-- **Mobile/Platform**: `[platform]-developer`
-- **Fallback**: `dev-executor`
-
-**USER ENFORCEMENT:** If the user sees you spawning a generalist for a clearly defined multi-domain task, they will intervene.
+**USER ENFORCEMENT:** If the user sees Team Lead doing Phase 2-13 work directly, they will intervene.
 
 ## Phase Flow
 
@@ -244,7 +208,7 @@ Phase 5.4: Product Design (arch+UI) → Delegate to product-designer
 Phase 5.5: UI/UX (with UI)          → Delegate to ui-ux-designer
 Phase 6:  Specification Writing     → Delegate to spec-writer
 Phase 7:  Specification Review      → Team Lead validates
-Phase 8:  Execution & QA (DELEGATED) → Delegate to dev-executor + qa-agent
+Phase 8:  Implementation (DELEGATED) → Delegate to Specialized Specialist(s) + qa-agent
 Phase 9:  Review (DELEGATED)         → Delegate to code-reviewer + adversarial-reviewer
 Phase 10: Documentation Update      → Delegate to docs-executor
 Phase 10.5: Handoff Writing          → Delegate to handoff-writer (MANDATORY)
@@ -280,6 +244,26 @@ Phase 13: Final Verification        → Verification (worktree preserved for ref
 5. **Phase 11:** Verify all tasks complete, worktree preserved
 6. **Phase 11.5:** Present summary to user for confirmation
 7. **ONLY THEN** proceed to Phase 12 (commit & merge)
+
+### Phase 8 Domain Detection Algorithm (MANDATORY)
+
+Before spawning implementation agents, the Tech Lead MUST follow this algorithm:
+
+1.  **Analyze Task List**: Read `task-list.md` from the specification directory.
+2.  **Inspect Target Files**: For each task, identify the file extensions and paths:
+    - `.rs` / `Cargo.toml` → **rust-developer**
+    - `.go` / `go.mod` → **golang-developer**
+    - `.tsx` / `.jsx` / `.css` / `next.config` → **frontend-developer**
+    - `.py` / `.fastapi` / `routes/` → **backend-developer**
+    - `.swift` / `ios/` → **ios-developer**
+    - `.kt` / `android/` → **android-developer**
+    - `.xaml` / `.csproj` → **windows-app-developer**
+    - `.swift` + `macOS target` → **macos-app-developer**
+3.  **Group by Domain**: Aggregate tasks into domain-specific groups.
+4.  **Execute Model Selection**:
+    - **SINGLE-DOMAIN**: Direct parallel spawn of one specialist (e.g., `rust-developer`) + `qa-agent`.
+    - **MULTI-DOMAIN**: Parallel direct spawn of _multiple_ specialists (e.g., `rust-developer` + `frontend-developer`) in a single turn. Explicitly assign task ranges to each.
+    - **UNKNOWN**: Fallback to `dev-executor` for intermingled tasks or if detection fails.
 
 ## Subagent Delegation Patterns
 
