@@ -174,23 +174,37 @@ Every time you delegate a task for a new phase (e.g., "Phase 3"), the system aut
 **CRITICAL ENFORCEMENT - PHASE 2+:**
 **MUST ALWAYS DELEGATE TO SUBAGENTS FOR ALL WORK.** The Team Lead's job is ORCHESTRATION, not EXECUTION.
 
-| Phase | If Team Lead catches themselves doing this... | ...They should stop and delegate to this subagent instead: |
-| ----- | --------------------------------------------- | ---------------------------------------------------------- |
-| 2     | Writing requirements document                 | `requirements-clarifier`                                   |
-| 2.5   | Writing BDD scenarios                         | `bdd-scenario-writer`                                      |
-| 3     | Doing web research, reading docs              | `research-agent`                                           |
-| 4     | Analyzing code patterns                       | `debug-analyzer`                                           |
-| 5     | Assessing code structure                      | `code-assessor`                                            |
-| 5.3   | Designing architecture (arch only)            | `architecture-agent`                                       |
-| 5.4   | Designing architecture + UI together          | `product-designer`                                         |
-| 5.5   | Creating UI/UX designs (UI only)              | `ui-ux-designer`                                           |
-| 6     | Writing spec/plan/task list                   | `spec-writer`                                              |
-| 8     | Writing code, running tests                   | `dev-executor` + `qa-agent`                                |
-| 9     | Reviewing code manually                       | `code-reviewer` + `adversarial-reviewer`                   |
-| 10    | Updating documentation                        | `docs-executor`                                            |
-| 10.5  | Writing handoff document                      | `handoff-writer`                                           |
+| Phase | If Team Lead catches themselves doing this... | ...They should stop and delegate to this subagent instead:    |
+| ----- | --------------------------------------------- | ------------------------------------------------------------- |
+| 2     | Writing requirements document                 | `requirements-clarifier`                                      |
+| 2.5   | Writing BDD scenarios                         | `bdd-scenario-writer`                                         |
+| 3     | Doing web research, reading docs              | `research-agent`                                              |
+| 4     | Analyzing code patterns                       | `debug-analyzer`                                              |
+| 5     | Assessing code structure                      | `code-assessor`                                               |
+| 5.3   | Designing architecture (arch only)            | `architecture-agent`                                          |
+| 5.4   | Designing architecture + UI together          | `product-designer`                                            |
+| 5.5   | Creating UI/UX designs (UI only)              | `ui-ux-designer`                                              |
+| 6     | Writing spec/plan/task list                   | `spec-writer`                                                 |
+| 8     | Writing code, running tests                   | **Specialized Specialist** (see Selection Logic) + `qa-agent` |
+| 9     | Reviewing code manually                       | `code-reviewer` + `adversarial-reviewer`                      |
+| 10    | Updating documentation                        | `docs-executor`                                               |
+| 10.5  | Writing handoff document                      | `handoff-writer`                                              |
 
-**USER ENFORCEMENT:** If the user sees Team Lead doing Phase 2-13 work directly, they will intervene.
+### Phase 8 Specialist Selection Logic (MANDATORY)
+
+Before spawning Phase 8 subagents, you MUST analyze the implementation plan and project files to select the best-fit **Execution Specialist**:
+
+- **Rust project**: Delegate to `rust-developer`
+- **Go project**: Delegate to `golang-developer`
+- **Frontend / Web (React/Next.js/Vue)**: Delegate to `frontend-developer`
+- **Backend (Node.js/Python/General)**: Delegate to `backend-developer`
+- **Android App**: Delegate to `android-developer`
+- **iOS App**: Delegate to `ios-developer`
+- **macOS App**: Delegate to `macos-app-developer`
+- **Windows App**: Delegate to `windows-app-developer`
+- **Unknown/General Scripting**: Fallback to `dev-executor`
+
+**USER ENFORCEMENT:** If the user sees Team Lead using `dev-executor` for a known stack (like Rust or Frontend), they will intervene.
 
 ## Phase Flow
 

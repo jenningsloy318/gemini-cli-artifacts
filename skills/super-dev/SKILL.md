@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.7.4"
+  version: "3.7.5"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -32,6 +32,7 @@ metadata:
     - proactive-indexing
     - single-turn-parallel
     - index-discovery
+    - specialist-selection
 ---
 
 # Super Dev Workflow
@@ -66,7 +67,7 @@ To maintain a clear audit trail and logical order, all files created within the 
 - **Normalization**: The `doc-validator` remains as a safety layer to ensure **NO GAPS** exist, even if phases are skipped.
 - **Example Indexing:**
   - `01-requirements.md`
-  - `02-behavior-scenarios.md`
+  - `02-behavior-scenarios.md` (Note: Gap-free even if phase skipped)
   - `03-research.md`
   - `04-assessment.md`
   - `05-specification.md`
@@ -98,7 +99,7 @@ The `doc-validator` MUST perform two distinct types of validation for every docu
 - **Qualitative**: Perform deep LLM analysis against phase goals, project standards, and previous artifacts.
   A "PASS" verdict requires success in BOTH methods.
 
-### Mandatory Role Mapping (v3.7.4):
+### Mandatory Role Mapping (v3.7.5):
 
 | Phase | Document                       | Writer Agent             | Validator Agent | Gate Script            |
 | ----- | ------------------------------ | ------------------------ | --------------- | ---------------------- |
@@ -108,8 +109,23 @@ The `doc-validator` MUST perform two distinct types of validation for every docu
 | 5     | `[doc-index]-assessment.md`    | `code-assessor`          | `doc-validator` | (N/A)                  |
 | 6     | `[doc-index]-specification.md` | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
 | 7     | `[doc-index]-plan.md`          | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
+| 8     | **Specialized Specialist**     | **Execution Specialist** | `qa-agent`      | `gate-build.sh`        |
 | 10    | Documentation Updates          | `docs-executor`          | `doc-validator` | `gate-docs-drift.sh`   |
 | 10.5  | `[doc-index]-handoff.md`       | `handoff-writer`         | `doc-validator` | (N/A)                  |
+
+### Phase 8 Specialist Selection Logic (MANDATORY)
+
+The Tech Lead MUST select the best-fit execution subagent based on the implementation plan and codebase:
+
+- **Rust project**: Delegate to `rust-developer`
+- **Go project**: Delegate to `golang-developer`
+- **Frontend / Web (React/Next.js/Vue)**: Delegate to `frontend-developer`
+- **Backend (Node.js/Python/General)**: Delegate to `backend-developer`
+- **Android App**: Delegate to `android-developer`
+- **iOS App**: Delegate to `ios-developer`
+- **macOS App**: Delegate to `macos-app-developer`
+- **Windows App**: Delegate to `windows-app-developer`
+- **Unknown/General Scripting**: Fallback to `dev-executor`
 
 ## Mandatory Requirement Clarification (NEW in v3.0.9)
 
@@ -382,7 +398,7 @@ You MUST ONLY use these tools for:
 
 1. Phase 0/1 Setup (creating directories, worktrees)
 2. Phase 12 Git Operations (merge, commit)
-3. Project Management (reading status, updating task lists, tool calls)
+3. Project Management (reading status, updating task lists, tool calls for delegation)
 
 **HOW TO DELEGATE TO SUBAGENTS:**
 Use the **`generalist` tool** (or specialized subagent tools like `codebase_investigator`) with a clear request:
@@ -438,7 +454,7 @@ generalist(request: "Act as the [Agent Name] subagent. Your instructions are loc
 | 5.4   | product-designer       | Coordinate architecture + UI design together                                  |
 | 5.5   | ui-ux-designer         | Create UI/UX design (UI only)                                                 |
 | 6     | spec-writer            | Write spec, plan, task list                                                   |
-| 8     | dev-executor           | Implement code (concurrent with `qa-agent`)                                   |
+| 8     | **Specialist**         | **Execution Specialist** (Rust, Go, Frontend, Backend, Android, etc.)         |
 | 8     | qa-agent               | **QA Lead:** Plan tests, run tests + browser smoke tests                      |
 | 9     | code-reviewer          | **Staff Engineer:** Spec-aware review focused on production-risk bugs         |
 | 9     | adversarial-reviewer   | **Red Team:** Multi-lens adversarial challenge with Destructive Action Gate   |
