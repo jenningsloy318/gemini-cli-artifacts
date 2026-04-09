@@ -1,11 +1,11 @@
 ---
 name: specification-templates
-description: Technical specification templates, naming conventions, validation gates, and quality standards for writing unambiguous implementation specifications. Reference for Phase 6 (Specification Writing) in super-dev workflow.
+description: Technical specification templates, naming conventions, validation gates, and quality standards for writing unambiguous implementation specifications. Reference for Phase 6 (Specification & Planning) in super-dev workflow.
 ---
 
 # Specification Templates Reference
 
-Reference documentation for writing comprehensive technical specifications. Use this during Phase 6 (Specification Writing) of the super-dev workflow.
+Reference documentation for writing comprehensive technical specifications. Use this during Phase 6 (Specification & Planning) of the super-dev workflow.
 
 ## Core Principles
 
@@ -537,7 +537,7 @@ All tasks are complete when:
 
 ## Reference
 
-This is a reference document extracted from the `super-dev:spec-writer` agent. For full agent behavior during Phase 6, invoke:
+This is a reference document extracted from the `super-dev:spec-writer` agent. For full agent behavior during Phase 6 (Specification & Planning), invoke:
 
 ```
 Task(subagent_type: "super-dev:spec-writer", prompt: "Write specification for: [feature]")

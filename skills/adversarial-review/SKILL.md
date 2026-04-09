@@ -274,7 +274,7 @@ ELSE:
 
 ## Gotchas
 
-- **Making code changes instead of producing a verdict**: This skill is strictly read-only. The adversarial reviewer must never edit, write, or fix code. Its sole output is a verdict document with findings. If fixes are needed, they go back to Phase 8 via the dev-executor.
+- **Making code changes instead of producing a verdict**: This skill is strictly read-only. The adversarial reviewer must never edit, write, or fix code. Its sole output is a verdict document with findings. If fixes are needed, they go back to Phase 8 (Implementation) via the dev-executor.
 - **Blending reviewer lenses instead of keeping them exclusive**: Each reviewer (Skeptic, Architect, Minimalist) must adopt exactly one lens. Blending concerns (e.g., a Skeptic commenting on unnecessary abstractions) weakens the review by diluting each perspective's focus.
 - **Skipping the Destructive Action Gate**: The gate runs on EVERY review regardless of change size or lens count. It is not optional even for small or seemingly safe changes. A single overlooked `DROP TABLE` or `rm -rf` can cause irreversible damage.
 - **Not scanning ALL files in the diff**: Reviewing only the changed lines instead of all files in the diff misses context-dependent issues like broken callers, removed safety checks elsewhere, or destructive patterns in unchanged code that the change now exposes.
@@ -305,7 +305,7 @@ ELSE:
 When used within the super-dev workflow:
 - Runs in **Phase 9** in parallel with code-reviewer
 - Both reviews must pass (Code Review = Approved AND Adversarial = PASS) to proceed
-- REJECT forces loop back to Phase 8 (Execution & QA)
+- REJECT forces loop back to Phase 8 (Implementation)
 - CONTESTED allows Team Lead to decide
 
 When used standalone (outside super-dev):

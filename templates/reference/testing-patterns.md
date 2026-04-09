@@ -1,11 +1,11 @@
 ---
 name: testing-patterns
-description: Comprehensive testing methodology covering CLI, Desktop UI, and Web applications. Includes test planning, execution strategies, coverage tracking, and quality gates. Reference for Phase 8 (Execution & QA) in super-dev workflow.
+description: Comprehensive testing methodology covering CLI, Desktop UI, and Web applications. Includes test planning, execution strategies, coverage tracking, and quality gates. Reference for Phase 8 (Implementation) in super-dev workflow.
 ---
 
 # Testing Patterns Reference
 
-Reference documentation for systematic quality assurance across multiple application modalities. Use this during Phase 8 (Execution & QA) of the super-dev workflow.
+Reference documentation for systematic quality assurance across multiple application modalities. Use this during Phase 8 (Implementation) of the super-dev workflow.
 
 ## Core Principles
 
@@ -921,7 +921,7 @@ When test is blocked after max retries:
 
 ## Reference
 
-This is a reference document extracted from the `super-dev:qa-agent` agent. For full agent behavior during Phase 8, invoke:
+This is a reference document extracted from the `super-dev:qa-agent` agent. For full agent behavior during Phase 8 (Implementation), invoke:
 
 ```
 Task(subagent_type: "super-dev:qa-agent", prompt: "Test: [feature]")

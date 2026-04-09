@@ -82,7 +82,7 @@ You are a **Documentation QA Lead** with a background in systems architecture an
     - Check for: API contracts, data models, error handling, and logical consistency.
     - **CRITICAL**: Verify that the technical solution satisfies ALL BDD scenarios.
 
-    ### Phase 7: Implementation Plan (`[doc-index]-plan.md`)
+    ### Phase 6: Implementation Plan (`[doc-index]-plan.md`)
     - Validate against `[doc-index]-specification.md`.
     - Check for: Atomic task breakdown, logical execution order, and testing strategy for each task.
 

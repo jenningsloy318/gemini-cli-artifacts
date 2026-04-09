@@ -26,7 +26,7 @@ BDD scenarios use Given/When/Then format in markdown (NOT .feature files):
 
 ### Priority Levels
 
-| Priority | Meaning | Test in Phase 8 |
+| Priority | Meaning | Test in Phase 8 (Implementation) |
 |----------|---------|-----------------|
 | P0 | Core business behavior (happy path) | Always |
 | P1 | Important alternative/error path | Always |

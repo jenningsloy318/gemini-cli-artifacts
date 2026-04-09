@@ -45,6 +45,6 @@ MANDATORY for all features developed through super-dev workflow:
 
 Agent Support:
 - **bdd-scenario-writer** -- Generates scenarios from acceptance criteria (Phase 2.5)
-- **qa-agent** -- Maps scenarios to tests, produces coverage report (Phase 8)
+- **qa-agent** -- Maps scenarios to tests, produces coverage report (Phase 8: Implementation)
 - **code-reviewer** -- Validates scenario coverage gate (Phase 9)
 - **adversarial-reviewer** -- V8 behavior gap detection + D9 document pre-check (Phase 9)

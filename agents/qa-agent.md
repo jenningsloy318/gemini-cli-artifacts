@@ -796,7 +796,7 @@ kill $CODERABBIT_PID 2>/dev/null
 
 ### Integration with Parallel Execution
 
-**During Phase 8 (Execution & QA):**
+**During Phase 8 (Implementation):**
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

@@ -92,7 +92,7 @@ Stores conventions and patterns discovered during development.
 
 - After Phase 5 (Code Assessment): Record codebase conventions discovered
 - After Phase 9 (Code Review): Record patterns flagged by reviewers
-- After Phase 8 (Execution): Record successful patterns used
+- After Phase 8 (Implementation): Record successful patterns used
 
 ## Usage Statistics
 

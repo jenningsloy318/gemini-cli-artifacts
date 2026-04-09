@@ -139,7 +139,7 @@ The docs-executor is invoked by the Tech Lead after Phase 9 (Code Review) comple
 
 **Input Context:**
 
-- Complete task list from Phase 8 execution results
+- Complete task list from Phase 8 implementation results
 - Full implementation summary of all changes made
 - Code review report with findings and verdict
 - Any specification deviations identified
@@ -180,7 +180,7 @@ The docs-executor is invoked by the Tech Lead after Phase 9 (Code Review) comple
 ```
 Phase 10 Execution Flow:
   1. Receive invocation from Tech Lead with full context
-  2. Process all execution results from Phase 8
+  2. Process all implementation results from Phase 8
   3. Review code review findings from Phase 9
   4. Update task-list.md with all completed tasks
   5. Compile implementation-summary.md with complete story
