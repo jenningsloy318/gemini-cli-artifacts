@@ -14,7 +14,7 @@ license: MIT
 compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
 metadata:
   author: Jennings Liu
-  version: "3.7.21"
+  version: "3.7.22"
   repository: https://github.com/jenningsloy318/gemini-cli-artifacts
   keywords:
     - development
@@ -74,12 +74,13 @@ To maintain a clear audit trail and logical order, all files created within the 
   - `03-research.md`
   - `04-assessment.md`
   - `05-specification.md`
-  - `06-implementation-plan.md`
+  - `06-plan.md`
   - `07-task-list.md`
-  - `08-test-report.md`
-  - `09-code-review.md`
-  - `10-adversarial-review.md`
-  - `11-handoff.md`
+  - `08-adversarial-review.md`
+  - `09-test-report.md`
+  - `10-code-review.md`
+  - `11-documentation.md`
+  - `12-handoff.md`
 
 The Tech Lead is responsible for adapting to any renames reported by the validator.
 
@@ -108,7 +109,7 @@ The `doc-validator` MUST perform two distinct types of validation for every docu
 - **Qualitative**: Perform deep LLM analysis against phase goals, project standards, and previous artifacts.
   A "PASS" verdict requires success in BOTH methods.
 
-### Mandatory Role Mapping (v3.7.21):
+### Mandatory Role Mapping (v3.7.22):
 
 | Phase | Document                       | Writer Agent             | Validator Agent | Gate Script            |
 | ----- | ------------------------------ | ------------------------ | --------------- | ---------------------- |
@@ -119,11 +120,11 @@ The `doc-validator` MUST perform two distinct types of validation for every docu
 | 6     | `[doc-index]-specification.md` | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
 | 6     | `[doc-index]-plan.md`          | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
 | 6     | `[doc-index]-task-list.md`     | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
+| 7     | `[doc-index]-adversarial.md`   | `spec-critic`            | `doc-validator` | `gate-review.sh`       |
 | 8     | `[doc-index]-test-report.md`   | `Implementation`         | `qa-agent`      | `gate-build.sh`        |
 | 9     | `[doc-index]-code-review.md`   | `Review`                 | `doc-validator` | `gate-review.sh`       |
-| 9     | `[doc-index]-adversarial.md`   | `Review`                 | `doc-validator` | `gate-review.sh`       |
 | 10    | Documentation Updates          | `docs-executor`          | `doc-validator` | `gate-docs-drift.sh`   |
-| 10.5  | `[doc-index]-handoff.md`       | `handoff-writer`         | `doc-validator` | (N/A)                  |
+| 11    | `[doc-index]-handoff.md`       | `handoff-writer`         | `doc-validator` | (N/A)                  |
 
 ### Phase 8 Implementation Architecture (3-Tier)
 
