@@ -84,7 +84,19 @@ To maintain a clear audit trail and logical order, all files created within the 
 
 The Tech Lead is responsible for adapting to any renames reported by the validator.
 
-## Single-Turn Parallel Writer-Validator Strategy (NEW in v3.5.0)
+## The Critique-Refinement Loop (NEW in v3.7.22)
+
+To prevent patching flawed designs, the Tech Lead MUST enforce a strict feedback loop between Phase 6 (Specification) and Phase 7 (Adversarial Review):
+
+1. **Gatekeeping**: The `spec-critic` acts as a non-negotiable gate for specification quality.
+2. **Failure Handling**: If the `spec-critic` and `doc-validator` return a "REJECTED" or "CONTESTED" verdict:
+   - The Tech Lead MUST reject the implementation of that spec.
+   - The Tech Lead creates a new task entry in the `task-list.md` detailing the gaps found.
+   - The Tech Lead **MUST mandate a return to Phase 6** (Specification Writing).
+3. **Refinement**: The `spec-writer` updates the specification, explicitly incorporating the feedback from `[doc-index]-adversarial.md` as mandatory context.
+4. **Re-Validation**: The Tech Lead triggers a _full_ Phase 7 loop to re-evaluate the updated specification. This ensures that fixes do not introduce new regressions or edge cases.
+
+The state machine for Phase 6 and 7 is recursive: **Build -> Criticize -> Validate -> (If Fail: Refine -> Validate) -> Pass**.
 
 To ensure maximum document quality and speed, every phase that produces a document MUST employ a **Single-Turn Parallel** dual-agent strategy.
 
