@@ -13,9 +13,9 @@
     "super-dev:research-agent": {
       "phase": "3",
       "description": "Research requires completed requirements and BDD scenarios",
-      "requires": ["[doc-index]-requirements.md", "[doc-index]-scenarios.md"],
+      "requires": ["[doc-index]-requirements.md", "[doc-index]-behavior-scenarios.md"],
       "sections": {
-        "[doc-index]-scenarios.md": ["Given"]
+        "[doc-index]-behavior-scenarios.md": ["Scenario", "Given"]
       }
     },
     "super-dev:debug-analyzer": {
@@ -27,165 +27,65 @@
     "super-dev:code-assessor": {
       "phase": "5",
       "description": "Code assessment requires research report",
-      "requires": ["[doc-index]-research.md"],
+      "requires": ["[doc-index]-research-report.md"],
       "sections": {}
     },
     "super-dev:architecture-agent": {
       "phase": "5.3",
       "description": "Architecture design requires assessment",
-      "requires": ["[doc-index]-assessment.md"],
+      "requires": ["[doc-index]-code-assessment.md"],
       "sections": {}
     },
     "super-dev:product-designer": {
       "phase": "5.4",
-      "description": "Product design requires assessment",
-      "requires": ["[doc-index]-assessment.md"],
+      "description": "Product design requires assessment with both arch and UI",
+      "requires": ["[doc-index]-code-assessment.md"],
       "sections": {}
     },
     "super-dev:ui-ux-designer": {
       "phase": "5.5",
       "description": "UI/UX design requires assessment",
-      "requires": ["[doc-index]-assessment.md"],
+      "requires": ["[doc-index]-code-assessment.md"],
       "sections": {}
     },
     "super-dev:spec-writer": {
       "phase": "6",
       "description": "Spec writing requires assessment and design documents",
-      "requires": ["[doc-index]-assessment.md"],
+      "requires": ["[doc-index]-code-assessment.md"],
       "sections": {}
+    },
+    "super-dev:spec-reviewer": {
+      "phase": "7",
+      "description": "Spec review requires specification, implementation plan, and task list",
+      "requires": ["[doc-index]-specification.md", "[doc-index]-implementation-plan.md", "[doc-index]-task-list.md"],
+      "sections": {
+        "[doc-index]-specification.md": ["Testing Strategy"]
+      }
     },
     "super-dev:dev-executor": {
       "phase": "8",
-      "description": "Implementation requires complete specification, plan, and task list",
-      "requires": [
-        "[doc-index]-specification.md",
-        "[doc-index]-plan.md",
-        "[doc-index]-task-list.md"
-      ],
+      "description": "Execution requires complete specification, plan, and task list",
+      "requires": ["[doc-index]-specification.md", "[doc-index]-implementation-plan.md", "[doc-index]-task-list.md"],
       "sections": {
-        "[doc-index]-specification.md": ["Technical Design"],
-        "[doc-index]-task-list.md": ["Tasks"]
-      }
-    },
-    "super-dev:rust-developer": {
-      "phase": "8",
-      "description": "Implementation requires complete specification, plan, and task list",
-      "requires": [
-        "[doc-index]-specification.md",
-        "[doc-index]-plan.md",
-        "[doc-index]-task-list.md"
-      ],
-      "sections": {
-        "[doc-index]-specification.md": ["Technical Design"],
-        "[doc-index]-task-list.md": ["Tasks"]
-      }
-    },
-    "super-dev:golang-developer": {
-      "phase": "8",
-      "description": "Implementation requires complete specification, plan, and task list",
-      "requires": [
-        "[doc-index]-specification.md",
-        "[doc-index]-plan.md",
-        "[doc-index]-task-list.md"
-      ],
-      "sections": {
-        "[doc-index]-specification.md": ["Technical Design"],
-        "[doc-index]-task-list.md": ["Tasks"]
-      }
-    },
-    "super-dev:frontend-developer": {
-      "phase": "8",
-      "description": "Implementation requires complete specification, plan, and task list",
-      "requires": [
-        "[doc-index]-specification.md",
-        "[doc-index]-plan.md",
-        "[doc-index]-task-list.md"
-      ],
-      "sections": {
-        "[doc-index]-specification.md": ["Technical Design"],
-        "[doc-index]-task-list.md": ["Tasks"]
-      }
-    },
-    "super-dev:backend-developer": {
-      "phase": "8",
-      "description": "Implementation requires complete specification, plan, and task list",
-      "requires": [
-        "[doc-index]-specification.md",
-        "[doc-index]-plan.md",
-        "[doc-index]-task-list.md"
-      ],
-      "sections": {
-        "[doc-index]-specification.md": ["Technical Design"],
-        "[doc-index]-task-list.md": ["Tasks"]
-      }
-    },
-    "super-dev:android-developer": {
-      "phase": "8",
-      "description": "Implementation requires complete specification, plan, and task list",
-      "requires": [
-        "[doc-index]-specification.md",
-        "[doc-index]-plan.md",
-        "[doc-index]-task-list.md"
-      ],
-      "sections": {
-        "[doc-index]-specification.md": ["Technical Design"],
-        "[doc-index]-task-list.md": ["Tasks"]
-      }
-    },
-    "super-dev:ios-developer": {
-      "phase": "8",
-      "description": "Implementation requires complete specification, plan, and task list",
-      "requires": [
-        "[doc-index]-specification.md",
-        "[doc-index]-plan.md",
-        "[doc-index]-task-list.md"
-      ],
-      "sections": {
-        "[doc-index]-specification.md": ["Technical Design"],
-        "[doc-index]-task-list.md": ["Tasks"]
-      }
-    },
-    "super-dev:macos-app-developer": {
-      "phase": "8",
-      "description": "Implementation requires complete specification, plan, and task list",
-      "requires": [
-        "[doc-index]-specification.md",
-        "[doc-index]-plan.md",
-        "[doc-index]-task-list.md"
-      ],
-      "sections": {
-        "[doc-index]-specification.md": ["Technical Design"],
-        "[doc-index]-task-list.md": ["Tasks"]
-      }
-    },
-    "super-dev:windows-app-developer": {
-      "phase": "8",
-      "description": "Implementation requires complete specification, plan, and task list",
-      "requires": [
-        "[doc-index]-specification.md",
-        "[doc-index]-plan.md",
-        "[doc-index]-task-list.md"
-      ],
-      "sections": {
-        "[doc-index]-specification.md": ["Technical Design"],
-        "[doc-index]-task-list.md": ["Tasks"]
+        "[doc-index]-specification.md": ["Implementation"],
+        "[doc-index]-task-list.md": ["Task"]
       }
     },
     "super-dev:qa-agent": {
       "phase": "8",
       "description": "QA requires complete specification and BDD scenarios",
-      "requires": ["[doc-index]-specification.md", "[doc-index]-scenarios.md"],
+      "requires": ["[doc-index]-specification.md", "[doc-index]-behavior-scenarios.md"],
       "sections": {}
     },
     "super-dev:code-reviewer": {
       "phase": "9",
-      "description": "Code review requires specification",
+      "description": "Code review requires specification (after execution)",
       "requires": ["[doc-index]-specification.md"],
       "sections": {}
     },
     "super-dev:adversarial-reviewer": {
       "phase": "9",
-      "description": "Adversarial review requires specification",
+      "description": "Adversarial review requires specification (after execution)",
       "requires": ["[doc-index]-specification.md"],
       "sections": {}
     },

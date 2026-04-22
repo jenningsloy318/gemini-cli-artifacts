@@ -1,191 +1,236 @@
-<template name="requirements">
-<header>
-# Requirements: [Feature/Fix Name]
+---
+name: requirements-template
+description: XML-tagged template for structured requirements documents. Used by requirements-clarifier agent to produce consistent, implementation-ready requirements with root cause analysis, acceptance criteria, and solution options.
+doc-type: requirements
+gate-profile: gate-requirements.sh
+---
 
-**Date:** [timestamp]
-**Type:** Feature/Bug Fix/Improvement
-**Priority:** High/Medium/Low
+<document type="requirements">
 
-</header>
+  <metadata>
+    <field name="title">Requirements: [Feature/Fix Name]</field>
+    <field name="date">[timestamp]</field>
+    <field name="author">super-dev:requirements-clarifier</field>
+    <field name="type">Feature | Bug Fix | Improvement</field>
+    <field name="priority">High | Medium | Low</field>
+    <field name="status">Draft | Review | Approved</field>
+  </metadata>
 
-<section id="summary" title="Executive Summary">
-<description>2-3 sentence overview of the real need, not just the surface request.</description>
-## Executive Summary
+  <section title="Executive Summary">
+    <paragraph>[2-3 sentence overview of the real need, not just the surface request]</paragraph>
+  </section>
 
-[Executive Summary Content]
+  <section title="The Real Need (Root Cause Analysis)">
 
-</section>
+    <subsection title="Surface Request">
+      <paragraph>[What the user explicitly asked for]</paragraph>
+    </subsection>
 
-<section id="need" title="The Real Need (Root Cause Analysis)">
-<subsection id="surface" title="Surface Request">
-### Surface Request
+    <subsection title="5 Whys Analysis">
+      <list type="ordered">
+        <item>Why: [First why and answer]</item>
+        <item>Why: [Second why and answer]</item>
+        <item>Why: [Third why and answer]</item>
+        <item>Why: [Fourth why and answer]</item>
+        <item>Why: [Root cause identified]</item>
+      </list>
+    </subsection>
 
-[What the user explicitly asked for]
-</subsection>
+    <subsection title="Job to Be Done">
+      <paragraph>
+        When [situation/context]
+        I want to [motivation/goal]
+        So I can [expected outcome]
+      </paragraph>
 
-<subsection id="5whys" title="5 Whys Analysis">
-### 5 Whys Analysis
+      <paragraph label="Job Type"></paragraph>
+      <list type="unordered">
+        <item>Functional: [practical task]</item>
+        <item>Emotional: [how they want to feel]</item>
+        <item>Social: [how they want to be perceived]</item>
+      </list>
+    </subsection>
 
-1. Why: [First why and answer]
-2. Why: [Second why and answer]
-3. Why: [Third why and answer]
-4. Why: [Fourth why and answer]
-5. Why: [Root cause identified]
-   </subsection>
+  </section>
 
-<subsection id="jtbd" title="Job to Be Done">
-### Job to Be Done
+  <section title="Workflow Context">
 
-**When** [situation/context]
-**I want to** [motivation/goal]
-**So I can** [expected outcome]
+    <subsection title="Current State">
+      <paragraph>[How the user currently accomplishes this]</paragraph>
+    </subsection>
 
-**Job Type:**
+    <subsection title="Pain Points">
+      <list type="unordered">
+        <item>[Pain point 1]</item>
+        <item>[Pain point 2]</item>
+      </list>
+    </subsection>
 
-- Functional: [practical task]
-- Emotional: [how they want to feel]
-- Social: [how they want to be perceived]
-</subsection>
-</section>
+    <subsection title="Workflow Map">
+      <diagram>
+[Before] --> [Requested Action] --> [After]
+                    |
+                    v
+            [Related Actions]
+      </diagram>
+    </subsection>
 
-<section id="workflow" title="Workflow Context">
-<subsection id="current" title="Current State">
-### Current State
+    <subsection title="Stakeholders">
+      <list type="unordered">
+        <item>[Who else is involved or affected]</item>
+      </list>
+    </subsection>
 
-[How the user currently accomplishes this]
-</subsection>
+  </section>
 
-<subsection id="pain" title="Pain Points">
-### Pain Points
+  <section title="Requirements">
 
-- [Pain point 1]
-- [Pain point 2]
-  </subsection>
+    <subsection title="Functional Requirements">
+      <list type="ordered">
+        <item>[Requirement 1]</item>
+        <item>[Requirement 2]</item>
+      </list>
+    </subsection>
 
-<subsection id="map" title="Workflow Map">
-### Workflow Map
+    <subsection title="Non-Functional Requirements">
+      <list type="unordered">
+        <item>Performance: [requirements]</item>
+        <item>Security: [requirements]</item>
+        <item>Accessibility: [requirements]</item>
+      </list>
+    </subsection>
 
-```mermaid
-[Before] → [Requested Action] → [After]
-↓
-[Related Actions]
-```
+    <subsection title="Anticipated Downstream Needs">
+      <paragraph>Based on workflow analysis:</paragraph>
+      <list type="unordered">
+        <item>[Anticipated need 1]: [rationale]</item>
+        <item>[Anticipated need 2]: [rationale]</item>
+      </list>
+    </subsection>
 
-</subsection>
+  </section>
 
-<subsection id="stakeholders" title="Stakeholders">
-### Stakeholders
-- [Who else is involved or affected]
-</subsection>
-</section>
+  <section title="Proposed Solution Options">
 
-<section id="requirements" title="Requirements">
-<subsection id="functional" title="Functional Requirements">
-### Functional Requirements
-1. [Requirement 1]
-2. [Requirement 2]
-</subsection>
+    <option id="1" label="Minimum Viable">
+      <paragraph>[Description of simplest solution]</paragraph>
+      <list type="unordered">
+        <item>Pros: [benefits]</item>
+        <item>Cons: [limitations]</item>
+      </list>
+    </option>
 
-<subsection id="non-functional" title="Non-Functional Requirements">
-### Non-Functional Requirements
-- Performance: [requirements]
-- Security: [requirements]
-- Accessibility: [requirements]
-</subsection>
+    <option id="2" label="Recommended">
+      <paragraph>[Description of recommended solution that addresses root need]</paragraph>
+      <list type="unordered">
+        <item>Pros: [benefits]</item>
+        <item>Cons: [limitations]</item>
+      </list>
+    </option>
 
-<subsection id="downstream" title="Anticipated Downstream Needs">
-### Anticipated Downstream Needs
-Based on workflow analysis:
-- [Anticipated need 1]: [rationale]
-- [Anticipated need 2]: [rationale]
-</subsection>
-</section>
+    <option id="3" label="Comprehensive">
+      <paragraph>[Description of full-featured solution]</paragraph>
+      <list type="unordered">
+        <item>Pros: [benefits]</item>
+        <item>Cons: [limitations]</item>
+      </list>
+    </option>
 
-<section id="options" title="Proposed Solution Options">
-<subsection id="opt1" title="Option 1: [Minimum Viable]">
-### Option 1: [Minimum Viable]
-[Description of simplest solution]
-- Pros: [benefits]
-- Cons: [limitations]
-</subsection>
+  </section>
 
-<subsection id="opt2" title="Option 2: [Recommended]">
-### Option 2: [Recommended]
-[Description of recommended solution that addresses root need]
-- Pros: [benefits]
-- Cons: [limitations]
-</subsection>
+  <section title="Impact Assessment">
 
-<subsection id="opt3" title="Option 3: [Comprehensive]">
-### Option 3: [Comprehensive]
-[Description of full-featured solution]
-- Pros: [benefits]
-- Cons: [limitations]
-</subsection>
-</section>
+    <subsection title="Business Outcome">
+      <paragraph>[What business goal does this support?]</paragraph>
+    </subsection>
 
-<section id="impact" title="Impact Assessment">
-<subsection id="business" title="Business Outcome">
-### Business Outcome
-[What business goal does this support?]
-</subsection>
+    <subsection title="Success Metrics">
+      <list type="unordered">
+        <item>[Metric 1]: [target]</item>
+        <item>[Metric 2]: [target]</item>
+      </list>
+    </subsection>
 
-<subsection id="metrics" title="Success Metrics">
-### Success Metrics
-- [Metric 1]: [target]
-- [Metric 2]: [target]
-</subsection>
+    <subsection title="Behavior Change Expected">
+      <paragraph>[How will user behavior change after implementation?]</paragraph>
+    </subsection>
 
-<subsection id="behavior" title="Behavior Change Expected">
-### Behavior Change Expected
-[How will user behavior change after implementation?]
-</subsection>
-</section>
+  </section>
 
-<section id="technical" title="Technical Considerations">
-<subsection id="integration" title="Integration Points">
-### Integration Points
-- [System/API 1]
-- [System/API 2]
-</subsection>
+  <section title="Technical Considerations">
 
-<subsection id="constraints" title="Technical Constraints">
-### Technical Constraints
-- [Constraint 1]
-- [Constraint 2]
-</subsection>
+    <subsection title="Integration Points">
+      <list type="unordered">
+        <item>[System/API 1]</item>
+        <item>[System/API 2]</item>
+      </list>
+    </subsection>
 
-<subsection id="references" title="Design References">
-### Design References
-- [Links to designs if applicable]
-</subsection>
-</section>
+    <subsection title="Technical Constraints">
+      <list type="unordered">
+        <item>[Constraint 1]</item>
+        <item>[Constraint 2]</item>
+      </list>
+    </subsection>
 
-<section id="assumptions" title="Assumptions">
-## Assumptions
-- [Assumption 1]: [rationale]
-- [Assumption 2]: [rationale]
-</section>
+    <subsection title="Design References">
+      <list type="unordered">
+        <item>[Links to designs if applicable]</item>
+      </list>
+    </subsection>
 
-<section id="questions" title="Open Questions">
-## Open Questions
-- [ ] [Question 1]
-- [ ] [Question 2]
-</section>
+  </section>
 
-<section id="ac" title="Acceptance Criteria">
-## Acceptance Criteria
-- [ ] [Criterion 1]
-- [ ] [Criterion 2]
-</section>
+  <section title="Assumptions">
+    <list type="unordered">
+      <item>[Assumption 1]: [rationale]</item>
+      <item>[Assumption 2]: [rationale]</item>
+    </list>
+  </section>
 
-<section id="recommendations" title="Recommendations">
-## Recommendations
+  <section title="Open Questions">
+    <list type="unordered">
+      <item>[Question 1]</item>
+      <item>[Question 2]</item>
+    </list>
+    <rule>Render as plain bullet items (- Question), NOT as checkboxes (- [ ] Question). Checkboxes here would inflate the AC count in gate-requirements.sh.</rule>
+  </section>
 
-Based on the analysis, I recommend:
+  <section title="Acceptance Criteria">
+    <checklist>
+      <item status="open" name="AC-01">[Criterion 1]</item>
+      <item status="open" name="AC-02">[Criterion 2]</item>
+      <item status="open" name="AC-03">[Criterion 3]</item>
+    </checklist>
+    <rule>
+      MANDATORY RENDERING: Each item MUST render as EITHER:
+        (a) `- [ ] **AC-XX**: description` (checkbox format), OR
+        (b) `- **AC-XX**: description` (AC-ID format)
+      The gate regex requires `^\s*-\s*\[` OR `^\s*-\s*\*{0,2}AC-[0-9]`.
+      Minimum 2 items required. Always produce 3+ items.
+      AC-IDs must be sequential: AC-01, AC-02, AC-03, etc.
+    </rule>
+  </section>
 
-1. **Immediate**: [What to build now]
-2. **Next**: [What to consider for follow-up]
-3. **Future**: [What to keep in mind for roadmap]
-</section>
-</template>
+  <section title="Recommendations">
+    <paragraph>Based on the analysis, I recommend:</paragraph>
+    <list type="ordered">
+      <item name="Immediate">[What to build now]</item>
+      <item name="Next">[What to consider for follow-up]</item>
+      <item name="Future">[What to keep in mind for roadmap]</item>
+    </list>
+  </section>
+
+</document>
+
+## Gate Compliance Notes
+
+The rendered document MUST satisfy `gate-requirements.sh`:
+
+| # | Gate Check | How This Template Satisfies It |
+|---|-----------|-------------------------------|
+| 1 | "acceptance criteria" text present | `<section title="Acceptance Criteria">` renders the heading |
+| 2 | Minimum 2 acceptance criteria items | `<checklist>` contains 3+ `<item>` entries with `- [ ] **AC-XX**:` or `- **AC-XX**:` format |
+| 3 | Non-functional keywords present | `<subsection title="Non-Functional Requirements">` includes performance, security, accessibility |
+| 4 | Summary keyword present | `<section title="Executive Summary">` renders the heading |
+| 5 | Minimum 500 characters | Full template expansion produces well above 500 characters |

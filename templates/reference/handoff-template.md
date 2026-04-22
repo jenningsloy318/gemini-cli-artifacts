@@ -1,89 +1,133 @@
-<template name="handoff">
-<header>
-# Handoff Document: [Feature/Fix Name]
+---
+name: handoff-template
+description: Structured handoff document template for passing work between AI agent sessions. Designed for machine consumption with prioritized unfinished items and concrete next steps.
+doc-type: handoff
+gate-profile: none
+---
 
-**Date:** [timestamp]
-**From:** AI Agent (Session N)
-**To:** Next AI Agent
-**Spec Directory:** specification/[spec-index]-[spec-name]
+<document type="handoff">
 
-</header>
+<metadata>
+  <field name="title">Handoff: [Feature/Fix Name]</field>
+  <field name="date">[timestamp]</field>
+  <field name="spec">specification/[spec-index]-[spec-name]</field>
+  <field name="status">[Complete / Partial -- specify what is missing]</field>
+  <field name="commits">[N] commits on branch [branch-name]</field>
+</metadata>
 
-<section id="objective" title="1. Current Task Objective">
-<subsection id="problem" title="Problem">
-[What problem was being solved — one paragraph, specific]
-</subsection>
-<subsection id="deliverables" title="Deliverables">
-[Bulleted list of what was expected to be produced]
-</subsection>
-<subsection id="criteria" title="Completion Criteria">
-[How "done" is defined — reference specific AC IDs from requirements.md]
-</subsection>
+<section title="Objective">
+  <paragraph>[1-2 sentences: what problem, what deliverable, what "done" means]</paragraph>
+  <reference target="[doc-index]-requirements.md" section="Acceptance Criteria">
+    AC reference: See requirements document Acceptance Criteria section
+  </reference>
 </section>
 
-<section id="progress" title="2. Current Progress">
-<subsection id="decisions" title="Analysis & Decisions">
-[Key analysis performed, options evaluated, decisions made with rationale]
-</subsection>
-<subsection id="changes" title="Changes Made">
-[Files created/modified/deleted, with specific paths — use git diff summary]
-</subsection>
-<subsection id="outputs" title="Outputs Produced">
-[Spec artifacts, code modules, test suites — bulleted list with file paths]
-</subsection>
+<section title="Progress">
+  <table>
+    <row header="true">
+      <cell>Phase</cell>
+      <cell>Status</cell>
+      <cell>Notes</cell>
+    </row>
+    <row>
+      <cell>Requirements</cell>
+      <cell>[done/partial]</cell>
+      <cell></cell>
+    </row>
+    <row>
+      <cell>BDD Scenarios</cell>
+      <cell>[done/partial]</cell>
+      <cell></cell>
+    </row>
+    <row>
+      <cell>Research</cell>
+      <cell>[done/partial/skipped]</cell>
+      <cell></cell>
+    </row>
+    <row>
+      <cell>Specification</cell>
+      <cell>[done/partial]</cell>
+      <cell></cell>
+    </row>
+    <row>
+      <cell>Implementation</cell>
+      <cell>[done/partial]</cell>
+      <cell></cell>
+    </row>
+    <row>
+      <cell>Code Review</cell>
+      <cell>[verdict]</cell>
+      <cell></cell>
+    </row>
+    <row>
+      <cell>Adversarial Review</cell>
+      <cell>[verdict]</cell>
+      <cell></cell>
+    </row>
+    <row>
+      <cell>Documentation</cell>
+      <cell>[done/partial]</cell>
+      <cell></cell>
+    </row>
+  </table>
 </section>
 
-<section id="context" title="3. Key Context">
-<subsection id="background" title="Background">
-[Why this task exists, what preceded it, how it fits into the project]
-</subsection>
-<subsection id="requirements" title="User Requirements & Constraints">
-[Explicit user conventions: git rules, workflow preferences, commit format, etc.]
-</subsection>
-<subsection id="rationale" title="Key Decisions & Rationale">
-[Architecture choices, design trade-offs, option selections — each with reasoning]
-</subsection>
+<section title="Key Decisions">
+  <list type="unordered">
+    <item name="[Decision 1]">[choice] -- why: [1-line rationale]</item>
+    <item name="[Decision 2]">[choice] -- why: [1-line rationale]</item>
+  </list>
+  <reference target="[doc-index]-specification.md" section="[N]">
+    Full context in specification document Section [N]
+  </reference>
 </section>
 
-<section id="findings" title="4. Key Findings">
-<subsection id="conclusions" title="Conclusions">
-[What was learned during implementation]
-</subsection>
-<subsection id="patterns" title="Patterns & Anomalies">
-[Codebase patterns discovered, unexpected behaviors, naming conventions found]
-</subsection>
+<section title="Unfinished Items">
+  <subsection title="P0: Critical">
+    <list type="unordered">
+      <item>[Item] -- See [source file/section]</item>
+    </list>
+  </subsection>
+  <subsection title="P1: Important">
+    <list type="unordered">
+      <item>[Item] -- See [source file/section]</item>
+    </list>
+  </subsection>
+  <subsection title="P2: Nice-to-Have">
+    <list type="unordered">
+      <item>[Item]</item>
+    </list>
+  </subsection>
 </section>
 
-<section id="unfinished" title="5. Unfinished Items (Priority Order)">
-<subsection id="p0" title="P0: Critical">
-[Items that MUST be addressed next — blocking issues, broken functionality]
-</subsection>
-<subsection id="p1" title="P1: Important">
-[Items deferred from this session — follow-ups]
-</subsection>
+<section title="Risks and Gotchas">
+  <list type="unordered">
+    <item>[Risk 1]: [1-line description + what to watch for]</item>
+    <item>[Risk 2]: [1-line description]</item>
+  </list>
+  <paragraph>Directions NOT worth pursuing: [approach already tried and rejected, with reason]</paragraph>
 </section>
 
-<section id="path" title="6. Suggested Handoff Path">
-<subsection id="files" title="Files to Read First">
-[Ordered list of most important files to read, with paths and WHY each matters]
-</subsection>
-<subsection id="verify" title="What to Verify First">
-[Specific commands to run, state to check]
-</subsection>
-<subsection id="next" title="Recommended Next Actions">
-[Concrete actionable steps for the next session, in order]
-</subsection>
+<section title="Read These First">
+  <list type="ordered">
+    <item><code>[path]</code> -- [why this file matters, 5 words]</item>
+    <item><code>[path]</code> -- [why]</item>
+    <item><code>[path]</code> -- [why]</item>
+  </list>
 </section>
 
-<section id="risks" title="7. Risks and Warnings">
-<subsection id="pitfalls" title="Pitfalls">
-[Known tricky areas, file complexity warnings]
-</subsection>
+<section title="Next Steps">
+  <list type="ordered">
+    <item>[Concrete action -- e.g., "Run `make test` to verify green build"]</item>
+    <item>[Concrete action -- e.g., "Address P0 item: [description]"]</item>
+    <item>[Concrete action]</item>
+    <item>[Concrete action]</item>
+    <item>[Concrete action]</item>
+  </list>
 </section>
 
-<section id="first-steps" title="First Steps for the Next Agent">
-1. Read this handoff document completely
-2. [Concrete step]
-3. [Concrete step]
-</section>
-</template>
+<rule>Under 300 lines total. No section exceeds 30 lines.</rule>
+<rule>No copy-pasted content from spec artifacts.</rule>
+<rule>Written FOR an AI agent -- concrete paths, commands, and IDs only.</rule>
+
+</document>

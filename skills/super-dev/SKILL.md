@@ -1,200 +1,177 @@
 ---
 name: super-dev
-description: >
-  Use when implementing features, fixing bugs, refactoring code, optimizing performance,
-  resolving deprecations, or any multi-step development task requiring planning, implementation,
-  testing, and review. Orchestrates specialized subagents through research, architecture,
-  coding, QA, code review, and documentation phases. Triggers on: "implement", "build",
-  "fix bug", "refactor", "add feature", "develop this", "help me build", "add functionality",
-  "optimize performance", "resolve deprecation", "systematic development".
-  Do NOT trigger on: simple questions ("what does this code do?"), file searches
-  ("where is the auth function?"), one-off commands ("run the tests"), code explanations,
-  quick edits, or non-development tasks.
+description: Multi-step development orchestrator for implementing features, fixing bugs, refactoring, optimizing performance, and resolving deprecations
+author: Jennings Liu
+version: 3.7.22
 license: MIT
-compatibility: Requires Gemini CLI with experimental subagents enabled (experimental.enableAgents=true). Git required for worktree management.
-metadata:
-  author: Jennings Liu
-  version: "3.7.22"
-  repository: https://github.com/jenningsloy318/gemini-cli-artifacts
-  keywords:
-    - development
-    - workflow
-    - subagents
-    - tech-lead
-    - parallel-execution
-    - hooks
-    - git-worktree
-    - requirement-clarification
-    - isolation
-    - writer-validator
-    - parallel-docs
-    - dual-validation
-    - proactive-indexing
-    - single-turn-parallel
-    - index-discovery
-    - specialist-selection
-    - multi-domain-parallel
-    - domain-detection
-    - sequential-specification
 ---
 
-# Super Dev Workflow
+<purpose>Tech Lead agent team workflow. The Tech Lead orchestrates specialized agent teammates — it NEVER implements directly, only spawns, coordinates, and verifies. Agents execute research, architecture, coding, QA, code review, and documentation phases in parallel where possible.</purpose>
 
-A team-based development system where the Tech Lead acts as Tech Lead, orchestrating specialized subagents who work in their own independent context loops, returning structured results to the main session.
+<triggers>Triggers on: "implement", "build", "fix bug", "refactor", "add feature", "develop this", "help me build", "add functionality", "optimize performance", "resolve deprecation", "systematic development". Do NOT trigger on: simple questions, file searches, one-off commands, code explanations, quick edits, non-development tasks.</triggers>
 
-**Announce at start:** YOU MUST say "I'm using the super-dev skill with super-dev subagents to systematically implement this task." at the beginning of every run.
+<workflow>
+  <phase n="0" name="Apply Dev Rules">Invoke dev-rules skill. MUST complete before any other action.</phase>
+  <phase n="1" name="Specification Setup">Create worktree, spec dir, workflow JSON, agent team. MUST complete before any codebase exploration or agent spawning.</phase>
+  <phase n="2" name="Requirements Clarification">Spawn requirements-clarifier + doc-validator (parallel). Gate: gate-requirements.sh.</phase>
+  <phase n="2.5" name="BDD Scenarios">Spawn bdd-scenario-writer + doc-validator (parallel). User confirmation required. Gate: gate-bdd.sh.</phase>
+  <phase n="3" name="Research">Spawn research-agent. Firecrawl MCP first, then supplementary scripts. Present 3-5 options to user.</phase>
+  <phase n="4" name="Debug Analysis">Spawn debug-analyzer. Only for bug fixes — skip otherwise.</phase>
+  <phase n="5" name="Code Assessment">Spawn code-assessor. FIRST phase allowed to read/grep/explore the codebase.</phase>
+  <phase n="5.3" name="Architecture Design">Spawn architecture-agent. Selection: Architecture ONLY → 5.3. UI ONLY → 5.5. BOTH → 5.4 (product-designer).</phase>
+  <phase n="5.5" name="UI/UX Design">Spawn ui-ux-designer. Only if UI feature.</phase>
+  <phase n="6" name="Specification Writing">Spawn spec-writer + doc-validator (parallel). Produces specification, implementation plan, task list. Gate: gate-spec-trace.sh.</phase>
+  <phase n="7" name="Specification Review">Spawn spec-reviewer + doc-validator (parallel). Gate: gate-spec-review.sh. On failure: follow Spec Iteration Loop.</phase>
+  <phase n="8" name="Implementation">Domain-Aware Agent Routing: spawn specialist(s) + qa-agent (parallel). Gate: gate-build.sh.</phase>
+  <phase n="9" name="Code Review + Adversarial Review">Spawn code-reviewer + adversarial-reviewer + 2x doc-validator (4 parallel). Gate: gate-review.sh. On failure: follow Implementation Iteration Loop.</phase>
+  <phase n="10" name="Documentation Update">Spawn docs-executor. Gate: gate-docs-drift.sh. MANDATORY — do not skip.</phase>
+  <phase n="10.5" name="Handoff Writing">Spawn handoff-writer. MANDATORY — do not skip.</phase>
+  <phase n="11" name="Team Cleanup">Verify all teammates terminated, worktree preserved.</phase>
+  <phase n="11.5" name="User Confirmation">Present summary to user for confirmation before merge.</phase>
+  <phase n="12" name="Commit and Merge">Git operations: commit spec directory + code, merge to main.</phase>
+  <phase n="13" name="Final Verification">Verify completion, worktree preserved for reference.</phase>
+</workflow>
 
-## Mandatory Worktree Enforcement (NEW in v3.1.2)
+<processes>
+  <process name="Specification Setup (Phase 1)">
+    <step n="1" name="Spec Index">Scan main repo's `specification/` directory for highest `[XX]` prefix. Next index = max + 1 (zero-padded).</step>
+    <step n="2" name="Spec Name">Derive from user request (e.g., "add auth" → `add-auth`). Kebab-case, lowercase.</step>
+    <step n="3" name="Spec Identifier">Define as `[spec-index]-[spec-name]` (e.g., `22-xml-restructure`). Use this identifier for worktree, branch, spec directory, and all references.</step>
+    <step n="4" name="Worktree">Create worktree: `git worktree add .worktree/[spec-identifier] -b [spec-identifier]`. Branch name = spec-identifier. Then `cd .worktree/[spec-identifier]`. ALL subsequent file operations happen inside the worktree.</step>
+    <step n="5" name="Spec Directory">Create `specification/[spec-identifier]/` INSIDE the worktree.</step>
+    <step n="6" name="Agent Team">Create team named `super-dev-[spec-name]` (e.g., `super-dev-xml-restructure`). All agents spawn into this team.</step>
+    <step n="7" name="Workflow JSON">Create `[spec-identifier]-workflow-tracking.json` in the worktree spec directory. Track phases, iterations, timestamps.</step>
+  </process>
 
-Super-dev now strictly enforces that ALL development work happens inside a git worktree.
+  <process name="First-Run Configuration">
+    <step n="1" name="Detect">Derive project key: `PROJECT_NAME="$(basename "$(git rev-parse --show-toplevel)")"`. Check `${GEMINI_EXTENSION_DATA}/projects/${PROJECT_NAME}/config.json`.</step>
+    <step n="2" name="Auto-detect">Language (package.json→Node, Cargo.toml→Rust, go.mod→Go, pyproject.toml→Python). Framework (next.config.*→Next.js, vite.config.*→Vite). Package manager (bun.lockb, pnpm-lock.yaml, yarn.lock). Test runner (jest.config.*, vitest.config.*, playwright.config.*).</step>
+    <step n="3" name="Confirm and Write">Ask user to confirm detected values. Write config to `${GEMINI_EXTENSION_DATA}/projects/${PROJECT_NAME}/config.json` (include `project.path` for collision detection). On subsequent runs, read config silently.</step>
+  </process>
 
-- **Phase 1 Identification:** Before doing any work, the Tech Lead MUST define:
-  - `SPEC_INDEX`: Next sequential index (e.g., `01`).
-  - `FEATURE_NAME`: Kebab-case name of the task (e.g., `auth-fix`).
-  - `SPEC_NAME`: `${SPEC_INDEX}-${FEATURE_NAME}` (e.g., `01-auth-fix`).
-  - `BRANCH_NAME`: `${SPEC_NAME}` (Identical to SPEC_NAME, e.g., `01-auth-fix`).
-  - `WORKTREE_DIR`: `.worktree/${SPEC_NAME}` (Directory part identical to SPEC_NAME, e.g., `.worktree/01-auth-fix`).
-- **Explicit Creation:** Tech Lead MUST run `git worktree add -b ${BRANCH_NAME} ${WORKTREE_DIR}`.
-- **Strict Isolation:** Once the worktree is created, ALL subsequent labor (Phases 2-11) MUST occur within that worktree. Any edit to the main repository tree during these phases is a VIOLATION.
-- **Mandatory Navigation:** Subagents are explicitly instructed to `cd` into `${WORKTREE_DIR}` at the start of every session. NAVIGATION is mandatory, not just switching branches.
-- **Global Rule:** The `dev-rules` skill makes worktree navigation a mandatory initial step for all agents.
-- **Verification:** Agents are required to verify their environment using `git worktree list`.
+  <process name="Verification Gates">
+    Gate scripts in `${GEMINI_EXTENSION_ROOT}/scripts/gates/` exit 0 (PASS) or 1 (FAIL). Gates are NON-NEGOTIABLE — if a gate fails, loop back and fix.
 
-## Specification Directory Naming Convention (NEW in v3.4.2)
+    <step n="1" name="Gate Map">
+      <gate after="2 → 2.5" script="gate-requirements.sh" run_by="doc-validator" checks="Acceptance criteria, NFRs, summary" />
+      <gate after="2.5 → 3" script="gate-bdd.sh" run_by="doc-validator" checks="SCENARIO-IDs, Given/When/Then, AC traceability" />
+      <gate after="6 → 7" script="gate-spec-trace.sh" run_by="doc-validator" checks="Spec refs BDD scenarios, testing strategy" />
+      <gate after="7 → 8" script="gate-spec-review.sh" run_by="doc-validator" checks="Review verdict, 8 dimensions, grounding" />
+      <gate after="8 → 9" script="gate-build.sh" run_by="tech-lead" checks="Build succeeds, tests pass, type checks" />
+      <gate after="9 → 10" script="gate-review.sh" run_by="doc-validator" checks="Code review approved, adversarial PASS" />
+      <gate after="10 → 10.5" script="gate-docs-drift.sh" run_by="tech-lead" checks="Docs exist, no excessive TODOs" />
+    </step>
+    <step n="2" name="Execution">`bash ${GEMINI_EXTENSION_ROOT}/scripts/gates/<gate-name>.sh <spec-dir>`</step>
+    <step n="3" name="Failure Handling">Gate fails → report which checks failed → spawn appropriate agent to fix → re-run gate → proceed only on PASS (exit 0).</step>
 
-To maintain a clear audit trail and logical order, all files created within the specification directory (`${WORKTREE_DIR}/specification/${SPEC_NAME}/`) MUST follow a strict sequential naming convention:
+  </process>
 
-- **Format:** `[doc-index]-[descriptive-name].md`
-- **Doc Index Discovery (NEW in v3.7.4)**: At the start of every document-producing phase, the Tech Lead MUST run `ls` on the spec directory to identify the current highest index.
-- **Proactive Indexing**: The Tech Lead proactively assigns the next sequential number (`prev + 1`) and defines the **EXACT** filename before spawning subagents.
-- **Normalization**: The `doc-validator` remains as a safety layer to ensure **NO GAPS** exist, even if phases are skipped.
-- **Example Indexing:**
-  - `01-requirements.md`
-  - `02-behavior-scenarios.md` (Note: Gap-free even if phase skipped)
-  - `03-research.md`
-  - `04-assessment.md`
-  - `05-specification.md`
-  - `06-plan.md`
-  - `07-task-list.md`
-  - `08-adversarial-review.md`
-  - `09-test-report.md`
-  - `10-code-review.md`
-  - `11-documentation.md`
-  - `12-handoff.md`
+  <process name="Document Naming Pre-Computation">
+    Tech Lead pre-computes exact filenames BEFORE spawning agents. Agents receive concrete names (e.g., `03-research-report.md`), never `[doc-index]` placeholders.
 
-The Tech Lead is responsible for adapting to any renames reported by the validator.
+    <step n="1">List spec directory, find highest existing `[XX]` prefix</step>
+    <step n="2">Next index = max + 1 (zero-padded to 2 digits)</step>
+    <step n="3">For multi-doc phases, pre-allocate consecutive indices</step>
+    <step n="4">Pass EXACT filenames to agents via `OUTPUT FILENAME` in spawn prompts</step>
+    <step n="5">Doc-validator receives same filenames and verifies (not renames)</step>
 
-## The Critique-Refinement Loop (NEW in v3.7.22)
+  </process>
 
-To prevent patching flawed designs, the Tech Lead MUST enforce a strict feedback loop between Phase 6 (Specification) and Phase 7 (Adversarial Review):
+  <process name="Worktree Enforcement (PRE-PHASE GATE)">
+    At the START of every phase (Phase 2 onwards), before ANY action, run: `pwd | grep -q '\.worktree/'`
 
-1. **Gatekeeping**: The `spec-critic` acts as a non-negotiable gate for specification quality.
-2. **Failure Handling**: If the `spec-critic` and `doc-validator` return a "REJECTED" or "CONTESTED" verdict:
-   - The Tech Lead MUST reject the implementation of that spec.
-   - The Tech Lead creates a new task entry in the `task-list.md` detailing the gaps found.
-   - The Tech Lead **MUST mandate a return to Phase 6** (Specification Writing).
-3. **Refinement**: The `spec-writer` updates the specification, explicitly incorporating the feedback from `[doc-index]-adversarial.md` as mandatory context.
-4. **Re-Validation**: The Tech Lead triggers a _full_ Phase 7 loop to re-evaluate the updated specification. This ensures that fixes do not introduce new regressions or edge cases.
+    If check fails: ABORT immediately. Do not proceed, do not spawn agents, do not read/write files. Print error: "WORKTREE VIOLATION: pwd is not inside .worktree/. Either run Phase 1 to create a worktree, or cd to the existing worktree (cd .worktree/[spec-name])."
 
-The state machine for Phase 6 and 7 is recursive: **Build -> Criticize -> Validate -> (If Fail: Refine -> Validate) -> Pass**.
+    This applies to ALL phases ≥2, not just agent spawning. File reads, greps, builds, commits — everything must happen inside the worktree. Wrong pwd means wrong relative paths for gate scripts, specs, and agent work.
 
-To ensure maximum document quality and speed, every phase that produces a document MUST employ a **Single-Turn Parallel** dual-agent strategy.
+  </process>
 
-### Execution Pattern (v3.7.4):
+  <process name="Domain-Aware Agent Routing">
+    For Phase 8, spawn domain specialists directly instead of dev-executor:
+    <route domain="Rust" agent="rust-developer" />
+    <route domain="Go" agent="golang-developer" />
+    <route domain="Frontend" agent="frontend-developer" />
+    <route domain="Backend" agent="backend-developer" />
+    <route domain="iOS" agent="ios-developer" />
+    <route domain="Android" agent="android-developer" />
+    <route domain="Windows" agent="windows-app-developer" />
+    <route domain="macOS" agent="macos-app-developer" />
+    <route domain="Unknown" agent="dev-executor" />
+  </process>
 
-1.  **Index Discovery**: Tech Lead runs `ls` to find the last index.
-2.  **Filename Definition**: Tech Lead defines the EXACT target filename (e.g., `05-specification.md`).
-3.  **Single-Turn Spawning (MANDATORY)**: The Tech Lead MUST issue BOTH subagent delegation calls (Writer + Validator) in a **SINGLE RESPONSE**.
-4.  **Collaborative loop**:
-    - The **Writer** drafts the document using the EXACT filename provided.
-    - The **Validator** (`doc-validator`) waits for the file to appear and then reviews it using the **Dual-Validation** method.
-    - **Validation**: The Validator MUST verify that the assigned index is strictly incremental and has NO GAPS.
-    - If validation fails, the Validator provides explicit fix instructions to the Writer.
-    - The Writer applies fixes and notifies the Validator.
-5.  **Phase Exit**: The phase is complete ONLY when the Validator reports a "PASS" verdict to the Tech Lead.
+  <process name="Spec Iteration Loop (Phase 6/7)">
+    <step n="1" name="Trigger">Phase 7 spec-reviewer reports issues or gate-spec-review.sh fails.</step>
+    <step n="2" name="Spawn Fix">Tech Lead spawns spec-writer + doc-validator (parallel) with reviewer findings as input. Tech Lead NEVER edits specs directly.</step>
+    <step n="3" name="Re-review">After spec-writer completes, spawn spec-reviewer + doc-validator (parallel) again.</step>
+    <step n="4" name="Exit Criteria">Loop exits when: spec-reviewer approves AND gate-spec-review.sh passes. Max 3 iterations. After 3: escalate to user with findings summary.</step>
+  </process>
 
-### Dual-Validation Method (NEW in v3.3.1):
+  <process name="Implementation Iteration Loop (Phase 8/9)">
+    <step n="1" name="Trigger">Phase 9 code-reviewer verdict is not "Approved" or adversarial-reviewer returns REJECT.</step>
+    <step n="2" name="Spawn Fix">Tech Lead spawns domain specialist(s) + qa-agent (parallel) with review findings as input. Tech Lead NEVER fixes code directly.</step>
+    <step n="3" name="Re-review">After specialists complete, spawn code-reviewer + adversarial-reviewer + doc-validators (parallel) again.</step>
+    <step n="4" name="Exit Criteria">Loop exits when: code-reviewer approves AND adversarial-reviewer returns PASS or CONTESTED-accept. Max 3 iterations. After 3: escalate to user with review findings.</step>
+  </process>
 
-The `doc-validator` MUST perform two distinct types of validation for every document:
+  <process name="Phase Enforcement">
+    <entry phase="0" action="Invoke dev-rules skill" agents="none" />
+    <entry phase="1" action="Setup: worktree, spec dir, JSON, team" agents="none" />
+    <entry phase="2" action="Task tool" agents="requirements-clarifier + doc-validator (parallel)" />
+    <entry phase="2.5" action="Task tool, present to user" agents="bdd-scenario-writer + doc-validator (parallel)" />
+    <entry phase="3" action="Task tool, present options" agents="research-agent" />
+    <entry phase="4" action="Task tool (bugs only)" agents="debug-analyzer" />
+    <entry phase="5" action="Task tool" agents="code-assessor" />
+    <entry phase="5.3/5.4/5.5" action="Task tool, present options" agents="architecture-agent / product-designer / ui-ux-designer" />
+    <entry phase="6" action="Task tool" agents="spec-writer + doc-validator (parallel)" />
+    <entry phase="7" action="Task tool" agents="spec-reviewer + doc-validator (parallel)" />
+    <entry phase="8" action="Domain-Aware Routing" agents="specialist(s) + qa-agent (parallel)" />
+    <entry phase="9" action="Task tool" agents="code-reviewer + adversarial-reviewer + 2x doc-validator (4 parallel)" />
+    <entry phase="10" action="Task tool" agents="docs-executor" />
+    <entry phase="10.5" action="Task tool" agents="handoff-writer" />
+    <entry phase="11" action="Verify all terminated, worktree preserved" agents="varies" />
+    <entry phase="12" action="Git operations (commit, merge) — include spec directory" agents="none" />
+    <entry phase="13" action="Verify completion, worktree preserved" agents="none" />
+  </process>
+</processes>
 
-- **Programmatic**: Execute the relevant gate script from `scripts/gates/` (e.g., `gate-bdd.sh`).
-- **Qualitative**: Perform deep LLM analysis against phase goals, project standards, and previous artifacts.
-  A "PASS" verdict requires success in BOTH methods.
+<criteria name="Success">
+  <criterion name="Outcome">Feature/fix works correctly. All tests pass with new coverage. Code review resolves all Critical/High/Medium to zero. BDD scenario coverage 100%. Documentation updated. Handoff document generated.</criterion>
+  <criterion name="Efficiency">Phase iteration loops less than 3. Teammates terminated immediately after completion. Tech Lead never performs agent work directly.</criterion>
+  <criterion name="Style">Git worktree with matching branch name. Spec directory structure followed. Workflow tracking JSON maintained. Commit messages follow conventions. All work inside worktree.</criterion>
+</criteria>
 
-### Mandatory Role Mapping (v3.7.22):
+<constraints>
+  <constraint name="Worktree-Only Modifications">NEVER modify, add, or delete files in the main repo. ALL file operations (code, specs, docs, configs) MUST happen inside the worktree. The only exception is Phase 1 step 1 (scanning main repo's specification/ for the next index — read-only). Phase 12 merges the worktree branch to main.</constraint>
+  <constraint name="Worktree Paths in Spawn Prompts">ALL paths passed to agents (spec_directory, output paths, target files) MUST be worktree-relative. Tech Lead must verify every path contains `.worktree/` before spawning. Agents write to whatever path they receive — wrong paths corrupt the main branch.</constraint>
+  <constraint name="Delegation Mode">Tech Lead spawns teammates for ALL work. Never implements directly.</constraint>
+  <constraint name="Sequential Phases">Each phase depends on previous phase completing successfully.</constraint>
+  <constraint name="Iteration Rules">Phase 6/7: follow Spec Iteration Loop process. Phase 8/9: follow Implementation Iteration Loop process. Both loops: max 3 iterations, Tech Lead MUST spawn sub-agents for fixes (never fix directly), escalate to user after 3 failures.</constraint>
+  <constraint name="Version Bump">Every modification to super-dev-plugin files requires patch version bump in plugin.json and marketplace.json.</constraint>
+  <constraint name="Phase 0+1 Gate">Phase 0 (dev rules) and Phase 1 (worktree, spec dir, team) MUST complete before ANY exploration, code reading, grep, glob, research, or agent spawning. No codebase interaction until the worktree and spec directory exist.</constraint>
+  <constraint name="No Early Code Analysis">Do NOT read code, grep, glob, or explore the codebase before Phase 5 (Code Assessment). Phases 0-4 work from requirements, BDD scenarios, and research only — not from reading source files. The code-assessor agent in Phase 5 is the FIRST agent allowed to examine the codebase.</constraint>
+  <constraint name="Gate Scripts">Gate scripts must pass between phases.</constraint>
+  <constraint name="Parallel Doc-validator Rule">Phases 2, 2.5, 6, 7, 9: ALWAYS spawn doc-validator alongside writer/reviewer. Both in same action. Spawning only writer is a VIOLATION.</constraint>
+  <constraint name="Delegation Rule">If a phase requires work (2-11), Tech Lead MUST spawn agents via Task tool. NEVER do work directly.</constraint>
+  <constraint name="Direct Peer Communication">Agents in same phase communicate directly (FINDING_SHARE, FINDING_ACK, REVIEW_COMPLETE, VALIDATION FAILED/PASS).</constraint>
+  <constraint name="MANDATORY Phase 9-12 Transition">Execute in strict order: Phase 10 → gate-docs-drift.sh → Phase 10.5 → Phase 11 → Phase 11.5 → Phase 12. Jumping Phase 9 → Phase 12 is a CRITICAL violation.</constraint>
+  <constraint name="Teammate Termination">Terminate teammates immediately after their work completes. Verify output, then shut down. Do NOT keep idle teammates running. Exception: In Phase 8 (specialists + qa-agent) and Phase 9 (code-reviewer + adversarial-reviewer + doc-validators), wait for ALL parallel agents to complete before terminating any.</constraint>
+</constraints>
 
-| Phase | Document                       | Writer Agent             | Validator Agent | Gate Script            |
-| ----- | ------------------------------ | ------------------------ | --------------- | ---------------------- |
-| 2     | `[doc-index]-requirements.md`  | `requirements-clarifier` | `doc-validator` | `gate-requirements.sh` |
-| 2.5   | `[doc-index]-scenarios.md`     | `bdd-scenario-writer`    | `doc-validator` | `gate-bdd.sh`          |
-| 3     | `[doc-index]-research.md`      | `research-agent`         | `doc-validator` | (N/A)                  |
-| 5     | `[doc-index]-assessment.md`    | `code-assessor`          | `doc-validator` | (N/A)                  |
-| 6     | `[doc-index]-specification.md` | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
-| 6     | `[doc-index]-plan.md`          | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
-| 6     | `[doc-index]-task-list.md`     | `spec-writer`            | `doc-validator` | `gate-spec-trace.sh`   |
-| 7     | `[doc-index]-adversarial.md`   | `spec-critic`            | `doc-validator` | `gate-review.sh`       |
-| 8     | `[doc-index]-test-report.md`   | `Implementation`         | `qa-agent`      | `gate-build.sh`        |
-| 9     | `[doc-index]-code-review.md`   | `Review`                 | `doc-validator` | `gate-review.sh`       |
-| 10    | Documentation Updates          | `docs-executor`          | `doc-validator` | `gate-docs-drift.sh`   |
-| 11    | `[doc-index]-handoff.md`       | `handoff-writer`         | `doc-validator` | (N/A)                  |
+<rules>
+  <rule name="agent-team" mandatory="true">ALL work MUST use agent team. Create team via TeamCreate before spawning any agents.</rule>
+  <rule name="tech-lead-delegation" mandatory="true">Tech Lead NEVER implements directly. Only assigns tasks, spawns agents, coordinates, and verifies output.</rule>
+  <rule name="git-workflow" mandatory="true">Commit format, PR workflow, feature implementation workflow</rule>
+  <rule name="coding-style" mandatory="true">Immutability, file organization, error handling, input validation</rule>
+  <rule name="testing" mandatory="true">80% coverage, TDD workflow, BDD practices</rule>
+  <rule name="security" mandatory="true">No hardcoded secrets, input validation, injection prevention</rule>
+  <rule name="agents" mandatory="true">Agent usage, parallel execution, immediate termination</rule>
+  <rule name="patterns" mandatory="false">API response format, custom hooks, repository pattern</rule>
+  <rule name="performance" mandatory="false">Model selection, context management, build troubleshooting</rule>
+  <rule name="rust-project" mandatory="false">Rust workspace structure, build commands, crate conventions (only for Rust projects)</rule>
+</rules>
 
-### Phase 8 Implementation Architecture (3-Tier)
-
-The Tech Lead MUST select the implementation model based on **Domain Detection Algorithm**:
-
-1.  **Analyze Task List**: Read `task-list.md` from the spec directory.
-2.  **Detect Domains**: For each task, check target file extensions:
-    - `.rs` / `Cargo.toml` → **rust-developer**
-    - `.go` / `go.mod` → **golang-developer**
-    - `.tsx` / `.jsx` / `.css` / `next.config` → **frontend-developer**
-    - `.py` / `.fastapi` / `routes/` → **backend-developer**
-    - `.swift` / `ios/` → **ios-developer**
-    - `.kt` / `android/` → **android-developer**
-    - `.xaml` / `.csproj` → **windows-app-developer**
-    - `.swift` + `macOS target` → **macos-app-developer**
-3.  **Group Tasks**: Bundle tasks by detected domain.
-4.  **Execute Model Selection**:
-
-```text
-  SINGLE-DOMAIN (e.g., all Rust):
-  ┌──────────┐
-  │Tech Lead │─── analyzes tasks ──→ all .rs files
-  └────┬─────┘
-       │
-       ▼
-  ┌──────────────┐
-  │rust-developer│  ← direct spawn, no middleman
-  │(all tasks)   │
-  └──────────────┘
-
-  MULTI-DOMAIN (e.g., Rust backend + React frontend):
-  ┌──────────┐
-  │Tech Lead │─── analyzes tasks ──→ T1-T3: .rs files
-  └──┬────┬──┘                       T4-T5: .tsx files
-     │    │
-     ▼    ▼         ← PARALLEL, both direct spawn
-  ┌──────────────┐  ┌────────────────────┐
-  │rust-developer│  │frontend-developer  │
-  │(T1, T2, T3)  │  │(T4, T5)            │
-  └──────────────┘  └────────────────────┘
-
-  UNKNOWN/AMBIGUOUS DOMAIN:
-  ┌──────────┐
-  │Tech Lead │─── can't determine domain
-  └────┬─────┘
-       │
-       ▼
-  ┌──────────────┐
-  │dev-executor  │  ← fallback, existing behavior
-  │(does its own │    (internally routes to specialists)
-  │ detection)   │
-  └──────────────┘
-```
-
-## Mandatory Requirement Clarification (NEW in v3.0.9)
-
-To ensure technical integrity and eliminate ambiguity, **Phase 2 (Requirements)** now mandates the use of the `clarify` skill.
-
----
-
-**For detailed phase-by-phase implementation, Execution Rules, and JSON Tracking schema, see:** `/agents/tech-lead.md`
+<references>
+  <ref>Plugin root: `${GEMINI_EXTENSION_ROOT}` — agents, commands, rules, contexts, skills, templates, scripts</ref>
+  <ref>Plugin data: `${GEMINI_EXTENSION_DATA}` — global stats, learned patterns, autoresearch results</ref>
+  <ref>Compatibility: Requires Gemini CLI CLI with Task tool and agent teams (CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1). Git required for worktree management.</ref>
+</references>

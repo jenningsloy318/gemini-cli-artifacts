@@ -82,7 +82,7 @@ project/
 │
 ├── deploy/                   # Deployment configs
 ├── docs/                     # Documentation
-└── ${extensionPath}/scripts/                  # Utility scripts
+└── scripts/                  # Utility scripts
 ```
 
 ---

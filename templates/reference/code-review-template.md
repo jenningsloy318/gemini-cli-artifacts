@@ -1,102 +1,169 @@
-<template name="code-review">
-<header>
-# Code Review: [Feature/Fix Name]
+---
+name: code-review-template
+description: Structured code review report template with severity-graded findings, specification validation, BDD scenario coverage, and deterministic verdict logic.
+doc-type: code-review
+gate-profile: code-review
+---
 
-**Date:** [timestamp]
-**Reviewer:** super-dev:code-reviewer
-**Secondary Reviewer:** code-review-expert (if available)
-**Status:** [Approved / Approved with Comments / Changes Requested / Blocked]
-**Base SHA:** [sha or N/A]
-**Head SHA:** [sha or N/A]
+<document type="code-review">
 
-</header>
+<metadata>
+  <field name="title">Code Review: [Feature/Fix Name]</field>
+  <field name="date">[timestamp]</field>
+  <field name="reviewer">super-dev:code-reviewer</field>
+  <field name="secondary-reviewer">code-review-expert (if available)</field>
+  <field name="status">[Approved / Approved with Comments / Changes Requested / Blocked]</field>
+  <field name="base-sha">[sha or N/A]</field>
+  <field name="head-sha">[sha or N/A]</field>
+</metadata>
 
-<section id="stats" title="Summary Statistics">
-| Severity | Count |
-| -------- | ----- |
-| Critical | X     |
-| High     | X     |
-| Medium   | X     |
-| Low      | X     |
-| Info     | X     |
+<section title="Summary Statistics">
+  <table>
+    <row header="true">
+      <cell>Severity</cell>
+      <cell>Count</cell>
+    </row>
+    <row><cell>Critical</cell><cell>X</cell></row>
+    <row><cell>High</cell><cell>X</cell></row>
+    <row><cell>Medium</cell><cell>X</cell></row>
+    <row><cell>Low</cell><cell>X</cell></row>
+    <row><cell>Info</cell><cell>X</cell></row>
+  </table>
 
-| Dimension       | Issues |
-| --------------- | ------ |
-| Correctness     | X      |
-| Security        | X      |
-| Performance     | X      |
-| Maintainability | X      |
-| Testability     | X      |
-| Error Handling  | X      |
-| Consistency     | X      |
-| Accessibility   | X      |
-
+  <table>
+    <row header="true">
+      <cell>Dimension</cell>
+      <cell>Issues</cell>
+    </row>
+    <row><cell>Correctness</cell><cell>X</cell></row>
+    <row><cell>Security</cell><cell>X</cell></row>
+    <row><cell>Performance</cell><cell>X</cell></row>
+    <row><cell>Maintainability</cell><cell>X</cell></row>
+    <row><cell>Testability</cell><cell>X</cell></row>
+    <row><cell>Error Handling</cell><cell>X</cell></row>
+    <row><cell>Consistency</cell><cell>X</cell></row>
+    <row><cell>Accessibility</cell><cell>X</cell></row>
+  </table>
 </section>
 
-<section id="validation" title="Specification Validation">
-| Criterion           | Status              | Evidence    |
-| ------------------- | ------------------- | ----------- |
-| AC-1: [description] | Met/Not Met/Partial | [file:line] |
-| AC-2: [description] | Met/Not Met/Partial | [file:line] |
-| ...                 | ...                 | ...         |
+<section title="Specification Validation">
+  <table>
+    <row header="true">
+      <cell>Criterion</cell>
+      <cell>Status</cell>
+      <cell>Evidence</cell>
+    </row>
+    <row>
+      <cell>AC-1: [description]</cell>
+      <cell>Met/Not Met/Partial</cell>
+      <cell>[file:line]</cell>
+    </row>
+    <row>
+      <cell>AC-2: [description]</cell>
+      <cell>Met/Not Met/Partial</cell>
+      <cell>[file:line]</cell>
+    </row>
+  </table>
 
-<subsection id="nongoals" title="Non-Goals Check">
-<list type="todo">
-<item>[x] NG-1: [non-goal] - Not implemented (correct)</item>
-<item>[ ] NG-2: [non-goal] - Implemented (issue - see F-XXX)</item>
-</list>
-</subsection>
+  <subsection title="Non-Goals Check">
+    <checklist>
+      <item checked="true">NG-1: [non-goal] - Not implemented (correct)</item>
+      <item checked="false">NG-2: [non-goal] - Implemented (issue - see F-XXX)</item>
+    </checklist>
+  </subsection>
 </section>
 
-<section id="bdd-coverage" title="BDD Scenario Coverage">
-| Scenario ID  | Title   | Test Reference                | Status            |
-| ------------ | ------- | ----------------------------- | ----------------- |
-| SCENARIO-001 | [title] | [test file:line or test name] | Covered / Missing |
+<section title="BDD Scenario Coverage">
+  <table>
+    <row header="true">
+      <cell>Scenario ID</cell>
+      <cell>Title</cell>
+      <cell>Test Reference</cell>
+      <cell>Status</cell>
+    </row>
+    <row>
+      <cell>SCENARIO-001</cell>
+      <cell>[title]</cell>
+      <cell>[test file:line or test name]</cell>
+      <cell>Covered / Missing</cell>
+    </row>
+  </table>
 
-**Coverage:** [M/N] scenarios covered
-**Gate:** PASS / FAIL
-
+  <paragraph label="Coverage">[M/N] scenarios covered</paragraph>
+  <paragraph label="Gate">PASS / FAIL</paragraph>
 </section>
 
-<section id="findings" title="Findings">
-<description>Findings include both specification-first review (internal) and senior engineer review (external code-review-expert skill, if available). Findings identified by both reviewers are marked with **[Dual]**.</description>
+<section title="Findings">
+  <rule name="critical-text-guard">
+    NEVER use `**Critical**` as bold text inside finding bodies. The gate regex `\*\*Critical\*\*` scans the ENTIRE file — any `**Critical**` text outside the summary table triggers CR3 FAIL. The `### Critical` section heading is safe (no bold markers). Use `label` attributes on `<paragraph>` tags for field labels (e.g., `<paragraph label="Issue">`).
+  </rule>
+  <subsection title="Critical">
+    <finding id="F-001" dimension="[Dimension]" location="file:line">
+      <paragraph label="Issue">[description]</paragraph>
+      <paragraph label="Suggestion">[concrete fix]</paragraph>
+      <paragraph label="Rationale">[why it matters]</paragraph>
+    </finding>
+  </subsection>
 
-<subsection id="critical" title="Critical">
-**F-001** | [Dimension] | `file:line` **[Dual]** (if identified by both)
-**Issue:** [description]
-**Suggestion:** [concrete fix]
-**Rationale:** [why it matters]
-</subsection>
+  <subsection title="High">
+    <finding id="F-002" dimension="[Dimension]" location="file:line">
+      <paragraph label="Issue">[description]</paragraph>
+      <paragraph label="Suggestion">[fix]</paragraph>
+      <paragraph label="Rationale">[why]</paragraph>
+    </finding>
+  </subsection>
 
-<subsection id="high" title="High">
-**F-002** | [Dimension] | `file:line`
-**Issue:** [description]
-**Suggestion:** [fix]
-**Rationale:** [why]
-</subsection>
+  <subsection title="Medium">
+    <finding id="F-XXX" dimension="[Dimension]" location="file:line">
+      <paragraph label="Issue">[description]</paragraph>
+      <paragraph label="Suggestion">[fix]</paragraph>
+      <paragraph label="Rationale">[why]</paragraph>
+    </finding>
+  </subsection>
 
-<subsection id="medium" title="Medium">
-[Same format]
-</subsection>
+  <subsection title="Low">
+    <finding id="F-XXX" dimension="[Dimension]" location="file:line">
+      <paragraph label="Issue">[description]</paragraph>
+      <paragraph label="Suggestion">[fix]</paragraph>
+      <paragraph label="Rationale">[why]</paragraph>
+    </finding>
+  </subsection>
 
-<subsection id="low" title="Low">
-[Same format]
-</subsection>
-
-<subsection id="info" title="Info">
-[Same format]
-</subsection>
+  <subsection title="Info">
+    <finding id="F-XXX" dimension="[Dimension]" location="file:line">
+      <paragraph label="Issue">[description]</paragraph>
+      <paragraph label="Suggestion">[fix]</paragraph>
+      <paragraph label="Rationale">[why]</paragraph>
+    </finding>
+  </subsection>
 </section>
 
-<section id="strengths" title="Strengths">
-<list>
-<item>[Specific good patterns with file:line references]</item>
-</list>
+<section title="Strengths">
+  <list type="unordered">
+    <item>[Specific good patterns with file:line references]</item>
+  </list>
 </section>
 
-<section id="recommendations" title="Recommendations">
-<list>
-<item>[Actionable improvement recommendations]</item>
-</list>
+<section title="Recommendations">
+  <list type="unordered">
+    <item>[Non-blocking improvements and future considerations]</item>
+  </list>
 </section>
-</template>
+
+<section title="Verdict">
+  <field name="verdict">[Approved / Approved with Comments / Changes Requested / Blocked]</field>
+  <paragraph label="Reasoning">[brief technical assessment]</paragraph>
+  <paragraph label="Blocking Issues">[F-XXX IDs or "None"]</paragraph>
+  <rule name="verdict-consistency">
+    The verdict here MUST exactly match the `status` field in the metadata section above. The gate takes `head -1` of the first matching line — if metadata and verdict disagree, the gate judges by whichever renders first (metadata). Always keep them identical.
+  </rule>
+</section>
+
+<rule name="verdict-logic">
+  Critical findings exist --> Blocked.
+  High findings greater than 3, or any AC not met, or scenario coverage less than 100% --> Changes Requested.
+  High or Medium findings exist --> Approved with Comments.
+  Otherwise --> Approved.
+</rule>
+
+</document>

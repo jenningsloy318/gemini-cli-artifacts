@@ -1,74 +1,18 @@
 ---
-name: super-dev:usage-report
+name: usage-report
 description: View skill and agent usage statistics for the super-dev plugin
 ---
 
-# Usage Report
+<purpose>Read `${GEMINI_EXTENSION_DATA}/global/stats.json` and `${GEMINI_EXTENSION_DATA}/global/usage.log` to display total invocations, top skills, top agents, and recent activity.</purpose>
 
-View usage statistics for the super-dev plugin.
+<usage>/super-dev:usage-report</usage>
 
-## Usage
+<output name="What It Displays">
+  Total invocations: How many times skills and agents have been used. Top skills: Most frequently used, sorted by count. Top agents: Most frequently used, sorted by count. Recent activity: Last 10 invocations from usage.log.
+</output>
 
-```
-/super-dev:usage-report
-```
-
-## What This Command Does
-
-Reads `${extensionPath}/data/stats.json` and `${extensionPath}/data/usage.log` to display:
-
-1. **Total invocations** — How many times skills and agents have been used
-2. **Top skills** — Most frequently used skills, sorted by count
-3. **Top agents** — Most frequently used agents, sorted by count
-4. **Recent activity** — Last 10 invocations from usage.log
-
-## How to Read
-
-```bash
-# View stats summary
-cat "${extensionPath}/data/stats.json" | jq .
-
-# View recent usage
-tail -10 "${extensionPath}/data/usage.log"
-
-# Count by type
-grep '"type":"skill"' "${extensionPath}/data/usage.log" | jq -r '.name' | sort | uniq -c | sort -rn
-
-# Count by agent
-grep '"type":"agent"' "${extensionPath}/data/usage.log" | jq -r '.name' | sort | uniq -c | sort -rn
-```
-
-## Report Format
-
-```
-# Super Dev Usage Report
-
-**Total invocations:** [count]
-**Last updated:** [timestamp]
-
-## Top Skills
-| Skill | Count |
-|-------|-------|
-| super-dev | XX |
-| tdd-workflow | XX |
-| ...   | ...   |
-
-## Top Agents
-| Agent | Count |
-|-------|-------|
-| super-dev:dev-executor | XX |
-| super-dev:code-reviewer | XX |
-| ... | ... |
-
-## Recent Activity (Last 10)
-| Timestamp | Type | Name |
-|-----------|------|------|
-| ... | skill | ... |
-| ... | agent | ... |
-```
-
-## Notes
-
-- Usage data is stored in `${extensionPath}/data` and persists across sessions
-- Stats are updated automatically via PreToolUse hook
-- No sensitive data is collected — only tool names and timestamps
+<constraints>
+  <constraint>Usage data stored in `${GEMINI_EXTENSION_DATA}/global/` — persists across sessions and projects</constraint>
+  <constraint>Stats updated automatically via PreToolUse hook</constraint>
+  <constraint>No sensitive data collected — only tool names and timestamps</constraint>
+</constraints>

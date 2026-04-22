@@ -1,82 +1,85 @@
 {
   "hooks": {
-    "BeforeTool": [
-      {
-        "matcher": "run_shell_command",
-        "hooks": [
-          {
-            "name": "block-dangerous",
-            "type": "command",
-            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}block-dangerous.sh",
-            "description": "Block destructive commands before execution"
-          }
-        ]
-      },
-      {
-        "matcher": "write_file|replace",
-        "hooks": [
-          {
-            "name": "protect-files",
-            "type": "command",
-            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}protect-files.sh",
-            "description": "Protect sensitive files from edits"
-          }
-        ]
-      },
-      {
-        "matcher": "generalist",
-        "hooks": [
-          {
-            "name": "phase-gate",
-            "type": "command",
-            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}phase-gate.sh",
-            "description": "Check previous phase artifacts at start of each phase"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp_github_create_pull_request",
-        "hooks": [
-          {
-            "name": "require-tests-for-pr",
-            "type": "command",
-            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}require-tests-for-pr.sh",
-            "description": "Block PR creation unless all tests pass"
-          }
-        ]
-      }
-    ],
-    "AfterTool": [
-      {
-        "matcher": "write_file|replace",
-        "hooks": [
-          {
-            "name": "auto-format",
-            "type": "command",
-            "command": "jq -r \".tool_input.file_path\" | xargs npx prettier --write 2>/dev/null; exit 0",
-            "description": "Auto-format every file Gemini touches"
-          },
-          {
-            "name": "auto-lint",
-            "type": "command",
-            "command": "npx eslint --fix $(jq -r \".tool_input.file_path\") 2>&1 | tail -10; exit 0",
-            "description": "Auto-lint and report errors after edit"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": ".*",
-        "hooks": [
-          {
-            "name": "auto-commit",
-            "type": "command",
-            "command": "bash ${extensionPath}${/}scripts${/}hooks${/}auto-commit.sh",
-            "description": "Auto-commit after each completed task"
-          }
-        ]
-      }
-    ]
+    "PreToolUse": [
+    {
+      "matcher": "Skill|Agent",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "echo '{\"tool_name\": \"$TOOL_NAME\", \"tool_input\": $TOOL_INPUT}' | ${GEMINI_EXTENSION_ROOT}/scripts/usage-tracker.sh 2>/dev/null || true"
+        }
+      ]
+    },
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "${GEMINI_EXTENSION_ROOT}/hooks/block-dangerous.sh"
+        },
+        {
+          "type": "command",
+          "command": "${GEMINI_EXTENSION_ROOT}/hooks/log-commands.sh"
+        }
+      ]
+    },
+    {
+      "matcher": "Edit|Write",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "${GEMINI_EXTENSION_ROOT}/hooks/protect-files.sh"
+        }
+      ]
+    },
+    {
+      "matcher": "mcp__github__create_pull_request",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "${GEMINI_EXTENSION_ROOT}/hooks/require-tests-pr.sh"
+        }
+      ]
+    },
+    {
+      "matcher": "Agent",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "${GEMINI_EXTENSION_ROOT}/hooks/phase-gate.sh"
+        }
+      ]
+    }
+  ],
+  "PostToolUse": [
+    {
+      "matcher": "Write|Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "${GEMINI_EXTENSION_ROOT}/hooks/auto-format.sh"
+        },
+        {
+          "type": "command",
+          "command": "${GEMINI_EXTENSION_ROOT}/hooks/auto-lint.sh"
+        },
+        {
+          "type": "command",
+          "command": "${GEMINI_EXTENSION_ROOT}/hooks/run-tests.sh"
+        }
+      ]
+    }
+  ],
+  "Stop": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "${GEMINI_EXTENSION_ROOT}/hooks/auto-checkpoint.sh"
+        }
+      ]
+    }
+  ]
   }
 }

@@ -2,7 +2,7 @@
 
 A comprehensive Tech Lead-driven development workflow extension for Gemini CLI with parallel agent execution for implementing features, fixing bugs, and refactoring code.
 
-**v2.2.0 — Enhanced with 2026 AI Development Best Practices**
+**v3.7.22 — Enhanced with 2026 AI Development Best Practices**
 
 ## Overview
 

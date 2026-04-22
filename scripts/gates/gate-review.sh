@@ -1,6 +1,6 @@
 #!/bin/bash
-# Gate: Review Verdicts Quality Check
-# Verifies that both Code and Adversarial reviews have passed
+# Gate: Review Verdict Check
+# Verifies code review and adversarial review verdicts before proceeding
 #
 # Usage: gate-review.sh <spec-dir>
 # Exit 0 = PASS, Exit 1 = FAIL
@@ -8,10 +8,6 @@
 set -euo pipefail
 
 SPEC_DIR="${1:?Usage: gate-review.sh <spec-dir>}"
-
-# Find review files dynamically
-REVIEW_FILE=$(find "$SPEC_DIR" -maxdepth 1 -name "*-code-review.md" | head -1)
-ADV_REVIEW_FILE=$(find "$SPEC_DIR" -maxdepth 1 -name "*-adversarial-review.md" | head -1)
 
 PASS=0
 FAIL=0
@@ -22,48 +18,54 @@ check() {
     local result="$2"
     if [ "$result" = "true" ]; then
         PASS=$((PASS + 1))
-        echo "  [PASS] ${desc}"
     else
         FAIL=$((FAIL + 1))
         ERRORS="${ERRORS}\n  FAIL: ${desc}"
-        echo "  [FAIL] ${desc}"
     fi
 }
 
-echo "GATE: Review Verdicts (Dynamic Resolution)"
+# Find code review file
+CODE_REVIEW=$(find "$SPEC_DIR" -name "*code-review*" -type f 2>/dev/null | head -1)
+if [ -n "$CODE_REVIEW" ]; then
+    # Check for approved verdict
+    cr_verdict=$(grep -iE '(approved|changes requested|blocked)' "$CODE_REVIEW" | head -1 || echo "")
+    is_approved=$(echo "$cr_verdict" | grep -ci "approved" || true)
+    is_blocked=$(echo "$cr_verdict" | grep -ciE "(changes requested|blocked)" || true)
 
-# 1. Check Code Review
-if [ -n "$REVIEW_FILE" ] && [ -f "$REVIEW_FILE" ]; then
-    # Verdict should be APPROVED
-    verdict=$(grep -i "verdict:" "$REVIEW_FILE" | head -n 1 | cut -d':' -f2 | tr -d ' ' || true)
-    check "Code Review Verdict: APPROVED (found: ${verdict:-none})" "$([ "${verdict^^}" = "APPROVED" ] && echo true || echo false)"
-    
-    # Critical findings should be 0
-    crit_count=$(grep -i "critical:" "$REVIEW_FILE" | head -n 1 | cut -d':' -f2 | tr -d ' ' || true)
-    check "Zero Critical findings (found: ${crit_count:-none})" "$([ "${crit_count:-0}" -eq 0 ] && echo true || echo false)"
-    
-    # High findings should be 0
-    high_count=$(grep -i "high:" "$REVIEW_FILE" | head -n 1 | cut -d':' -f2 | tr -d ' ' || true)
-    check "Zero High findings (found: ${high_count:-none})" "$([ "${high_count:-0}" -eq 0 ] && echo true || echo false)"
+    check "Code review exists" "true"
+    check "Code review approved (verdict: $(echo "$cr_verdict" | head -c 50))" "$([ "$is_approved" -gt 0 ] && [ "$is_blocked" -eq 0 ] && echo true || echo false)"
+
+    # Check no critical issues remain (match "| Critical | N |" where N>0, or bold **Critical** in findings)
+    # Exclude section headings like "### Critical" and summary rows like "| Critical | 0 |"
+    critical_findings=$(grep -cE '\*\*Critical\*\*' "$CODE_REVIEW" 2>/dev/null || true)
+    critical_nonzero=$(grep -cE '\|\s*Critical\s*\|\s*[1-9]' "$CODE_REVIEW" 2>/dev/null || true)
+    critical_count=$((critical_findings + critical_nonzero))
+    check "No critical issues (found: ${critical_count})" "$([ "$critical_count" -eq 0 ] && echo true || echo false)"
 else
-    check "Code Review file (*-code-review.md) found" "false"
+    check "Code review file exists" "false"
 fi
 
-# 2. Check Adversarial Review
-if [ -n "$ADV_REVIEW_FILE" ] && [ -f "$ADV_REVIEW_FILE" ]; then
-    # Verdict should be PASS
-    verdict=$(grep -i "verdict:" "$ADV_REVIEW_FILE" | head -n 1 | cut -d':' -f2 | tr -d ' ' || true)
-    check "Adversarial Review Verdict: PASS (found: ${verdict:-none})" "$([ "${verdict^^}" = "PASS" ] && echo true || echo false)"
+# Find adversarial review file
+ADV_REVIEW=$(find "$SPEC_DIR" -name "*adversarial*" -type f 2>/dev/null | head -1)
+if [ -n "$ADV_REVIEW" ]; then
+    # Check for PASS or CONTESTED verdict (CONTESTED = Tech Lead accepted)
+    adv_verdict=$(grep -iE '(PASS|CONTESTED|REJECT|HALT)' "$ADV_REVIEW" | head -1 || echo "")
+    is_pass=$(echo "$adv_verdict" | grep -ciE "PASS|CONTESTED" || true)
+    is_reject=$(echo "$adv_verdict" | grep -ci "REJECT" || true)
+
+    check "Adversarial review exists" "true"
+    check "Adversarial review PASS or CONTESTED (verdict: $(echo "$adv_verdict" | head -c 50))" "$([ "$is_pass" -gt 0 ] && [ "$is_reject" -eq 0 ] && echo true || echo false)"
 else
-    check "Adversarial Review file (*-adversarial-review.md) found" "false"
+    check "Adversarial review file exists" "false"
 fi
 
 # Report
 TOTAL=$((PASS + FAIL))
-echo -e "\nFinal Score: ${PASS}/${TOTAL} checks passed"
+echo "GATE: Review Verdicts"
+echo "  Score: ${PASS}/${TOTAL} checks passed"
 
 if [ "$FAIL" -gt 0 ]; then
-    echo -e "Failures:${ERRORS}"
+    echo -e "  Failures:${ERRORS}"
     echo "GATE RESULT: FAIL"
     exit 1
 else

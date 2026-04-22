@@ -1,74 +1,61 @@
 # State Management Reference
 
-Super-dev uses `${extensionPath}/data` for persistent state that survives plugin upgrades.
+Super-dev uses `${GEMINI_EXTENSION_DATA}` for persistent state that survives plugin upgrades. Data is organized per-project using the git repository basename as the directory key.
 
 ## Storage Location
 
-All persistent data is stored in `${extensionPath}/data/`:
+```
+${GEMINI_EXTENSION_DATA}/
+├── global/
+│   └── stats.json               # Cross-project usage statistics
+└── projects/
+    └── [project-name]/           # Per-project data (basename of git root)
+        ├── config.json           # Project config (first-run setup)
+        ├── session-history.log   # Append-only session log
+        └── patterns.json         # Learned patterns and conventions
+```
 
+## Project Data Path Derivation
+
+```bash
+# Derive project key from git root directory name
+PROJECT_NAME="$(basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")"
+PROJECT_DATA="${GEMINI_EXTENSION_DATA}/projects/${PROJECT_NAME}"
+GLOBAL_DATA="${GEMINI_EXTENSION_DATA}/global"
 ```
-${extensionPath}/data/
-├── config.json              # User configuration (first-run setup)
-├── session-history.log      # Append-only session log
-├── patterns.json            # Learned patterns and conventions
-└── stats.json               # Skill usage statistics
-```
+
+**Path verification:** Every `config.json` stores the full project path in `project.path`. On load, verify the stored path matches the current working directory's git root. If mismatched (name collision from different projects with the same basename), append a short hash suffix (first 6 chars of SHA-256 of the full path) to create a new directory.
 
 ## Session History Log
 
-An append-only log of every super-dev workflow run.
+An append-only log of every super-dev workflow run, stored per-project.
 
 ### Format (one JSON line per session)
 
 ```jsonl
-{
-  "timestamp": "2026-03-24T10:00:00Z",
-  "spec": "01-user-auth",
-  "task": "Implement user authentication",
-  "phases_completed": [
-    0,
-    1,
-    2,
-    3,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    12
-  ],
-  "duration_phases": 13,
-  "verdict": {
-    "code_review": "Approved",
-    "adversarial": "PASS"
-  },
-  "files_changed": 12,
-  "language": "typescript",
-  "framework": "nextjs"
-}
+{"timestamp":"2026-03-24T10:00:00Z","spec":"01-user-auth","task":"Implement user authentication","phases_completed":[0,1,2,3,5,6,7,8,9,10,12],"duration_phases":13,"verdict":{"code_review":"Approved","adversarial":"PASS"},"files_changed":12,"language":"typescript","framework":"nextjs"}
 ```
 
 ### How to Write
 
 ```bash
 # Append at end of Phase 12 (commit)
-echo '{"timestamp":"...","spec":"...","task":"..."}' >> "${extensionPath}/data/session-history.log"
+echo '{"timestamp":"...","spec":"...","task":"..."}' >> "${PROJECT_DATA}/session-history.log"
 ```
 
 ### How to Read
 
 ```bash
 # Read last 5 sessions for context
-tail -5 "${extensionPath}/data/session-history.log"
+tail -5 "${PROJECT_DATA}/session-history.log"
 
 # Count total sessions
-wc -l "${extensionPath}/data/session-history.log"
+wc -l "${PROJECT_DATA}/session-history.log"
 ```
 
 ## Patterns File
 
-Stores conventions and patterns discovered during development.
+Stores conventions and patterns discovered during development, per-project.
 
 ### Format
 
@@ -92,11 +79,11 @@ Stores conventions and patterns discovered during development.
 
 - After Phase 5 (Code Assessment): Record codebase conventions discovered
 - After Phase 9 (Code Review): Record patterns flagged by reviewers
-- After Phase 8 (Implementation): Record successful patterns used
+- After Phase 8 (Execution): Record successful patterns used
 
 ## Usage Statistics
 
-Tracks which skills and agents are invoked for optimization.
+Tracks which skills and agents are invoked for optimization. Stored globally (not per-project).
 
 ### Format
 
@@ -112,7 +99,7 @@ Tracks which skills and agents are invoked for optimization.
     "dev-rules": 0
   },
   "agent_invocations": {
-    "Tech Lead": 0,
+    "tech-lead": 0,
     "dev-executor": 0,
     "qa-agent": 0,
     "code-reviewer": 0,
@@ -129,6 +116,7 @@ Tracks which skills and agents are invoked for optimization.
 - **Always append, never overwrite** the session-history.log
 - **Read history at Phase 0** to inform the current session
 - **Update patterns.json** only when confidence is high (seen 2+ times)
-- **Update stats.json** at the end of every workflow run
+- **Update stats.json** (global) at the end of every workflow run
 - **Never store secrets** in any state file
 - **Graceful degradation**: If any file is missing or corrupt, skip silently and continue
+- **Verify project path** on config load: if `config.json` `project.path` doesn't match current git root, create a new project directory with hash suffix
